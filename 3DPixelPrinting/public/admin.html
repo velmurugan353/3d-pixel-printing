@@ -1,0 +1,3088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — 3D Pixel Printing</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/royal-theme.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .product-tab { padding: 14px 24px; cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); border-bottom: 2px solid transparent; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px; }
+    .product-tab:hover { color: var(--royal-blue-light); background: rgba(26,58,255,0.05); }
+    .product-tab.active { color: var(--gold); border-bottom-color: var(--gold); background: rgba(255,215,0,0.03); }
+    .p-tab-content { animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    .tech-spec-row { background: var(--dark-card); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--dark-border); margin-bottom: 8px; display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; }
+    .product-admin-thumb { width: 40px; height: 40px; border-radius: 6px; object-fit: cover; border: 1px solid var(--dark-border); }
+    .admin-nav-badge { background: var(--error); color: white; font-size: 0.65rem; padding: 2px 6px; border-radius: 10px; margin-left: auto; display: none; height: 18px; width: 18px; align-items: center; justify-content: center; }
+    .btn-icon { width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 6px; cursor: pointer; }
+    .modal-overlay { z-index: 1000; }
+    .modal-body { max-height: 75vh; overflow-y: auto; }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN GATE -->
+<div id="loginGate" style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--dark-bg);position:relative;overflow:hidden">
+  <div class="card" style="width:100%;max-width:420px;position:relative;z-index:1;border-color:rgba(255,215,0,0.2)">
+    <div style="text-align:center;margin-bottom:32px">
+      <div class="logo-icon" style="margin:0 auto 16px;width:56px;height:56px;font-size:1.8rem">🛡️</div>
+      <h2 style="font-family:var(--font-display);font-size:1.8rem;font-weight:700">Admin Portal</h2>
+      <p style="color:var(--text-muted);font-size:0.875rem;margin-top:6px">3D Pixel Printing Management</p>
+    </div>
+    <form onsubmit="event.preventDefault();adminLogin()">
+      <div class="form-group"><label class="form-label">Admin Email</label><input type="email" class="form-control" id="loginEmail" value="admin@3dpixelprinting.in" required></div>
+      <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-control" id="loginPass" value="Admin@2025" required></div>
+      <div class="form-group"><select class="form-control" id="loginRole"><option value="superadmin">Super Admin</option><option value="subadmin">Sub Admin</option></select></div>
+      <button type="submit" class="btn btn-gold w-full btn-lg" style="width:100%"><i class="fas fa-shield-alt"></i> Secure Login</button>
+    </form>
+  </div>
+</div>
+
+<!-- ADMIN LAYOUT -->
+<div id="adminLayout" style="display:none">
+  <div class="admin-sidebar" id="adminSidebar">
+    <div class="admin-sidebar-header"><div class="logo-text" style="font-size:1.1rem">3D Pixel <span>Printing</span></div></div>
+    <div class="admin-nav">
+      <div class="admin-nav-section">
+        <div class="admin-nav-item active" onclick="adminNav('overview', this)">📊 Dashboard</div>
+        <div class="admin-nav-item" id="nav-orders" onclick="adminNav('orders', this)">📦 Orders <span class="admin-nav-badge" id="badge-orders">0</span></div>
+        <div class="admin-nav-item" onclick="adminNav('products', this)">🖨️ Products</div>
+        <div class="admin-nav-item" id="nav-stl" onclick="adminNav('stl', this)">📐 STL Manager <span class="admin-nav-badge" id="badge-stl">0</span></div>
+        <div class="admin-nav-item" onclick="adminNav('docs', this)">📄 Documents</div>
+      </div>
+      <div class="admin-nav-section"><div class="admin-nav-section-title">Services</div>
+        <div class="admin-nav-item" onclick="adminNav('pricing', this)">💰 Pricing Control</div>
+        <div class="admin-nav-item" onclick="adminNav('calculator', this)">🧮 Quote Calculator</div>
+        <div class="admin-nav-item" onclick="adminNav('service-requests', this)">🔧 Service Requests</div>
+        <div class="admin-nav-item" onclick="adminNav('amc', this)">📋 AMC Plans</div>
+      </div>
+      <div class="admin-nav-section"><div class="admin-nav-section-title">Store Management</div>
+        <div class="admin-nav-item" onclick="adminNav('users', this)">👥 Users</div>
+        <div class="admin-nav-item" onclick="adminNav('coupons', this)">🎟️ Coupons</div>
+        <div class="admin-nav-item" onclick="adminNav('payments', this)">💳 Payments</div>
+        <div class="admin-nav-item" onclick="adminNav('inventory', this)">📦 Inventory</div>
+      </div>
+      <div class="admin-nav-section"><div class="admin-nav-section-title">System</div>
+        <div class="admin-nav-item" onclick="adminNav('analytics', this)">📈 Analytics</div>
+        <div class="admin-nav-item" onclick="adminNav('cms', this)">🖥️ Website Control</div>
+        <div class="admin-nav-item" onclick="adminNav('settings', this)">⚙️ Settings</div>
+      </div>
+      <div class="admin-nav-item" style="color:var(--error); margin-top: 20px;" onclick="adminLogout()">🚪 Logout</div>
+    </div>
+    <div style="padding:16px 20px;border-top:var(--border-glow)"><div id="roleBadge" style="font-size:0.7rem;color:var(--gold)">Super Admin</div></div>
+  </div>
+
+  <div class="admin-main" id="adminMain">
+    <div class="admin-header">
+      <div style="display:flex;align-items:center;gap:15px">
+        <button onclick="toggleSidebar()" style="background:none;color:var(--text-secondary)"><i class="fas fa-bars"></i></button>
+        <h2 id="adminPageTitle">Dashboard Overview</h2>
+      </div>
+      
+      <div style="display:flex;align-items:center;gap:15px">
+        <!-- Database Status Indicator -->
+        <div id="dbStatus" class="db-status-badge connected" title="Database Connection Status" style="display:flex; margin-right:0">
+          <span class="db-status-dot"></span>
+          <span class="db-status-text">DB: Online</span>
+        </div>
+        <a href="index.html" class="btn btn-ghost btn-sm">View Store</a>
+      </div>
+    </div>
+    <div class="admin-content">
+      <div id="admin-overview">
+        <div class="grid-4" style="margin-bottom:28px"><div class="stat-card blue"><div class="stat-label">Revenue</div><div class="stat-value" id="stat-revenue">₹0</div></div><div class="stat-card gold"><div class="stat-label">Orders</div><div class="stat-value" id="stat-orders">0</div></div><div class="stat-card green"><div class="stat-label">Avg Order</div><div class="stat-value" id="stat-avg">₹0</div></div><div class="stat-card red"><div class="stat-label">Pending</div><div class="stat-value" id="stat-pending">0</div></div></div>
+        <div class="grid-2"><div class="card"><h3>Revenue Trend</h3><div style="height:200px"><canvas id="revenueChart"></canvas></div></div><div class="card"><h3>Category Split</h3><div style="height:200px"><canvas id="categoryChart"></canvas></div></div></div>
+        <div class="grid-2 mt-4" style="margin-top:20px"><div class="card"><h3>Recent Orders</h3><table class="table"><tbody id="overviewOrdersTable"></tbody></table></div><div class="card"><h3>⚠️ Low Stock</h3><div id="lowStockList"></div></div></div>
+      </div>
+      <div id="admin-orders" style="display:none">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;gap:12px"><input type="text" class="form-control" id="orderSearch" placeholder="Search ID or Customer..." oninput="filterAdminOrders()" style="max-width:300px"><select class="form-control" id="orderStatusFilter" onchange="filterAdminOrders()" style="width:auto"><option value="all">All Statuses</option><option value="pending">Pending</option><option value="printing">Printing</option><option value="shipped">Shipped</option><option value="delivered">Delivered</option></select></div>
+        <div class="table-wrapper"><table class="table"><thead><tr><th>ID</th><th>Customer</th><th>Email</th><th>Items</th><th>Amount</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead><tbody id="adminOrdersTable"></tbody></table></div>
+      </div>
+      <div id="admin-products" style="display:none">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; gap:15px; flex-wrap:wrap">
+          <div style="display:flex; gap:10px; flex:1; min-width:300px">
+            <div style="position:relative; flex:1">
+              <i class="fas fa-search" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--text-muted)"></i>
+              <input type="text" id="productSearch" class="form-control" placeholder="Search name or SKU..." style="padding-left:35px" oninput="renderAdminProducts()">
+            </div>
+            <select id="productCatFilter" class="form-control" style="width:160px" onchange="renderAdminProducts()">
+              <option value="all">All Categories</option>
+              <!-- Categories will be dynamically injected -->
+            </select>
+            <select id="productStockFilter" class="form-control" style="width:140px" onchange="renderAdminProducts()">
+              <option value="all">All Stock</option>
+              <option value="active">In Stock</option>
+              <option value="low">Low Stock</option>
+              <option value="out">Out of Stock</option>
+            </select>
+          </div>
+          <button class="btn btn-gold" onclick="openAddProductModal()">+ Add Product</button>
+        </div>
+        <div class="table-wrapper">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>SKU</th>
+                <th>Img</th>
+                <th>Product</th>
+                <th>Brand</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="adminProductsTable"></tbody>
+          </table>
+        </div>
+      </div>
+      <div id="admin-stl" style="display:none">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; background:rgba(255,215,0,0.05); padding:15px; border-radius:8px; border:1px solid var(--border-glow)">
+          <div style="display:flex; gap:15px; align-items:center">
+            <span style="font-size:0.8rem; font-weight:700; color:var(--gold)">BULK ACTIONS:</span>
+            <select id="bulkSTLStatus" class="form-control" style="width:150px; font-size:0.8rem">
+              <option value="">Change Status...</option>
+              <option value="pending">Pending</option>
+              <option value="slicing">Slicing</option>
+              <option value="queued">Queued</option>
+              <option value="printing">Printing</option>
+              <option value="processing">Post-Processing</option>
+              <option value="ready">Ready for Dispatch</option>
+              <option value="shipped">Shipped</option>
+            </select>
+            <button class="btn btn-gold btn-sm" onclick="applyBulkSTLStatus()">Apply</button>
+          </div>
+          <div style="display:flex; gap:10px">
+            <input type="text" id="stlSearch" class="form-control" placeholder="Search filename or job ID..." style="width:250px" oninput="renderSTLManager()">
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table class="table">
+            <thead>
+              <tr>
+                <th style="width:40px"><input type="checkbox" onclick="toggleAllSTL(this.checked)"></th>
+                <th>Model</th>
+                <th>Job ID</th>
+                <th>Customer</th>
+                <th>Machine</th>
+                <th>Weight</th>
+                <th>Workflow Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="stlManagerTable"></tbody>
+          </table>
+        </div>
+      </div>
+      <div id="admin-docs" style="display:none">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px">
+          <h3>📄 Documents & Billing</h3>
+          <div style="display:flex; gap:10px">
+            <button class="btn btn-gold btn-sm" onclick="openManualDocModal()">+ Create Manual Document</button>
+            <select id="docTypeFilter" class="form-control" style="width:150px" onchange="renderDocuments()">
+              <option value="all">All Documents</option>
+              <option value="invoice">Invoices Only</option>
+              <option value="quote">Quotations Only</option>
+            </select>
+            <input type="text" id="docSearch" class="form-control" placeholder="Search Customer or ID..." style="width:250px" oninput="renderDocuments()">
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Doc #</th>
+                <th>Customer</th>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="docsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div id="admin-pricing" style="display:none">
+        <div style="text-align:right;margin-bottom:20px"><button class="btn btn-royal" onclick="savePricingConfig()">Save All Changes</button></div>
+        <div class="grid-2">
+          <div class="card">
+            <h3>⚡ Rates & Baseline</h3>
+            <div class="grid-2">
+              <div class="form-group"><label class="form-label">Elec (₹/kWh)</label><input type="number" id="cfgElec" class="form-control"></div>
+              <div class="form-group"><label class="form-label">Labor (₹/h)</label><input type="number" id="cfgLabor" class="form-control"></div>
+              <div class="form-group"><label class="form-label">Depr (₹/h)</label><input type="number" id="cfgDepr" class="form-control"></div>
+              <div class="form-group"><label class="form-label">Maint (₹/g)</label><input type="number" step="0.01" id="cfgMaint" class="form-control"></div>
+              <div class="form-group"><label class="form-label">Printer Watt</label><input type="number" id="cfgWatt" class="form-control"></div>
+              <div class="form-group"><label class="form-label">GST (%)</label><input type="number" id="cfgGst" class="form-control"></div>
+              <div class="divider" style="grid-column:1/-1"></div>
+              <div class="form-group"><label class="form-label">Setup Fee (₹)</label><input type="number" id="cfgSetupFee" class="form-control" title="Fixed charge per job for setup/slicing"></div>
+              <div class="form-group"><label class="form-label">Filament Base (₹/kg)</label><input type="number" id="cfgFilBase" class="form-control"></div>
+              <div class="form-group"><label class="form-label">Resin Base (₹/L)</label><input type="number" id="cfgResBase" class="form-control"></div>
+              <div class="form-group"><label class="form-label">Failed Buffer (%)</label><input type="number" id="cfgFailBuffer" class="form-control" title="Extra margin for potential print failures"></div>
+            </div>
+          </div>
+          <div class="card"><h3>📈 Business</h3><div class="grid-2"><div class="form-group"><label class="form-label">Overhead (%)</label><input type="number" id="cfgOverhead" class="form-control"></div><div class="form-group"><label class="form-label">Profit (%)</label><input type="number" id="cfgProfit" class="form-control"></div><div class="form-group"><label class="form-label">Min Ship</label><input type="number" id="cfgShipMin" class="form-control"></div><div class="form-group"><label class="form-label">Free Threshold</label><input type="number" id="cfgShipFree" class="form-control"></div></div></div>
+        </div>
+        <div class="card mt-4" style="margin-top:20px">
+          <div style="display:flex;justify-content:space-between"><h3>📈 Bulk Discount Tiers</h3><button class="btn btn-sm" onclick="addBulkTierRow()">+ Add Tier</button></div>
+          <table class="table"><thead><tr><th>Min Qty</th><th>Max Qty</th><th>Discount (%)</th><th>Action</th></tr></thead><tbody id="bulkTiersConfigTable"></tbody></table>
+        </div>
+
+        <div class="grid-2 mt-4" style="margin-top:20px">
+          <div class="card">
+            <h3>🌍 Regional Pricing</h3>
+            <div class="form-group"><label class="form-label">Domestic Tax (%)</label><input type="number" id="regDomTax" class="form-control"></div>
+            <div class="form-group"><label class="form-label">Domestic Ship Mult</label><input type="number" step="0.1" id="regDomShip" class="form-control"></div>
+            <div class="divider"></div>
+            <div class="form-group"><label class="form-label">International Tax (%)</label><input type="number" id="regIntTax" class="form-control"></div>
+            <div class="form-group"><label class="form-label">International Ship Mult</label><input type="number" step="0.1" id="regIntShip" class="form-control"></div>
+            <div class="form-group"><label class="form-label">Customs Fee (₹)</label><input type="number" id="regIntCustoms" class="form-control"></div>
+          </div>
+          <div class="card">
+            <h3>🕒 Time-based Surcharges (%)</h3>
+            <div class="form-group"><label class="form-label">Rush Surcharge</label><input type="number" id="timeRush" class="form-control"></div>
+            <div class="form-group"><label class="form-label">Weekend Surcharge</label><input type="number" id="timeWeekend" class="form-control"></div>
+            <div class="form-group"><label class="form-label">Holiday Surcharge</label><input type="number" id="timeHoliday" class="form-control"></div>
+          </div>
+        </div>
+
+        <div class="card mt-4" style="margin-top:20px">
+          <div style="display:flex;justify-content:space-between"><h3>📊 Volume-based Pricing Breaks</h3><button class="btn btn-sm" onclick="addVolumeBreakRow()">+ Add Break</button></div>
+          <table class="table"><thead><tr><th>Max Volume (cm³)</th><th>Price Multiplier</th><th>Action</th></tr></thead><tbody id="volumeBreaksConfigTable"></tbody></table>
+        </div>
+
+        <div class="card mt-4" style="margin-top:20px"><div style="display:flex;justify-content:space-between"><h3>🔧 Service Availability</h3><div class="grid-4"><div class="form-group"><label class="form-label">Design</label><select id="statusDesign" class="form-control"><option value="active">Active</option><option value="maintenance">Stop</option><option value="coming_soon">Soon</option><option value="disabled">Hide</option></select></div><div class="form-group"><label class="form-label">Repair</label><select id="statusRepair" class="form-control"><option value="active">Active</option><option value="maintenance">Stop</option><option value="coming_soon">Soon</option><option value="disabled">Hide</option></select></div><div class="form-group"><label class="form-label">AMC</label><select id="statusAMC" class="form-control"><option value="active">Active</option><option value="maintenance">Stop</option></select></div><div class="form-group"><label class="form-label">Print</label><select id="statusPrinting" class="form-control"><option value="active">Active</option><option value="maintenance">Stop</option></select></div></div></div>
+        <div class="card mt-4" style="margin-top:20px"><div style="display:flex;justify-content:space-between"><h3>🎨 Design Studio Control</h3><button class="btn btn-sm" onclick="addDesignServiceRow()">+ Add</button></div><table class="table"><thead><tr><th>Name</th><th>Description</th><th>Price</th><th>Icon</th><th>Status</th><th>Action</th></tr></thead><tbody id="designServicesConfigTable"></tbody></table></div>
+        <div class="card mt-4" style="margin-top:20px"><div style="display:flex;justify-content:space-between"><h3>📦 Materials & Density</h3><button class="btn btn-sm" onclick="addMaterialRow()">+ Add</button></div><table class="table"><thead><tr><th>Name</th><th>Price</th><th>Unit</th><th>Density</th><th>Color</th><th>Action</th></tr></thead><tbody id="materialsConfigTable"></tbody></table></div>
+        <div class="grid-2 mt-4" style="margin-top:20px"><div class="card"><div style="display:flex;justify-content:space-between"><h3>🏷️ Categories</h3><button class="btn btn-sm" onclick="addCategoryRow()">+</button></div><table class="table"><thead><tr><th>Name</th><th>Slug</th><th>Action</th></tr></thead><tbody id="categoriesConfigTable"></tbody></table></div><div class="card"><div style="display:flex;justify-content:space-between"><h3>🏢 Brands</h3><button class="btn btn-sm" onclick="addBrandRow()">+</button></div><table class="table"><thead><tr><th>Name</th><th>Status</th><th>Action</th></tr></thead><tbody id="brandsConfigTable"></tbody></table></div></div>
+        <div class="grid-2 mt-4" style="margin-top:20px"><div class="card"><div style="display:flex;justify-content:space-between"><h3>🎨 Colors</h3><button class="btn btn-sm" onclick="addColorRow()">+</button></div><table class="table"><thead><tr><th>Name</th><th>Hex</th><th>Action</th></tr></thead><tbody id="colorsConfigTable"></tbody></table></div><div class="card"><div style="display:flex;justify-content:space-between"><h3>📏 Layer Heights</h3><button class="btn btn-sm" onclick="addLayerHeightRow()">+</button></div><table class="table"><thead><tr><th>Name</th><th>Val</th><th>Mult</th><th>Action</th></tr></thead><tbody id="layerHeightsConfigTable"></tbody></table></div></div>
+        <div class="card mt-4" style="margin-top:20px"><div style="display:flex;justify-content:space-between"><h3>✨ Finishes</h3><button class="btn btn-sm" onclick="addFinishRow()">+</button></div><table class="table"><thead><tr><th>Name</th><th>Fee</th><th>Action</th></tr></thead><tbody id="finishesConfigTable"></tbody></table></div>
+      </div>
+      <div id="admin-users" style="display:none"><h3>👥 Registered Users</h3><table class="table"><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Joined</th><th>Status</th><th>Action</th></tr></thead><tbody id="usersTable"></tbody></table></div>
+      <div id="admin-coupons" style="display:none"><div style="text-align:right;margin-bottom:20px"><button class="btn btn-gold" onclick="openCouponModal()">+ Create Coupon</button></div><table class="table"><thead><tr><th>Code</th><th>Type</th><th>Value</th><th>Min</th><th>Uses</th><th>Status</th><th>Action</th></tr></thead><tbody id="couponsTable"></tbody></table></div>
+      <div id="admin-calculator" style="display:none">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px">
+          <div>
+            <h3 style="margin:0">🧮 3D Production Quote Engine</h3>
+            <p style="color:var(--text-muted); font-size:0.8rem; margin-top:4px">Professional multi-model estimation for industrial clients</p>
+          </div>
+          <div style="display:flex; gap:10px">
+            <button class="btn btn-outline btn-sm" onclick="resetCalculator()"><i class="fas fa-undo"></i> Clear All</button>
+            <button class="btn btn-gold btn-sm" onclick="createManualSTLJob()"><i class="fas fa-plus"></i> Create Multi-Part Job</button>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 380px; gap:20px; align-items:start">
+          <!-- Main Workspace -->
+          <div>
+            <!-- Client & Global Config -->
+            <div class="card" style="margin-bottom:20px; border-left:4px solid var(--royal-blue-light)">
+              <div class="grid-3" style="gap:15px">
+                <div class="form-group" style="margin:0">
+                  <label class="form-label">Client / Customer</label>
+                  <select id="calcCustomer" class="form-control">
+                    <option value="">-- Guest / Walk-in --</option>
+                  </select>
+                </div>
+                <div class="form-group" style="margin:0">
+                  <label class="form-label">Primary Machine</label>
+                  <select id="calcMachine" class="form-control" onchange="calculateAdminQuote()">
+                    <option value="Standard FDM">Bambu Lab X1C (Standard)</option>
+                    <option value="Large FDM">RatRig V-Core (Large Scale)</option>
+                    <option value="Precision Resin">Anycubic M5s (SLA)</option>
+                  </select>
+                </div>
+                <div class="form-group" style="margin:0">
+                  <label class="form-label">Tax Configuration</label>
+                  <select id="calcTaxConfig" class="form-control" onchange="calculateAdminQuote()">
+                    <option value="18">GST 18% (Standard)</option>
+                    <option value="12">GST 12% (Services)</option>
+                    <option value="0">Zero Tax (SEZ / Export)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Model List -->
+            <div class="card" style="padding:0; overflow:hidden">
+              <div style="padding:15px 20px; background:rgba(255,255,255,0.02); border-bottom:1px solid var(--dark-border); display:flex; justify-content:space-between; align-items:center">
+                <h4 style="margin:0; font-size:0.9rem">Added Models (<span id="calcItemCount">0</span>)</h4>
+                <button class="btn btn-outline btn-xs" onclick="document.getElementById('calcUploadInput').click()">+ Upload STL</button>
+              </div>
+              <input type="file" id="calcUploadInput" style="display:none" accept=".stl" onchange="handleCalcUpload(event)">
+              
+              <div id="calcItemsList" style="min-height:200px; max-height:500px; overflow-y:auto">
+                <!-- Multi-model rows injected here -->
+                <div id="calcEmptyState" style="text-align:center; padding:60px; color:var(--text-muted)">
+                  <i class="fas fa-cubes" style="font-size:3rem; margin-bottom:15px; opacity:0.2"></i>
+                  <p>No models added yet. Upload an STL or add manually.</p>
+                </div>
+              </div>
+              
+              <div style="padding:15px; text-align:center; border-top:1px solid var(--dark-border)">
+                <button class="btn btn-ghost btn-sm" onclick="addManualItem()">+ Add Item Manually</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sidebar Summary -->
+          <div class="card" style="position:sticky; top:20px; background:rgba(255,215,0,0.02); border:1px solid rgba(255,215,0,0.1)">
+            <h4 style="margin-bottom:20px; color:var(--gold)"><i class="fas fa-file-invoice-dollar"></i> Global Summary</h4>
+            
+            <div style="display:flex; flex-direction:column; gap:12px">
+              <div style="display:flex; justify-content:space-between"><span>Production Cost:</span> <span id="resProdCost">₹0</span></div>
+              <div style="display:flex; justify-content:space-between"><span>Total Post-Processing:</span> <span id="resFinishCost">₹0</span></div>
+              <div style="display:flex; justify-content:space-between"><span>Admin Overhead:</span> <span id="resOverhead">₹0</span></div>
+              
+              <div class="divider" style="margin:5px 0"></div>
+              
+              <div style="display:flex; justify-content:space-between; font-weight:600"><span>Subtotal (Net):</span> <span id="resNetTotal">₹0</span></div>
+              <div style="display:flex; justify-content:space-between; color:var(--success)"><span>Profit Margin:</span> <span id="resProfit">₹0</span></div>
+              <div style="display:flex; justify-content:space-between"><span>GST Component:</span> <span id="resGst">₹0</span></div>
+              
+              <div style="background:var(--dark-bg); padding:20px; border-radius:12px; margin-top:10px; border:1px solid var(--gold); text-align:center">
+                <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px">Final Total Quote</div>
+                <div style="font-size:2.5rem; font-weight:900; color:var(--gold); margin:5px 0" id="resTotal">₹0</div>
+                <div id="resPerModel" style="font-size:0.75rem; color:var(--text-secondary)">₹0 avg per model</div>
+              </div>
+            </div>
+
+            <div style="margin-top:20px; display:flex; flex-direction:column; gap:10px">
+              <button class="btn btn-royal w-full" onclick="generateQuotation()"><i class="fas fa-file-pdf"></i> Generate Official Quote</button>
+              <button class="btn btn-outline btn-sm w-full" onclick="copyCalculatorBreakdown()"><i class="fas fa-copy"></i> Copy Text Summary</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="admin-service-requests" style="display:none"><h3>🔧 Service Queue</h3><table class="table"><thead><tr><th>ID</th><th>Customer</th><th>Issue</th><th>Status</th><th>Action</th></tr></thead><tbody id="repairTableBody"></tbody></table></div>
+       <div id="admin-amc" style="display:none">
+         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px">
+           <h3>📋 AMC Plans Management</h3>
+           <div style="display:flex; gap:10px">
+             <button class="btn btn-gold" onclick="openCreateAMCModal()"><i class="fas fa-plus"></i> New AMC</button>
+             <button class="btn btn-outline" onclick="exportAMC()"><i class="fas fa-download"></i> Export</button>
+           </div>
+         </div>
+         
+         <div class="card" style="margin-bottom:20px">
+           <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:15px">
+             <div class="form-group">
+               <input type="text" id="amcSearch" class="form-control" placeholder="Search customers or plans..." oninput="searchAMC()">
+             </div>
+             <div class="form-group">
+               <select id="filterStatus" class="form-control" onchange="searchAMC()">
+                 <option value="all">All Status</option>
+                 <option value="active">Active</option>
+                 <option value="expired">Expired</option>
+                 <option value="pending">Pending</option>
+               </select>
+             </div>
+             <div class="form-group">
+               <select id="filterLevel" class="form-control" onchange="searchAMC()">
+                 <option value="all">All Levels</option>
+                 <option value="Basic">Basic</option>
+                 <option value="Standard">Standard</option>
+                 <option value="Premium">Premium</option>
+                 <option value="Enterprise">Enterprise</option>
+               </select>
+             </div>
+             <button class="btn btn-ghost" onclick="resetAMCFilters()"><i class="fas fa-sync"></i> Reset</button>
+           </div>
+         </div>
+         
+         <div class="card">
+           <table class="table">
+             <thead>
+               <tr>
+                 <th>ID</th>
+                 <th>Customer</th>
+                 <th>Plan</th>
+                 <th>Level</th>
+                 <th>Expiry</th>
+                 <th>Status</th>
+                 <th>Actions</th>
+               </tr>
+             </thead>
+             <tbody id="amcTableBody"></tbody>
+           </table>
+           <div id="amcLoading" style="text-align:center; padding:40px; display:none">
+             <div class="loading-spinner"></div>
+             <div style="color:var(--text-muted); margin-top:10px">Loading AMC plans...</div>
+           </div>
+         </div>
+       </div>
+      <div id="admin-payments" style="display:none"><h3>💳 Payments</h3><table class="table"><thead><tr><th>Txn ID</th><th>Order</th><th>Amount</th><th>Status</th><th>Action</th></tr></thead><tbody id="paymentsTable"></tbody></table></div>
+      <div id="admin-analytics" style="display:none">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px">
+          <h3>📈 Comprehensive Analytics</h3>
+          <button class="btn btn-ghost btn-sm" onclick="renderAnalyticsCharts()"><i class="fas fa-sync"></i> Refresh Data</button>
+        </div>
+        
+        <div class="grid-4" style="margin-bottom:20px">
+          <div class="stat-card blue">
+            <div class="stat-label">Total Revenue</div>
+            <div class="stat-value" id="analytics-total-rev">₹0</div>
+          </div>
+          <div class="stat-card gold">
+            <div class="stat-label">Total Transactions</div>
+            <div class="stat-value" id="analytics-total-orders">0</div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-label">Total Users</div>
+            <div class="stat-value" id="analytics-total-users">0</div>
+          </div>
+          <div class="stat-card red">
+            <div class="stat-label">Active AMC Plans</div>
+            <div class="stat-value" id="analytics-active-amc">0</div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <h4>Revenue Breakdown (7 Days)</h4>
+            <div style="height:300px"><canvas id="salesChartFull"></canvas></div>
+          </div>
+          <div class="card">
+            <h4>User Acquisition (7 Days)</h4>
+            <div style="height:300px"><canvas id="userGrowthChart"></canvas></div>
+          </div>
+        </div>
+      </div>
+      <div id="admin-cms" style="display:none">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px">
+          <h3>🖥️ Website Content Manager (CMS)</h3>
+          <div style="display:flex; gap:10px">
+            <button class="btn btn-gold" onclick="saveCMSConfig()"><i class="fas fa-save"></i> Publish Changes</button>
+          </div>
+        </div>
+        
+        <div class="grid-2">
+          <div class="card" style="border-top:4px solid var(--royal-blue-main)">
+            <h4 style="margin-bottom:15px"><i class="fas fa-bullhorn"></i> Announcement Bar</h4>
+            <div class="form-group">
+              <label>HTML Content</label>
+              <textarea id="cmsAnnouncement" class="form-control" rows="3" placeholder="<strong>Free Shipping</strong> on orders..."></textarea>
+              <p style="font-size:0.75rem; color:var(--text-muted); margin-top:5px">Supports basic HTML like &lt;strong&gt;, &lt;i class="fas fa-icon"&gt;&lt;/i&gt;</p>
+            </div>
+          </div>
+
+          <div class="card" style="border-top:4px solid var(--gold)">
+            <h4 style="margin-bottom:15px"><i class="fas fa-image"></i> Homepage Hero Section</h4>
+            <div class="form-group">
+              <label>Main Headline</label>
+              <input type="text" id="cmsHeroTitle" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>Subtitle / Description</label>
+              <textarea id="cmsHeroSubtitle" class="form-control" rows="2"></textarea>
+            </div>
+            <div class="grid-2">
+              <div class="form-group"><label>Button Text</label><input type="text" id="cmsHeroBtnText" class="form-control"></div>
+              <div class="form-group"><label>Button Link</label><input type="text" id="cmsHeroBtnLink" class="form-control"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card" style="margin-top:20px; border-top:4px solid var(--success)">
+          <h4 style="margin-bottom:15px"><i class="fas fa-info-circle"></i> About Section (Footer/Contact)</h4>
+          <div class="form-group">
+            <label>About Us Short Text</label>
+            <textarea id="cmsAboutText" class="form-control" rows="3"></textarea>
+          </div>
+        </div>
+      </div>
+      <div id="admin-inventory" style="display:none"><h3>📦 Inventory Manager</h3><table class="table"><thead><tr><th>SKU</th><th>Product</th><th>Stock</th><th>Alert</th><th>Status</th><th>Action</th></tr></thead><tbody id="inventoryTable"></tbody></table></div>
+      <div id="admin-settings" style="display:none">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px">
+          <h3>⚙️ Global Store Management</h3>
+          <div style="display:flex; gap:10px">
+            <button class="btn btn-outline" onclick="loadGlobalSettings()"><i class="fas fa-sync"></i> Refresh</button>
+            <button class="btn btn-gold" onclick="saveGlobalSettings()"><i class="fas fa-save"></i> Save All Settings</button>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <!-- Store Identity & Maintenance -->
+          <div class="card" style="border-top:4px solid var(--royal-blue-main)">
+            <h4 style="margin-bottom:15px"><i class="fas fa-store"></i> Store Identity</h4>
+            <div class="form-group"><label>Store Name</label><input id="cfgStoreName" class="form-control" type="text"></div>
+            <div class="form-group"><label>Support Email</label><input id="cfgSupportEmail" class="form-control" type="email"></div>
+            <div class="form-group"><label>Contact Number</label><input id="cfgSupportPhone" class="form-control" type="text"></div>
+            
+            <div style="margin-top:20px; padding:15px; background:rgba(255,75,43,0.05); border:1px solid rgba(255,75,43,0.2); border-radius:8px">
+              <label style="display:flex; align-items:center; gap:10px; cursor:pointer; margin:0">
+                <input type="checkbox" id="cfgMaintenance" style="width:20px; height:20px; accent-color:var(--error)">
+                <div>
+                  <div style="font-weight:700; color:var(--error)">Maintenance Mode</div>
+                  <div style="font-size:0.75rem; color:var(--text-muted)">Disables checkout and shows a "We'll be right back" page to customers.</div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Financial & Taxes -->
+          <div class="card" style="border-top:4px solid var(--success)">
+            <h4 style="margin-bottom:15px"><i class="fas fa-coins"></i> Financial & Taxes</h4>
+            <div class="grid-2" style="gap:15px">
+              <div class="form-group">
+                <label>Global GST (%)</label>
+                <input id="cfgTaxGst" class="form-control" type="number" min="0" max="100">
+              </div>
+              <div class="form-group">
+                <label>Free Shipping Threshold (₹)</label>
+                <input id="cfgFreeShipping" class="form-control" type="number" min="0">
+              </div>
+            </div>
+            
+            <h5 style="margin-top:15px; margin-bottom:10px; color:var(--text-muted); font-size:0.8rem; text-transform:uppercase">Payment Gateways</h5>
+            <div class="form-group"><label>Razorpay Key ID</label><input type="password" id="cfgRzpKey" class="form-control" placeholder="rzp_live_..."></div>
+            <div class="form-group"><label>Stripe Publishable Key</label><input type="password" id="cfgStripeKey" class="form-control" placeholder="pk_live_..."></div>
+          </div>
+        </div>
+
+        <div class="grid-2" style="margin-top:20px">
+          <!-- Notification Engine -->
+          <div class="card" style="border-top:4px solid var(--gold)">
+            <h4 style="margin-bottom:15px"><i class="fas fa-bell"></i> Notification Engine</h4>
+            <div class="grid-2" style="gap:15px">
+              <div class="form-group"><label>SMTP Host</label><input id="cfgSmtpHost" class="form-control"></div>
+              <div class="form-group"><label>SMTP Port</label><input id="cfgSmtpPort" class="form-control" type="number"></div>
+              <div class="form-group" style="grid-column:1/-1"><label>SMTP User/Email</label><input id="cfgSmtpUser" class="form-control"></div>
+            </div>
+            
+            <h5 style="margin-top:15px; margin-bottom:10px; color:var(--text-muted); font-size:0.8rem; text-transform:uppercase">Automated Emails</h5>
+            <div style="display:flex; flex-direction:column; gap:10px">
+              <label style="display:flex; align-items:center; gap:8px"><input type="checkbox" id="cfgNotifyOrder" style="accent-color:var(--gold)"> Send Order Confirmations</label>
+              <label style="display:flex; align-items:center; gap:8px"><input type="checkbox" id="cfgNotifyStl" style="accent-color:var(--gold)"> Send STL Print Updates</label>
+              <label style="display:flex; align-items:center; gap:8px"><input type="checkbox" id="cfgNotifyAmc" style="accent-color:var(--gold)"> Send AMC Expiry Reminders</label>
+            </div>
+          </div>
+
+          <!-- Social Links -->
+          <div class="card" style="border-top:4px solid #ff4b2b">
+            <h4 style="margin-bottom:15px"><i class="fas fa-share-alt"></i> Social Media & Footer</h4>
+            <div class="form-group">
+              <label><i class="fab fa-instagram" style="color:#E1306C"></i> Instagram URL</label>
+              <input id="cfgSocialInsta" class="form-control" placeholder="https://instagram.com/...">
+            </div>
+            <div class="form-group">
+              <label><i class="fab fa-twitter" style="color:#1DA1F2"></i> Twitter / X URL</label>
+              <input id="cfgSocialTwitter" class="form-control" placeholder="https://twitter.com/...">
+            </div>
+            <div class="form-group">
+              <label><i class="fab fa-whatsapp" style="color:#25D366"></i> WhatsApp URL</label>
+              <input id="cfgSocialWhatsapp" class="form-control" placeholder="https://wa.me/...">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="manualDocModal">
+  <div class="modal" style="max-width:950px; padding:0">
+    <div class="modal-header" style="padding:20px 24px; border-bottom:1px solid var(--dark-border)">
+      <div>
+        <h3 id="manualDocTitle">PRO Billing Console</h3>
+        <p style="font-size:0.8rem; color:var(--text-muted); margin:0">Professional invoice & quotation generator</p>
+      </div>
+      <button class="btn-close" onclick="closeManualDocModal()">✕</button>
+    </div>
+    <div class="modal-body" style="padding:24px">
+      <div class="grid-4" style="margin-bottom:20px; gap:15px">
+        <div class="form-group" style="grid-column: span 2">
+          <label class="form-label">Client / Account</label>
+          <select id="manualCustSelect" class="form-control" onchange="syncManualCustomer(this.value)">
+            <option value="">-- Manual Entry --</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Doc Number (Optional)</label>
+          <input type="text" id="manualDocNum" class="form-control" placeholder="e.g. 2025/001">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Date</label>
+          <input type="date" id="manualDocDate" class="form-control">
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:20px; gap:15px">
+        <div class="form-group">
+          <label class="form-label">Billing Name</label>
+          <input type="text" id="manualCustName" class="form-control" placeholder="Client Legal Name">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Location / GSTIN</label>
+          <input type="text" id="manualCustAddr" class="form-control" placeholder="City, State or Tax ID">
+        </div>
+      </div>
+
+      <div style="background:rgba(255,215,0,0.02); padding:15px; border-radius:8px; border:1px solid rgba(255,215,0,0.1); margin-bottom:20px; display:flex; gap:15px; align-items:center">
+        <span style="font-size:0.8rem; font-weight:700; color:var(--gold)">QUICK ADD:</span>
+        <select id="quickProductPicker" class="form-control" style="flex:1" onchange="addSelectedProductToDoc(this.value)">
+          <option value="">-- Search Catalog (Products / Materials) --</option>
+        </select>
+        <button class="btn btn-ghost btn-sm" onclick="addManualDocRow()">+ Blank Row</button>
+      </div>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Description</th>
+            <th style="width:80px">Qty</th>
+            <th style="width:130px">Unit Price</th>
+            <th style="width:100px">GST %</th>
+            <th style="width:120px">Total</th>
+            <th style="width:40px"></th>
+          </tr>
+        </thead>
+        <tbody id="manualDocItems"></tbody>
+      </table>
+
+      <div class="grid-2" style="margin-top:30px; gap:30px">
+        <div>
+          <h4 style="font-size:0.85rem; color:var(--text-muted); text-transform:uppercase; margin-bottom:10px">Notes & Terms</h4>
+          <textarea id="manualDocTerms" class="form-control" rows="4" placeholder="e.g. 50% advance required. Delivery within 7 working days."></textarea>
+        </div>
+        <div style="padding:20px; background:var(--dark-surface); border-radius:12px; border:1px solid var(--dark-border); text-align:right">
+          <div style="display:flex; justify-content:space-between; font-size:0.9rem; color:var(--text-muted); margin-bottom:8px"><span>Subtotal:</span> <span id="manualSubtotal">₹0</span></div>
+          <div style="display:flex; justify-content:space-between; font-size:0.9rem; color:var(--text-muted); margin-bottom:8px"><span>GST Amount:</span> <span id="manualGst">₹0</span></div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px">
+            <span style="font-size:0.9rem">Discount:</span>
+            <input type="number" id="manualDiscount" class="form-control" style="width:100px; height:30px; text-align:right" value="0" oninput="calculateManualDocTotal()">
+          </div>
+          <div style="font-size:2.2rem; font-weight:900; color:var(--gold); border-top:1px solid var(--dark-border); padding-top:10px" id="manualGrandTotal">₹0</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer" style="padding:24px; text-align:right; border-top:1px solid var(--dark-border)">
+      <div style="float:left; display:flex; gap:15px">
+        <label style="display:flex; align-items:center; gap:8px; cursor:pointer"><input type="radio" name="manualType" value="invoice" checked onchange="updateManualDocUI()"> TAX INVOICE</label>
+        <label style="display:flex; align-items:center; gap:8px; cursor:pointer"><input type="radio" name="manualType" value="quote" onchange="updateManualDocUI()"> QUOTATION</label>
+      </div>
+      <button class="btn btn-ghost" onclick="closeManualDocModal()">Discard</button>
+      <button class="btn btn-gold" onclick="saveAndPrintManualDoc()"><i class="fas fa-file-invoice"></i> Save & Generate PDF</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="addProductModal">
+  <div class="modal" style="max-width:850px; padding:0">
+    <div class="modal-header" style="padding:20px 24px; border-bottom:1px solid var(--dark-border)"><h3 id="productModalTitle">Product Suite Editor</h3><button class="btn-close" onclick="closeAddProductModal()">✕</button></div>
+    <div style="display:flex; background:var(--dark-surface)"><div class="product-tab active" onclick="switchProductTab('general', this)">General</div><div class="product-tab" onclick="switchProductTab('pricing', this)">Price & Stock</div><div class="product-tab" onclick="switchProductTab('media', this)">Media</div><div class="product-tab" onclick="switchProductTab('tech', this)">Technical Specs</div><div class="product-tab" onclick="switchProductTab('seo', this)">SEO & Discovery</div></div>
+    <div class="modal-body" style="padding:24px">
+      <div id="p-tab-general" class="p-tab-content">
+        <div class="form-group"><label>Name *</label><input type="text" id="productNameField" class="form-control"></div>
+        <div class="grid-2">
+          <div class="form-group"><label>Brand</label><input type="text" id="brandField" class="form-control"></div>
+          <div class="form-group">
+            <label>Category</label>
+            <div style="display:flex; gap:8px">
+              <select id="categoryField" class="form-control" style="flex:1"></select>
+              <button class="btn btn-outline btn-sm" onclick="quickAddCategory()" title="Quick Add Category" type="button" style="width:40px">+</button>
+            </div>
+          </div>
+          <div class="form-group"><label>SKU</label><input type="text" id="skuField" class="form-control" readonly></div>
+          <div class="form-group"><label>Emoji</label><input type="text" id="emojiField" class="form-control"></div>
+        </div>
+        <div class="form-group"><label>Description</label><textarea id="descriptionField" class="form-control" rows="3"></textarea></div>
+        <div class="form-group"><label>Tags</label><input type="text" id="tagsField" class="form-control"></div>
+      </div>
+      <div id="p-tab-pricing" class="p-tab-content" style="display:none">
+        <div class="grid-2">
+          <div class="form-group"><label>Price *</label><input type="number" id="priceField" class="form-control"></div>
+          <div class="form-group"><label>Original Price</label><input type="number" id="originalPriceField" class="form-control"></div>
+          <div class="form-group"><label>Stock *</label><input type="number" id="stockField" class="form-control"></div>
+          <div class="form-group"><label>Alert Level</label><input type="number" id="lowStockField" class="form-control" value="5"></div>
+          <div class="form-group" style="grid-column:1/-1"><label>Badge</label><input type="text" id="badgeField" class="form-control"></div>
+        </div>
+      </div>
+      <div id="p-tab-media" class="p-tab-content" style="display:none">
+        <div style="display:flex; justify-content:space-between; margin-bottom:15px">
+          <button class="btn btn-outline btn-sm" onclick="openMediaLibrary()">
+            <i class="fas fa-images"></i> Browse Library
+          </button>
+          <button class="btn btn-royal btn-sm" onclick="document.getElementById('productImageInput').click()">
+            <i class="fas fa-upload"></i> Upload New
+          </button>
+        </div>
+        <input type="file" id="productImageInput" style="display:none" multiple onchange="handleProductImageUpload(event)">
+        <div style="border:2px dashed var(--dark-border);padding:30px;text-align:center">
+          <div id="imagePreviewContainer" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"></div>
+          <div style="margin-top:10px; color:var(--text-muted); font-size:0.8rem">Images linked to this product</div>
+        </div>
+      </div>
+      <div id="p-tab-tech" class="p-tab-content" style="display:none"><div id="techSpecsList"></div><button class="btn btn-sm" onclick="addTechSpecRow()">+ Add Spec</button></div>
+      <div id="p-tab-seo" class="p-tab-content" style="display:none">
+        <div style="background:rgba(255,215,0,0.05); padding:15px; border-radius:8px; margin-bottom:20px; border:1px solid var(--gold)">
+          <label style="display:flex; align-items:center; gap:10px; cursor:pointer">
+            <input type="checkbox" id="isFeaturedField" style="width:20px; height:20px">
+            <div>
+              <div style="font-weight:700; color:var(--gold)">⭐ Featured Product</div>
+              <div style="font-size:0.75rem; color:var(--text-muted)">Highlight this product on the homepage and at the top of category pages.</div>
+            </div>
+          </label>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Meta Title (SEO)</label>
+          <input type="text" id="metaTitleField" class="form-control" placeholder="Search engine optimized title...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Meta Description (SEO)</label>
+          <textarea id="metaDescriptionField" class="form-control" rows="4" placeholder="Brief summary for search results..."></textarea>
+        </div>
+        <div style="margin-top:20px; padding:15px; background:var(--dark-surface); border-radius:8px">
+          <h5 style="color:var(--text-muted); font-size:0.75rem; margin-bottom:10px">Google Preview</h5>
+          <div style="color:#8ab4f8; font-size:1.1rem; margin-bottom:4px" id="preview-google-title">Product Name | 3D Pixel Printing</div>
+          <div style="color:#00e676; font-size:0.85rem; margin-bottom:4px">https://3dpixelprinting.in/product/...</div>
+          <div style="color:#bdc1c6; font-size:0.8rem" id="preview-google-desc">No description set. Add a meta description to see how your product appears in search results.</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer" style="padding:20px;text-align:right"><button class="btn btn-ghost" onclick="closeAddProductModal()">Cancel</button><button class="btn btn-gold" onclick="saveProduct()">Save Product</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="mediaLibraryModal">
+  <div class="modal" style="max-width:900px">
+    <div class="modal-header"><h3>Media Library</h3><button class="btn-close" onclick="closeMediaLibrary()">✕</button></div>
+    <div class="modal-body">
+      <div id="libraryGallery" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(120px, 1fr)); gap:15px; max-height:500px; overflow-y:auto; padding:5px">
+        <!-- Images will load here -->
+      </div>
+    </div>
+    <div class="modal-footer" style="text-align:right">
+      <button class="btn btn-ghost" onclick="closeMediaLibrary()">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="amcNotesModal">
+  <div class="modal" style="max-width:800px">
+    <div class="modal-header">
+      <div>
+        <h3 style="margin-bottom:5px">🔧 Service Journal</h3>
+        <p id="amcModalSubtitle" style="font-size:0.8rem; color:var(--text-muted); margin:0"></p>
+      </div>
+      <button class="btn-close" onclick="document.getElementById('amcNotesModal').classList.remove('active')">✕</button>
+    </div>
+    <div class="modal-body">
+      <!-- Search & Filters -->
+      <div style="display:flex; gap:10px; margin-bottom:15px">
+        <div style="flex:1; position:relative">
+          <i class="fas fa-search" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--text-muted)"></i>
+          <input type="text" id="noteSearch" class="form-control" placeholder="Search entries..." style="padding-left:35px" oninput="filterAMCNotes()">
+        </div>
+        <select id="filterCategory" class="form-control" style="width:150px" onchange="filterAMCNotes()">
+          <option value="all">All Categories</option>
+          <option value="General">General</option>
+          <option value="Maintenance">Maintenance</option>
+          <option value="Repair">Repair</option>
+          <option value="Communication">Communication</option>
+          <option value="Payment">Payment</option>
+          <option value="Internal">Internal</option>
+        </select>
+      </div>
+
+      <div id="amcNotesList" style="max-height:400px; overflow-y:auto; margin-bottom:20px; padding-right:5px"></div>
+      
+      <div style="background:rgba(255,215,0,0.05); padding:20px; border-radius:12px; border:1px solid var(--gold)">
+        <h4 style="margin-bottom:15px; font-size:1rem; color:var(--gold)">Add New Entry</h4>
+        <div class="grid-3" style="gap:10px; margin-bottom:10px">
+          <div class="form-group">
+            <label class="form-label" style="font-size:0.7rem">Category</label>
+            <select id="newNoteCategory" class="form-control">
+              <option value="General">General</option>
+              <option value="Maintenance">Maintenance</option>
+              <option value="Repair">Repair</option>
+              <option value="Communication">Communication</option>
+              <option value="Payment">Payment</option>
+              <option value="Internal">Internal</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" style="font-size:0.7rem">Action Status</label>
+            <select id="newNoteStatus" class="form-control">
+              <option value="none">Info Only</option>
+              <option value="follow-up">Requires Follow-up</option>
+              <option value="resolved">Resolved</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" style="font-size:0.7rem">Entry Date</label>
+            <input type="datetime-local" id="newNoteDate" class="form-control">
+          </div>
+        </div>
+        <textarea id="newAMCNoteText" class="form-control" rows="3" placeholder="Describe the service performed or interaction..." style="margin-bottom:10px"></textarea>
+        <div style="display:flex; justify-content:space-between; align-items:center">
+          <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:0.85rem">
+            <input type="checkbox" id="newNotePinned"> <i class="fas fa-thumbtack" style="color:var(--gold)"></i> Pin this entry
+          </label>
+          <button class="btn btn-gold" onclick="addAMCNote()">Add to Journal</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer" style="text-align:right">
+      <button class="btn btn-ghost" onclick="document.getElementById('amcNotesModal').classList.remove('active')">Close Window</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="orderDetailModal">
+  <div class="modal" style="max-width:900px">
+    <div class="modal-header">
+      <div>
+        <h3 style="margin-bottom:5px">📦 Order Details <span id="detailOrderId" style="color:var(--gold)"></span></h3>
+        <p id="detailOrderDate" style="font-size:0.8rem; color:var(--text-muted); margin:0"></p>
+      </div>
+      <button class="btn-close" onclick="closeOrderDetailModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="display:flex; gap:20px; margin-bottom:20px">
+        <!-- Main Details -->
+        <div style="flex:2">
+          <div class="grid-2" style="margin-bottom:20px">
+            <div><h4 style="color:var(--royal-blue-light); font-size:0.9rem; margin-bottom:10px">👤 Customer</h4><div id="detailCustName" style="font-weight:600"></div><div id="detailCustEmail"></div><div id="detailCustPhone"></div></div>
+            <div><h4 style="color:var(--royal-blue-light); font-size:0.9rem; margin-bottom:10px">📍 Shipping</h4><div id="detailCustAddr" style="background:var(--dark-surface);padding:10px;border-radius:4px;font-size:0.85rem"></div></div>
+          </div>
+          
+          <table class="table">
+            <thead><tr><th>Item</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead>
+            <tbody id="detailItemsTable"></tbody>
+          </table>
+          
+          <div style="text-align:right; margin-top:20px; padding:15px; background:rgba(255,255,255,0.02); border-radius:8px">
+            <div id="detailSubtotal" style="font-size:0.9rem; color:var(--text-muted)"></div>
+            <div id="detailGst" style="font-size:0.9rem; color:var(--text-muted)"></div>
+            <div style="font-size:1.3rem; font-weight:700; color:var(--gold); margin-top:5px" id="detailGrandTotal"></div>
+            <div id="detailPayMethod" style="font-size:0.75rem; color:var(--text-secondary); margin-top:5px"></div>
+          </div>
+
+          <div style="margin-top:30px">
+            <h4 style="color:var(--gold); font-size:1rem; margin-bottom:15px"><i class="fas fa-sticky-note"></i> Internal Admin Notes</h4>
+            <div id="detailAdminNotesList" style="max-height:150px; overflow-y:auto; margin-bottom:15px"></div>
+            <div style="display:flex; gap:10px">
+              <input type="text" id="newAdminOrderNote" class="form-control" placeholder="Add a private note...">
+              <button class="btn btn-gold btn-sm" onclick="addOrderAdminNote()">Add</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar Timeline -->
+        <div style="flex:1; background:rgba(0,0,0,0.2); padding:20px; border-radius:12px; border-left:1px solid var(--dark-border)">
+          <h4 style="margin-bottom:20px; font-size:0.9rem; color:var(--royal-blue-light)"><i class="fas fa-history"></i> Order Timeline</h4>
+          <div id="detailTimeline" style="position:relative; padding-left:20px">
+            <!-- Timeline items will be injected here -->
+          </div>
+          
+          <div style="margin-top:30px; border-top:1px solid var(--dark-border); padding-top:20px">
+            <label class="form-label" style="font-size:0.75rem">Update Status</label>
+            <select id="detailStatusSelect" class="form-control" style="margin-bottom:10px" onchange="updateOrderStatusFromModal(this.value)">
+              <option value="pending">Pending</option>
+              <option value="printing">Printing</option>
+              <option value="shipped">Shipped</option>
+              <option value="delivered">Delivered</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+            <input type="text" id="statusRemark" class="form-control" placeholder="Optional remark..." style="font-size:0.8rem; margin-bottom:10px">
+            <button class="btn btn-outline btn-sm w-full" onclick="printInvoiceFromDetail()"><i class="fas fa-print"></i> Print Invoice</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="stlJobDetailModal">
+  <div class="modal" style="max-width:950px; padding:0">
+    <div class="modal-header" style="padding:20px 24px; border-bottom:1px solid var(--dark-border)">
+      <div>
+        <h3 style="margin-bottom:5px">📐 STL Production Job <span id="jobDetailId" style="color:var(--gold)"></span></h3>
+        <p id="jobDetailFilename" style="font-size:0.8rem; color:var(--text-muted); margin:0"></p>
+      </div>
+      <button class="btn-close" onclick="closeSTLJobDetailModal()">✕</button>
+    </div>
+    <div style="display:flex; background:var(--dark-surface)">
+      <div class="product-tab active" onclick="switchSTLJobTab('overview', this)">Overview</div>
+      <div class="product-tab" onclick="switchSTLJobTab('production', this)">Production & Slicing</div>
+      <div class="product-tab" onclick="switchSTLJobTab('timeline', this)">Workflow History</div>
+    </div>
+    <div class="modal-body" style="padding:24px">
+      <div id="stl-job-tab-overview" class="stl-tab-content">
+        <div id="stlJobDetailBody"></div>
+      </div>
+      
+      <div id="stl-job-tab-production" class="stl-tab-content" style="display:none">
+        <div class="grid-2">
+          <div class="card">
+            <h4 style="color:var(--gold); margin-bottom:15px"><i class="fas fa-print"></i> Printer Assignment</h4>
+            <div class="form-group">
+              <label class="form-label">Assign Machine</label>
+              <select id="assignPrinterId" class="form-control">
+                <option value="">-- Unassigned --</option>
+                <option value="X1C-01">Bambu Lab X1C-01</option>
+                <option value="X1C-02">Bambu Lab X1C-02</option>
+                <option value="P1S-01">Bambu Lab P1S-01</option>
+                <option value="P1S-02">Bambu Lab P1S-02</option>
+                <option value="A1-01">Bambu Lab A1 Mini</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Estimated Model Weight (g)</label>
+              <input type="number" id="jobWeightEst" class="form-control" placeholder="e.g. 145">
+            </div>
+            <button class="btn btn-gold btn-sm w-full" onclick="updateSTLProduction()">Update Assignment</button>
+          </div>
+          
+          <div class="card">
+            <h4 style="color:var(--royal-blue-light); margin-bottom:15px"><i class="fas fa-layer-group"></i> Slicing Parameters</h4>
+            <div class="grid-2" style="gap:10px">
+              <div class="form-group"><label class="form-label">Wall Loops</label><input type="number" id="specWalls" class="form-control"></div>
+              <div class="form-group"><label class="form-label">Top Layers</label><input type="number" id="specTop" class="form-control"></div>
+              <div class="form-group"><label class="form-label">Infill Pattern</label>
+                <select id="specInfillPattern" class="form-control">
+                  <option value="grid">Grid</option><option value="gyroid">Gyroid</option><option value="cubic">Cubic</option>
+                </select>
+              </div>
+              <div class="form-group"><label class="form-label">Support</label>
+                <select id="specSupport" class="form-control">
+                  <option value="none">None</option><option value="auto">Normal (Auto)</option><option value="tree">Tree (Auto)</option>
+                </select>
+              </div>
+            </div>
+            <button class="btn btn-outline btn-sm w-full" onclick="updateSTLSlicing()">Save Slicing Specs</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="stl-job-tab-timeline" class="stl-tab-content" style="display:none">
+        <div id="stlWorkflowTimeline" style="position:relative; padding-left:20px; border-left:2px solid var(--dark-border)">
+          <!-- Timeline entries -->
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer" style="padding:20px; text-align:right">
+      <button class="btn btn-ghost" onclick="closeSTLJobDetailModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="stlViewerModal">
+  <div class="modal" style="max-width:1000px; padding:0; overflow:hidden; background:#000">
+    <div class="modal-header" style="background:var(--dark-bg); border-bottom:1px solid var(--dark-border); padding:15px 24px">
+      <div style="display:flex; align-items:center; gap:12px">
+        <div style="background:var(--gradient-royal); width:32px; height:32px; border-radius:6px; display:flex; align-items:center; justify-content:center; color:white">
+          <i class="fas fa-cube"></i>
+        </div>
+        <div>
+          <h3 id="stlViewFilename" style="margin:0; font-size:1.1rem; color:var(--text-main)">Model Preview</h3>
+          <div id="stlTechnicalStats" style="font-size:0.7rem; color:var(--text-muted); font-family:var(--font-tech)">SCANNING GEOMETRY...</div>
+        </div>
+      </div>
+      <button class="btn-close" onclick="closeSTLViewer()">✕</button>
+    </div>
+    
+    <div style="position:relative; background:#0a0a0f">
+      <!-- Debug Console (Invisible by default, press D to toggle or see on error) -->
+      <div id="stlDebug" style="position:absolute; bottom:80px; right:20px; width:300px; max-height:200px; background:rgba(0,0,0,0.8); border:1px solid var(--error); color:#0f0; font-family:monospace; font-size:10px; padding:10px; overflow-y:auto; z-index:100; display:none; pointer-events:none">
+        <div>-- VIEWER DEBUG LOG --</div>
+      </div>
+
+      <!-- 3D Canvas -->
+      <div id="stlContainer" style="height:600px; width:100%; cursor:grab; position:relative">
+        <div id="stlLoader" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; background:rgba(10,10,15,0.95); z-index:10; color:var(--gold)">
+          <i class="fas fa-atom fa-spin" style="font-size:3rem; margin-bottom:15px"></i>
+          <div id="loaderStatus" style="font-family:var(--font-tech); letter-spacing:2px">INITIALIZING ENGINE...</div>
+        </div>
+      </div>
+
+      <!-- Tech Overlay Left -->
+      <div style="position:absolute; top:20px; left:20px; z-index:5; display:flex; flex-direction:column; gap:10px">
+        <div class="stat-card" style="background:rgba(0,0,0,0.6); backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,0.1); padding:12px; min-width:140px">
+          <div style="font-size:0.6rem; color:var(--gold); text-transform:uppercase; margin-bottom:5px">Dimensions (mm)</div>
+          <div style="display:flex; justify-content:space-between; font-family:var(--font-tech); font-size:0.75rem"><span>X:</span> <span id="dimX">--</span></div>
+          <div style="display:flex; justify-content:space-between; font-family:var(--font-tech); font-size:0.75rem"><span>Y:</span> <span id="dimY">--</span></div>
+          <div style="display:flex; justify-content:space-between; font-family:var(--font-tech); font-size:0.75rem"><span>Z:</span> <span id="dimZ">--</span></div>
+        </div>
+        <div class="stat-card" style="background:rgba(0,0,0,0.6); backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,0.1); padding:12px">
+          <div style="font-size:0.6rem; color:var(--royal-blue-light); text-transform:uppercase; margin-bottom:5px">Volume</div>
+          <div id="modelVolume" style="font-family:var(--font-tech); font-size:0.85rem">Calculating...</div>
+        </div>
+      </div>
+
+      <!-- Controls Overlay Bottom -->
+      <div style="position:absolute; bottom:20px; left:50%; transform:translateX(-50%); z-index:5; display:flex; gap:10px; background:rgba(0,0,0,0.7); padding:8px; border-radius:12px; border:1px solid rgba(255,255,255,0.1); backdrop-filter:blur(10px); flex-wrap:wrap; justify-content:center; max-width:90%">
+        <div style="display:flex; gap:5px; border-right:1px solid rgba(255,255,255,0.1); padding-right:5px">
+          <button class="btn btn-icon btn-ghost" onclick="toggleSTLWireframe()" title="Wireframe"><i class="fas fa-border-none"></i></button>
+          <button class="btn btn-icon btn-ghost" onclick="toggleSTLAutoRotate()" title="Auto Orbit"><i class="fas fa-sync-alt"></i></button>
+          <button class="btn btn-icon btn-ghost" onclick="toggleSTLBoudingBox()" title="Bounding Box"><i class="fas fa-vector-square"></i></button>
+          <button class="btn btn-icon btn-ghost" onclick="toggleSTLGrid()" title="Grid/Axes"><i class="fas fa-ruler-combined"></i></button>
+        </div>
+
+        <div style="display:flex; gap:5px; border-right:1px solid rgba(255,255,255,0.1); padding-right:5px">
+          <button class="btn btn-icon btn-ghost" onclick="rotateSTLModel('x')" title="Rotate X +90°" style="color:var(--error)"><span style="font-weight:900; font-size:0.7rem">X</span></button>
+          <button class="btn btn-icon btn-ghost" onclick="rotateSTLModel('y')" title="Rotate Y +90°" style="color:var(--success)"><span style="font-weight:900; font-size:0.7rem">Y</span></button>
+          <button class="btn btn-icon btn-ghost" onclick="rotateSTLModel('z')" title="Rotate Z +90°" style="color:var(--royal-blue-light)"><span style="font-weight:900; font-size:0.7rem">Z</span></button>
+        </div>
+
+        <div style="display:flex; gap:5px; border-right:1px solid rgba(255,255,255,0.1); padding-right:5px">
+          <button class="btn btn-icon btn-ghost" onclick="setSTLView('iso')" title="ISO View"><i class="fas fa-cube"></i></button>
+          <button class="btn btn-icon btn-ghost" onclick="setSTLView('top')" title="Top View"><i class="fas fa-arrow-down"></i></button>
+          <button class="btn btn-icon btn-ghost" onclick="setSTLView('front')" title="Front View"><i class="fas fa-arrow-right"></i></button>
+          <button class="btn btn-icon btn-ghost" onclick="setSTLView('side')" title="Side View"><i class="fas fa-arrow-left"></i></button>
+        </div>
+
+        <div style="display:flex; gap:8px; align-items:center">
+          <button class="btn btn-icon btn-ghost" onclick="takeSTLScreenshot()" title="Snapshot"><i class="fas fa-camera"></i></button>
+          <input type="color" id="stlColorPicker" value="#1a3aff" style="width:28px; height:28px; padding:0; border:none; background:none; cursor:pointer" onchange="updateSTLColor(this.value)">
+          <button class="btn btn-gold btn-sm" onclick="resetView()" style="height:32px">Reset</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="liveMonitorModal">
+  <div class="modal" style="max-width:900px">
+    <div class="modal-header"><h3>🖨️ Live Printer Monitor — <span id="monitorJobId" style="color:var(--gold)"></span></h3><button class="btn-close" onclick="closeLiveMonitor()">✕</button></div>
+    <div class="modal-body">
+      <div class="grid-2">
+        <div style="background:#000;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;border-radius:8px;position:relative">
+          <div id="liveStreamPlaceholder"><i class="fas fa-video-slash" style="font-size:3rem;color:var(--text-muted)"></i><div style="margin-top:10px">Connecting to Camera...</div></div>
+          <div class="badge badge-error" style="position:absolute;top:10px;left:10px">LIVE</div>
+        </div>
+        <div>
+          <h4>Print Statistics</h4>
+          <div class="stat-card blue" style="padding:15px;margin-bottom:15px"><div class="stat-label">Progress</div><div class="stat-value" id="monitorProgress">0%</div><div style="background:rgba(255,255,255,0.1);height:8px;border-radius:10px;margin-top:10px"><div id="monitorBar" style="background:var(--gold);height:100%;width:0%;border-radius:10px;transition:width 0.5s"></div></div></div>
+          <div class="grid-2">
+            <div style="background:var(--dark-card);padding:10px;border-radius:4px"><div>Nozzle Temp</div><div style="color:var(--error);font-weight:700">215°C / 215°C</div></div>
+            <div style="background:var(--dark-card);padding:10px;border-radius:4px"><div>Bed Temp</div><div style="color:var(--royal-blue-light);font-weight:700">60°C / 60°C</div></div>
+          </div>
+          <div style="margin-top:20px"><button class="btn btn-danger w-full" onclick="showToast('Emergency Stop Triggered','error')"><i class="fas fa-stop-circle"></i> Emergency Stop</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="couponModal">
+  <div class="modal" style="max-width:480px"><div class="modal-header"><h3>Create Coupon</h3><button class="btn-close" onclick="closeCouponModal()">✕</button></div><div class="modal-body"><div class="form-group"><label>Code</label><input type="text" id="newCouponCode" class="form-control" style="text-transform:uppercase"></div><div class="form-group"><label>Type</label><select id="discountType" class="form-control"><option value="Percentage">Percentage</option><option value="Flat">Flat</option></select></div><div class="form-group"><label>Value</label><input type="number" id="discountValue" class="form-control"></div><div class="form-group"><label>Min Order</label><input type="number" id="minOrder" class="form-control" value="0"></div><div class="form-group"><label>Max Uses</label><input type="number" id="usageLimit" class="form-control" value="100"></div></div><div class="modal-footer" style="text-align:right"><button class="btn btn-gold" onclick="createCoupon()">Save</button></div></div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+<script>
+let adminOrders = [], adminProducts = [], adminSTLJobs = [], editingProductId = null;
+const statusBadge = { pending:'warning', printing:'royal', shipped:'blue', delivered:'success', cancelled:'error', active:'success', low:'warning', out:'error', maintenance:'warning' };
+
+async function updateDBStatus() {
+  const badge = document.getElementById('dbStatus');
+  const dot = badge?.querySelector('.db-status-dot');
+  const text = badge?.querySelector('.db-status-text');
+  
+  if(!badge) return;
+
+  try {
+    const res = await fetch('/api/health');
+    const data = await res.json();
+    
+    if(data.database === 'Connected') {
+      badge.className = 'db-status-badge connected';
+      text.textContent = 'DB: Online';
+      badge.title = 'MongoDB is Connected';
+    } else {
+      badge.className = 'db-status-badge disconnected';
+      text.textContent = 'DB: Offline';
+      badge.title = 'MongoDB is Disconnected';
+    }
+  } catch(e) {
+    badge.className = 'db-status-badge disconnected';
+    text.textContent = 'DB: Error';
+    badge.title = 'Could not reach API server';
+  }
+}
+
+async function adminLogin() {
+  const email = document.getElementById('loginEmail').value;
+  const password = document.getElementById('loginPass').value;
+  const role = document.getElementById('loginRole').value;
+  
+  try {
+    const response = await fetch('/api/admin/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password, role }),
+    });
+    
+    const data = await response.json();
+    
+    if (data.success) {
+      // Store the token in localStorage
+      localStorage.setItem('adminToken', data.token);
+      
+      // Hide login gate and show admin layout
+      document.getElementById('loginGate').style.display = 'none';
+      document.getElementById('adminLayout').style.display = 'flex';
+      
+      // Initialize the dashboard
+      initAdminDashboard(); 
+      fetchProducts(); 
+      fetchOrders(); 
+      fetchSTLJobs(); 
+      fetchPricingConfig(); 
+      fetchUsers(); 
+      fetchCoupons();
+      updateDBStatus();
+      
+      showToast('✅ Welcome Back Admin!', 'success');
+    } else {
+      showToast('❌ ' + data.error, 'error');
+    }
+  } catch (error) {
+    showToast('❌ Login failed: ' + error.message, 'error');
+  }
+}
+
+function adminLogout() { 
+  localStorage.removeItem('adminToken');
+  window.location.reload(); 
+}
+
+function adminNav(section, el) {
+  document.querySelectorAll('.admin-content > div').forEach(s => s.style.display = 'none');
+  const target = document.getElementById('admin-' + section);
+  if(target) target.style.display = 'block';
+  document.querySelectorAll('.admin-nav-item').forEach(n => n.classList.remove('active'));
+  if(el) el.classList.add('active');
+
+  if(section === 'overview') initAdminDashboard();
+  if(section === 'orders') fetchOrders();
+  if(section === 'products') fetchProducts();
+  if(section === 'stl') fetchSTLJobs();
+  if(section === 'pricing') fetchPricingConfig();
+  if(section === 'users') fetchUsers();
+  if(section === 'coupons') fetchCoupons();
+  if(section === 'service-requests') renderRepairRequests();
+  if(section === 'amc') renderAMC();
+  if(section === 'payments') renderPayments();
+  if(section === 'inventory') renderInventory();
+  if(section === 'analytics') renderAnalyticsCharts();
+  if(section === 'settings') loadGlobalSettings();
+  if(section === 'cms') loadCMSConfig();
+  if(section === 'calculator') initCalculator();
+  if(section === 'docs') renderDocuments();
+}
+
+async function renderDocuments() {
+  const [oRes, jRes] = await Promise.all([fetch('/api/orders'), fetch('/api/stl-jobs')]);
+  const orders = await oRes.json();
+  const jobs = await jRes.json();
+  
+  const search = (document.getElementById('docSearch')?.value || '').toLowerCase();
+  const type = document.getElementById('docTypeFilter')?.value || 'all';
+  
+  let docs = [];
+  
+  if(type === 'all' || type === 'invoice') {
+    orders.forEach(o => {
+      if(!search || o._id.toLowerCase().includes(search) || (o.customer?.name||'').toLowerCase().includes(search)) {
+        docs.push({ type: 'invoice', id: o._id, num: 'INV-'+o._id.slice(-8).toUpperCase(), name: o.customer?.name, date: o.createdAt, total: o.total, source: 'order' });
+      }
+    });
+  }
+  
+  if(type === 'all' || type === 'quote') {
+    jobs.forEach(j => {
+      if(!search || j._id.toLowerCase().includes(search) || (j.customer?.name||'').toLowerCase().includes(search)) {
+        docs.push({ type: 'quote', id: j._id, num: 'QT-'+j._id.slice(-8).toUpperCase(), name: j.customer?.name, date: j.createdAt, total: j.quote?.total || 0, source: 'job' });
+      }
+    });
+  }
+  
+  docs.sort((a,b) => new Date(b.date) - new Date(a.date));
+  
+  document.getElementById('docsTableBody').innerHTML = docs.map(d => `
+    <tr>
+      <td><span class="badge badge-${d.type==='invoice'?'success':'royal'}">${d.type.toUpperCase()}</span></td>
+      <td style="font-family:var(--font-tech)">${d.num}</td>
+      <td>${d.name}</td>
+      <td>${new Date(d.date).toLocaleDateString()}</td>
+      <td style="font-weight:700">₹${(d.total||0).toLocaleString()}</td>
+      <td>
+        <button class="btn btn-sm btn-icon btn-outline" onclick="window.open('invoice.html?id=${d.id}&type=${d.type}&source=${d.source}', '_blank')">
+          <i class="fas fa-print"></i>
+        </button>
+      </td>
+    </tr>
+  `).join('') || '<tr><td colspan="6" style="text-align:center; padding:40px; color:var(--text-muted)">No documents found.</td></tr>';
+}
+
+function generateQuotation() {
+  const modelName = document.getElementById('calcModelName').value.trim();
+  if(!calcUploadedFileId && !modelName) return showToast('Please upload a file or enter a model name first', 'warning');
+  
+  createManualSTLJob().then(() => {
+    setTimeout(() => {
+      const latestJob = adminSTLJobs[0]; 
+      if(latestJob) window.open(`invoice.html?id=${latestJob._id}&type=quote&source=job`, '_blank');
+    }, 1000);
+  });
+}
+
+let calcItems = []; // Array of { id, filename, fileId, material, layer, finish, weight, time, qty, cost }
+
+async function initCalculator() {
+  const [resPricing, resUsers] = await Promise.all([
+    fetch('/api/settings/pricing'),
+    fetch('/api/users')
+  ]);
+  calcConfig = await resPricing.json();
+  const users = await resUsers.json();
+  
+  const custSelect = document.getElementById('calcCustomer');
+  custSelect.innerHTML = '<option value="">-- Guest / Walk-in --</option>' + 
+    users.map(u => `<option value="${u._id}">${u.name} (${u.email})</option>`).join('');
+  
+  // Also update PRO manual document client selector
+  const manCustSelect = document.getElementById('manualCustSelect');
+  if(manCustSelect) {
+    manCustSelect.innerHTML = '<option value="">-- Manual Entry --</option>' + 
+      users.map(u => `<option value="${u._id}">${u.name} (${u.email})</option>`).join('');
+  }
+
+  // Populate Product Picker for Pro Doc
+  const prodPicker = document.getElementById('quickProductPicker');
+  if(prodPicker) {
+    const pRes = await fetch('/api/products');
+    const products = await pRes.json();
+    prodPicker.innerHTML = '<option value="">-- Search Catalog (Products / Materials) --</option>' + 
+      products.map(p => `<option value="PROD|${p._id}|${p.name}|${p.price}">${p.name} (₹${p.price})</option>`).join('') +
+      (calcConfig.MATERIALS || []).map(m => `<option value="MAT|${m.name}|${m.price}">Material: ${m.name} (₹${m.price}/kg)</option>`).join('');
+  }
+  
+  renderCalcItems();
+  calculateAdminQuote();
+}
+
+function syncManualCustomer(userId) {
+  if(!userId) return;
+  fetch('/api/users').then(r => r.json()).then(users => {
+    const u = users.find(x => x._id === userId);
+    if(u) {
+      document.getElementById('manualCustName').value = u.name;
+      document.getElementById('manualCustAddr').value = u.address || '';
+    }
+  });
+}
+
+function addSelectedProductToDoc(val) {
+  if(!val) return;
+  const [type, id, name, price] = val.split('|');
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><input type="text" class="form-control m-desc" value="${name}"></td>
+    <td><input type="number" class="form-control m-qty" value="1" oninput="calculateManualDocTotal()"></td>
+    <td><input type="number" class="form-control m-price" value="${price}" oninput="calculateManualDocTotal()"></td>
+    <td>
+      <select class="form-control m-gst-slab" onchange="calculateManualDocTotal()">
+        <option value="18">18%</option><option value="12">12%</option><option value="5">5%</option><option value="0">0%</option>
+      </select>
+    </td>
+    <td class="m-total" style="font-weight:600">₹${parseFloat(price).toLocaleString()}</td>
+    <td><button class="btn btn-xs btn-ghost" onclick="this.closest('tr').remove(); calculateManualDocTotal()"><i class="fas fa-times"></i></button></td>
+  `;
+  document.getElementById('manualDocItems').appendChild(tr);
+  document.getElementById('quickProductPicker').value = '';
+  calculateManualDocTotal();
+}
+
+function calculateManualDocTotal() {
+  let subtotal = 0;
+  let totalGst = 0;
+  
+  document.querySelectorAll('#manualDocItems tr').forEach(row => {
+    const qty = parseFloat(row.querySelector('.m-qty').value) || 0;
+    const price = parseFloat(row.querySelector('.m-price').value) || 0;
+    const slab = parseFloat(row.querySelector('.m-gst-slab').value) || 0;
+    
+    const rowBase = qty * price;
+    const rowGst = rowBase * (slab / 100);
+    
+    row.querySelector('.m-total').textContent = '₹' + (rowBase + rowGst).toLocaleString();
+    subtotal += rowBase;
+    totalGst += rowGst;
+  });
+
+  const discount = parseFloat(document.getElementById('manualDiscount').value) || 0;
+  const grandTotal = subtotal + totalGst - discount;
+
+  document.getElementById('manualSubtotal').textContent = '₹' + subtotal.toLocaleString();
+  document.getElementById('manualGst').textContent = '₹' + Math.round(totalGst).toLocaleString();
+  document.getElementById('manualGrandTotal').textContent = '₹' + Math.round(grandTotal).toLocaleString();
+}
+
+async function saveAndPrintManualDoc() {
+  const type = document.querySelector('input[name="manualType"]:checked').value;
+  const name = document.getElementById('manualCustName').value.trim();
+  if(!name) return showToast('Customer name is required', 'warning');
+
+  const items = [];
+  document.querySelectorAll('#manualDocItems tr').forEach(row => {
+    const desc = row.querySelector('.m-desc').value.trim();
+    const qty = parseFloat(row.querySelector('.m-qty').value) || 0;
+    const price = parseFloat(row.querySelector('.m-price').value) || 0;
+    const gstSlab = parseFloat(row.querySelector('.m-gst-slab').value) || 0;
+    if(desc) items.push({ name: desc, qty, price, gstSlab });
+  });
+
+  if(items.length === 0) return showToast('Add at least one item', 'warning');
+
+  const subtotal = items.reduce((s, i) => s + (i.qty * i.price), 0);
+  const totalGst = items.reduce((s, i) => s + (i.qty * i.price * (i.gstSlab/100)), 0);
+  const discount = parseFloat(document.getElementById('manualDiscount').value) || 0;
+  const total = subtotal + totalGst - discount;
+
+  const payload = {
+    customer: { name, address: document.getElementById('manualCustAddr').value },
+    items,
+    subtotal,
+    gst: totalGst,
+    discount,
+    total,
+    notes: document.getElementById('manualDocTerms').value,
+    status: 'completed',
+    paymentMethod: 'Manual PRO Billing'
+  };
+
+  try {
+    const res = await fetch('/api/orders', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload)
+    });
+    
+    const data = await res.json();
+    if(data.success) {
+      showToast('✅ PRO Document Generated', 'success');
+      closeManualDocModal();
+      renderDocuments();
+      window.open(`invoice.html?id=${data.orderId || data.id}&type=${type}&source=order`, '_blank');
+    }
+  } catch(e) {
+    showToast('❌ Error saving document', 'error');
+  }
+}
+
+function renderCalcItems() {
+  const container = document.getElementById('calcItemsList');
+  const countBadge = document.getElementById('calcItemCount');
+  
+  if(calcItems.length === 0) {
+    container.innerHTML = `<div id="calcEmptyState" style="text-align:center; padding:60px; color:var(--text-muted)">
+      <i class="fas fa-cubes" style="font-size:3rem; margin-bottom:15px; opacity:0.2"></i>
+      <p>No models added yet. Upload an STL or add manually.</p>
+    </div>`;
+    countBadge.textContent = '0';
+    return;
+  }
+
+  countBadge.textContent = calcItems.length;
+  container.innerHTML = calcItems.map((item, idx) => `
+    <div style="padding:20px; border-bottom:1px solid var(--dark-border); background:rgba(255,255,255,0.01); animation: fadeIn 0.3s ease">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:15px">
+        <div style="display:flex; gap:12px; align-items:center">
+          <div style="width:40px; height:40px; background:var(--dark-card); border-radius:6px; display:flex; align-items:center; justify-content:center; border:1px solid var(--border-glow)">
+            ${item.fileId ? '<i class="fas fa-cube" style="color:var(--gold)"></i>' : '<i class="fas fa-keyboard" style="opacity:0.5"></i>'}
+          </div>
+          <div>
+            <div style="font-weight:700; font-size:0.95rem">${item.filename}</div>
+            <div style="font-size:0.7rem; color:var(--text-muted)">ITEM REF: #${(idx+1).toString().padStart(2,'0')}</div>
+          </div>
+        </div>
+        <div style="display:flex; gap:8px">
+          ${item.fileId ? `<button class="btn btn-xs btn-outline" onclick="viewSTL('${item.fileId}', '${item.filename}')"><i class="fas fa-eye"></i> View 3D</button>` : ''}
+          <button class="btn btn-xs btn-ghost" style="color:var(--error)" onclick="removeItemFromCalc(${idx})"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>
+      
+      <div class="grid-4" style="gap:10px">
+        <div class="form-group" style="margin:0">
+          <label class="form-label" style="font-size:0.65rem">Material</label>
+          <select class="form-control" style="font-size:0.8rem; height:32px" onchange="updateCalcItem(${idx}, 'material', this.value)">
+            ${(calcConfig.MATERIALS || []).map(m => `<option value="${m.name}" ${item.material===m.name?'selected':''}>${m.name}</option>`).join('')}
+          </select>
+        </div>
+        <div class="form-group" style="margin:0">
+          <label class="form-label" style="font-size:0.65rem">Resolution</label>
+          <select class="form-control" style="font-size:0.8rem; height:32px" onchange="updateCalcItem(${idx}, 'layer', this.value)">
+            ${(calcConfig.LAYER_HEIGHTS || []).map(l => `<option value="${l.multiplier}" ${item.layer==l.multiplier?'selected':''}>${l.name.split('—')[0]}</option>`).join('')}
+          </select>
+        </div>
+        <div class="form-group" style="margin:0">
+          <label class="form-label" style="font-size:0.65rem">Weight (g)</label>
+          <input type="number" class="form-control" style="font-size:0.8rem; height:32px" value="${item.weight}" oninput="updateCalcItem(${idx}, 'weight', this.value)">
+        </div>
+        <div class="form-group" style="margin:0">
+          <label class="form-label" style="font-size:0.65rem">Quantity</label>
+          <input type="number" class="form-control" style="font-size:0.8rem; height:32px" value="${item.qty}" oninput="updateCalcItem(${idx}, 'qty', this.value)">
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function addManualItem() {
+  const name = prompt('Enter item name:', 'New Model Part');
+  if(!name) return;
+  
+  calcItems.push({
+    filename: name,
+    fileId: null,
+    material: calcConfig.MATERIALS[0]?.name,
+    layer: 1.0,
+    finish: 0,
+    weight: 100,
+    time: 5,
+    qty: 1
+  });
+  renderCalcItems();
+  calculateAdminQuote();
+}
+
+function removeItemFromCalc(idx) {
+  calcItems.splice(idx, 1);
+  renderCalcItems();
+  calculateAdminQuote();
+}
+
+function updateCalcItem(idx, key, val) {
+  calcItems[idx][key] = (key === 'weight' || key === 'qty' || key === 'layer') ? parseFloat(val) : val;
+  calculateAdminQuote();
+}
+
+function resetCalculator() {
+  if(!confirm('Clear all items and start over?')) return;
+  calcItems = [];
+  renderCalcItems();
+  calculateAdminQuote();
+}
+
+function calculateAdminQuote() {
+  if(!calcConfig) return;
+  
+  let totalProduction = 0;
+  let totalFinish = 0;
+  
+  const machine = document.getElementById('calcMachine').value;
+  // Machine specific modifiers
+  let deprRate = calcConfig.DEPRECIATION_RATE;
+  let elecRate = calcConfig.ELECTRICITY_RATE;
+  
+  if(machine === 'Large FDM') { deprRate *= 2; elecRate *= 1.5; }
+  else if(machine === 'Precision Resin') { deprRate *= 1.5; elecRate *= 0.8; }
+
+  calcItems.forEach(item => {
+    const material = calcConfig.MATERIALS.find(m => m.name === item.material);
+    const matPricePerGram = (material?.price || 0) / 1000;
+    
+    // Core item cost
+    const matCost = item.weight * matPricePerGram;
+    const itemElec = (item.time * (calcConfig.PRINTER_WATTAGE / 1000)) * elecRate;
+    const itemDepr = item.time * deprRate;
+    const itemLabor = (item.time * 0.1) * calcConfig.LABOR_RATE;
+    const itemMaint = item.weight * calcConfig.MAINTENANCE_RATE;
+    
+    const itemBase = (matCost + itemElec + itemDepr + itemLabor + itemMaint) * item.layer;
+    totalProduction += (itemBase * item.qty);
+  });
+
+  const overheadPct = calcConfig.OVERHEAD_PCT / 100;
+  const totalOverhead = totalProduction * overheadPct;
+  const productionWithOverhead = totalProduction + totalOverhead;
+  
+  const profitPct = parseInt(document.getElementById('calcProfit')?.value || 40) / 100;
+  const profitAmt = productionWithOverhead * profitPct;
+  const netTotal = productionWithOverhead + profitAmt;
+  
+  const gstPct = parseInt(document.getElementById('calcTaxConfig').value) / 100;
+  const gstAmt = netTotal * gstPct;
+  const grandTotal = netTotal + gstAmt;
+
+  // Update Summary
+  const set = (id, v) => { if(document.getElementById(id)) document.getElementById(id).textContent = '₹' + Math.round(v).toLocaleString(); };
+  set('resProdCost', totalProduction);
+  set('resOverhead', totalOverhead);
+  set('resNetTotal', netTotal);
+  set('resProfit', profitAmt);
+  set('resGst', gstAmt);
+  document.getElementById('resTotal').textContent = '₹' + Math.round(grandTotal).toLocaleString();
+  document.getElementById('resPerModel').textContent = calcItems.length > 0 ? `₹${Math.round(grandTotal/calcItems.length).toLocaleString()} avg per model` : '₹0 avg per model';
+}
+
+async function handleCalcUpload(event) {
+  const files = event.target.files;
+  if(files.length === 0) return;
+  
+  showToast(`Uploading ${files.length} model(s)...`, 'info');
+  
+  for(let file of files) {
+    const formData = new FormData();
+    formData.append('image', file);
+    
+    try {
+      const res = await fetch('/api/upload', { method: 'POST', body: formData });
+      const data = await res.json();
+      
+      if(data.success) {
+        const estWeight = Math.max(5, Math.min(Math.round(file.size / 2000), 1000));
+        calcItems.push({
+          filename: file.name,
+          fileId: data.imageId,
+          material: calcConfig.MATERIALS[0]?.name,
+          layer: 1.0,
+          finish: 0,
+          weight: estWeight,
+          time: Math.round(estWeight / 20), // Est 20g/hour
+          qty: 1
+        });
+      }
+    } catch(e) { console.error('Upload Error', e); }
+  }
+  
+  renderCalcItems();
+  calculateAdminQuote();
+  showToast('✅ Models added to workspace', 'success');
+}
+
+async function createManualSTLJob() {
+  const customerId = document.getElementById('calcCustomer').value;
+  if (calcItems.length === 0) return showToast('Add at least one model first', 'error');
+  
+  if (!confirm(`Create official production job for ${calcItems.length} items?`)) return;
+
+  const totalStr = document.getElementById('resTotal').textContent.replace(/[^0-9]/g, '');
+  const total = parseInt(totalStr);
+
+  const payload = {
+    customerId: customerId || null,
+    filename: calcItems.length === 1 ? calcItems[0].filename : `Multi-Part Batch (${calcItems.length} items)`,
+    items: calcItems.map(item => ({
+      name: item.filename,
+      fileData: item.fileId,
+      material: item.material,
+      qty: item.qty,
+      weight: item.weight
+    })),
+    quote: {
+      total: total,
+      gst: parseInt(document.getElementById('resGst').textContent.replace(/[^0-9]/g, ''))
+    },
+    weightEst: calcItems.reduce((s,i) => s + (i.weight * i.qty), 0)
+  };
+
+  try {
+    const res = await fetch('/api/stl-jobs/manual', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    
+    const result = await res.json();
+    if (result.success) {
+      showToast('✅ Batch Production Job Created!', 'success');
+      calcItems = [];
+      renderCalcItems();
+      calculateAdminQuote();
+      fetchSTLJobs();
+    } else {
+      showToast('❌ Error: ' + (result.error || 'Failed'), 'error');
+    }
+  } catch(e) {
+    showToast('❌ Network error', 'error');
+  }
+}
+
+function copyCalculatorBreakdown() {
+  const total = document.getElementById('resTotal').textContent;
+  const count = calcItems.length;
+  let text = `3D PRINT BATCH QUOTE\n-------------------\nTotal Items: ${count}\n`;
+  calcItems.forEach((it, idx) => {
+    text += `${idx+1}. ${it.filename} (${it.qty}x) - ${it.material}\n`;
+  });
+  text += `-------------------\nTotal Estimate: ${total}\n(Includes GST & Setup)`;
+  navigator.clipboard.writeText(text);
+  showToast('📋 Summary copied to clipboard', 'success');
+}
+
+async function loadCMSConfig() {
+  try {
+    const res = await fetch('/api/settings/cms');
+    const cfg = await res.json();
+    document.getElementById('cmsAnnouncement').value = cfg.announcementText || '';
+    document.getElementById('cmsHeroTitle').value = cfg.heroTitle || '';
+    document.getElementById('cmsHeroSubtitle').value = cfg.heroSubtitle || '';
+    document.getElementById('cmsHeroBtnText').value = cfg.heroButtonText || '';
+    document.getElementById('cmsHeroBtnLink').value = cfg.heroButtonLink || '';
+    document.getElementById('cmsAboutText').value = cfg.aboutText || '';
+  } catch (err) { showToast('❌ Error loading CMS', 'error'); }
+}
+
+async function saveCMSConfig() {
+  const payload = {
+    announcementText: document.getElementById('cmsAnnouncement').value,
+    heroTitle: document.getElementById('cmsHeroTitle').value,
+    heroSubtitle: document.getElementById('cmsHeroSubtitle').value,
+    heroButtonText: document.getElementById('cmsHeroBtnText').value,
+    heroButtonLink: document.getElementById('cmsHeroBtnLink').value,
+    aboutText: document.getElementById('cmsAboutText').value
+  };
+
+  try {
+    const res = await fetch('/api/settings/cms', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if ((await res.json()).success) { showToast('✅ Website Content Published', 'success'); }
+  } catch (error) { showToast('❌ Error saving CMS', 'error'); }
+}
+
+function openManualDocModal() {
+  document.getElementById('manualDocModal').classList.add('active');
+  document.getElementById('manualDocItems').innerHTML = '';
+  document.getElementById('manualCustName').value = '';
+  document.getElementById('manualCustAddr').value = '';
+  addManualDocRow();
+  updateManualDocUI();
+}
+
+function closeManualDocModal() {
+  document.getElementById('manualDocModal').classList.remove('active');
+}
+
+function updateManualDocUI() {
+  const type = document.querySelector('input[name="manualType"]:checked').value;
+  document.getElementById('manualDocTitle').textContent = type === 'invoice' ? 'Create Manual Invoice' : 'Create Manual Quotation';
+}
+
+function addManualDocRow() {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><input type="text" class="form-control m-desc" placeholder="Service or Product Name"></td>
+    <td><input type="number" class="form-control m-qty" value="1" oninput="calculateManualDocTotal()"></td>
+    <td><input type="number" class="form-control m-price" value="0" oninput="calculateManualDocTotal()"></td>
+    <td class="m-total" style="font-weight:600">₹0</td>
+    <td><button class="btn btn-xs btn-ghost" onclick="this.closest('tr').remove(); calculateManualDocTotal()"><i class="fas fa-times"></i></button></td>
+  `;
+  document.getElementById('manualDocItems').appendChild(tr);
+}
+
+function calculateManualDocTotal() {
+  let subtotal = 0;
+  document.querySelectorAll('#manualDocItems tr').forEach(row => {
+    const qty = parseFloat(row.querySelector('.m-qty').value) || 0;
+    const price = parseFloat(row.querySelector('.m-price').value) || 0;
+    const total = qty * price;
+    row.querySelector('.m-total').textContent = '₹' + total.toLocaleString();
+    subtotal += total;
+  });
+
+  const gst = subtotal * 0.18;
+  const grandTotal = subtotal + gst;
+
+  document.getElementById('manualSubtotal').textContent = '₹' + subtotal.toLocaleString();
+  document.getElementById('manualGst').textContent = '₹' + gst.toLocaleString();
+  document.getElementById('manualGrandTotal').textContent = '₹' + grandTotal.toLocaleString();
+}
+
+async function saveAndPrintManualDoc() {
+  const type = document.querySelector('input[name="manualType"]:checked').value;
+  const name = document.getElementById('manualCustName').value.trim();
+  if(!name) return showToast('Customer name is required', 'warning');
+
+  const items = [];
+  document.querySelectorAll('#manualDocItems tr').forEach(row => {
+    const desc = row.querySelector('.m-desc').value.trim();
+    const qty = parseFloat(row.querySelector('.m-qty').value) || 0;
+    const price = parseFloat(row.querySelector('.m-price').value) || 0;
+    if(desc) items.push({ name: desc, qty, price });
+  });
+
+  if(items.length === 0) return showToast('Add at least one item', 'warning');
+
+  const subtotal = items.reduce((s, i) => s + (i.qty * i.price), 0);
+  const gst = subtotal * 0.18;
+  const total = subtotal + gst;
+
+  // We save this as a "Manual Job" or "Manual Order" to get an ID
+  const payload = {
+    customer: { name, address: document.getElementById('manualCustAddr').value },
+    items,
+    subtotal,
+    gst,
+    total,
+    status: 'completed',
+    paymentMethod: 'Manual Billing'
+  };
+
+  try {
+    // Save as an order for invoice, or job for quote
+    const endpoint = type === 'invoice' ? '/api/orders' : '/api/stl-jobs/manual';
+    
+    // For simplicity in this demo, let's use a unified "Manual Doc" logic
+    // or just save as a standard order which the invoice.html can already read
+    const res = await fetch('/api/orders', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload)
+    });
+    
+    const data = await res.json();
+    if(data.success) {
+      showToast('✅ Document Generated', 'success');
+      closeManualDocModal();
+      renderDocuments();
+      window.open(`invoice.html?id=${data.orderId || data.id}&type=${type}&source=order`, '_blank');
+    }
+  } catch(e) {
+    showToast('❌ Error saving document', 'error');
+  }
+}
+
+async function fetchUsers() { try { const res = await fetch('/api/users'); const users = await res.json(); document.getElementById('usersTable').innerHTML = users.map(u => `<tr><td>${u.name}</td><td>${u.email}</td><td>${u.role}</td><td>${new Date(u.createdAt).toLocaleDateString()}</td><td>${u.status}</td><td><button class="btn btn-sm">Edit</button></td></tr>`).join(''); } catch (err) { showToast('❌ Error','error'); } }
+async function fetchCoupons() { try { const res = await fetch('/api/coupons'); const coupons = await res.json(); document.getElementById('couponsTable').innerHTML = coupons.map(c => `<tr><td>${c.code}</td><td>${c.type}</td><td>${c.value}</td><td>₹${c.minOrder}</td><td>${c.uses}</td><td>${c.status}</td><td><button class="btn btn-danger btn-sm" onclick="deleteCoupon('${c._id}')">X</button></td></tr>`).join(''); } catch (err) { showToast('❌ Error','error'); } }
+async function createCoupon() { const payload = { code: document.getElementById('newCouponCode').value.toUpperCase(), type: document.getElementById('discountType').value, value: parseFloat(document.getElementById('discountValue').value), minOrder: parseFloat(document.getElementById('minOrder').value), maxUses: parseInt(document.getElementById('usageLimit').value) }; const res = await fetch('/api/coupons', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); if((await res.json()).success) { showToast('✅ Created','success'); closeCouponModal(); fetchCoupons(); } }
+async function deleteCoupon(id) { const res = await fetch(`/api/coupons/${id}`, { method: 'DELETE' }); if((await res.json()).success) { showToast('✅ Deleted','success'); fetchCoupons(); } }
+
+async function fetchProducts() { 
+  const res = await fetch('/api/products'); 
+  adminProducts = await res.json(); 
+  
+  // Populate category filter if not already done
+  const catFilter = document.getElementById('productCatFilter');
+  if(catFilter && catFilter.options.length <= 1) {
+    const pRes = await fetch('/api/settings/pricing');
+    const cfg = await pRes.json();
+    if(cfg.STORE_CATEGORIES) {
+      cfg.STORE_CATEGORIES.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.slug;
+        opt.textContent = c.name;
+        catFilter.appendChild(opt);
+      });
+    }
+  }
+  
+  renderAdminProducts(); 
+}
+
+function renderAdminProducts() { 
+  const searchTerm = (document.getElementById('productSearch')?.value || '').toLowerCase();
+  const catFilter = document.getElementById('productCatFilter')?.value || 'all';
+  const stockFilter = document.getElementById('productStockFilter')?.value || 'all';
+  const list = document.getElementById('adminProductsTable');
+
+  const filtered = adminProducts.filter(p => {
+    const matchSearch = !searchTerm || p.name.toLowerCase().includes(searchTerm) || p.sku.toLowerCase().includes(searchTerm);
+    const matchCat = catFilter === 'all' || p.category === catFilter;
+    
+    let matchStock = true;
+    if(stockFilter !== 'all') {
+      const status = p.stock <= 0 ? 'out' : p.stock < (p.lowStockAlert || 5) ? 'low' : 'active';
+      matchStock = status === stockFilter;
+    }
+    
+    return matchSearch && matchCat && matchStock;
+  });
+
+  list.innerHTML = filtered.map(p => { 
+    const status = p.stock <= 0 ? 'out' : p.stock < (p.lowStockAlert || 5) ? 'low' : 'active'; 
+    const imgId = (p.imageIds && p.imageIds.length > 0) ? (p.imageIds[0]._id || p.imageIds[0]) : null; 
+    const imgHtml = imgId ? `<img src="/api/image/${imgId}" class="product-admin-thumb">` : `<div class="product-admin-thumb" style="display:flex;align-items:center;justify-content:center;background:var(--dark-surface)">📦</div>`; 
+    return `<tr><td>${p.sku}</td><td>${imgHtml}</td><td>${p.name}</td><td>${p.brand||'N/A'}</td><td>${p.category}</td><td>₹${(p.price||0).toLocaleString()}</td><td>${p.stock}</td><td><span class="badge badge-${statusBadge[status]}">${status.toUpperCase()}</span></td><td><div style="display:flex;gap:5px">
+        <button class="btn btn-sm btn-icon" onclick="openAddProductModal('${p._id}')" title="Edit"><i class="fas fa-edit"></i></button>
+        <button class="btn btn-sm btn-icon btn-ghost" onclick="duplicateProduct('${p._id}')" title="Duplicate"><i class="fas fa-copy"></i></button>
+        <button class="btn btn-danger btn-sm btn-icon" onclick="deleteProduct('${p._id}')" title="Delete"><i class="fas fa-trash"></i></button>
+      </div></td></tr>`; 
+  }).join('') || '<tr><td colspan="9" style="text-align:center; padding:40px; color:var(--text-muted)">No products found matching filters.</td></tr>'; 
+}
+
+async function fetchOrders() { const res = await fetch('/api/orders'); adminOrders = await res.json(); renderAdminOrders(); updateAdminBadges(); }
+function renderAdminOrders() {
+  document.getElementById('adminOrdersTable').innerHTML = adminOrders.map(o => `<tr>
+    <td style="font-family:var(--font-tech);font-size:0.85rem">${o._id.slice(-6).toUpperCase()}</td>
+    <td><div style="font-weight:600">${o.customer?.name}</div></td>
+    <td>${o.customer?.email}</td>
+    <td>${o.items.length} items</td>
+    <td style="font-family:var(--font-tech);font-weight:700;color:var(--gold)">₹${o.total.toLocaleString()}</td>
+    <td>${new Date(o.createdAt).toLocaleDateString()}</td>
+    <td>
+      <select class="form-control" style="width:120px;font-size:0.8rem;padding:4px" onchange="updateOrderStatus('${o._id}', this.value)">
+        <option value="pending" ${o.status==='pending'?'selected':''}>Pending</option>
+        <option value="printing" ${o.status==='printing'?'selected':''}>Printing</option>
+        <option value="shipped" ${o.status==='shipped'?'selected':''}>Shipped</option>
+        <option value="delivered" ${o.status==='delivered'?'selected':''}>Delivered</option>
+        <option value="cancelled" ${o.status==='cancelled'?'selected':''}>Cancelled</option>
+      </select>
+    </td>
+    <td><div style="display:flex;gap:5px">
+      <button class="btn btn-sm btn-icon btn-royal" onclick="viewOrder('${o._id}')"><i class="fas fa-eye"></i></button>
+      <button class="btn btn-sm btn-icon btn-outline" onclick="printInvoice('${o._id}')"><i class="fas fa-print"></i></button>
+    </div></td>
+  </tr>`).join('');
+}
+
+async function updateOrderStatus(id, status) {
+  const res = await fetch(`/api/orders/${id}`, { method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify({status}) });
+  if((await res.json()).success) { showToast('✅ Order Updated','success'); fetchOrders(); }
+}
+
+function printInvoice(id) { window.open(`invoice.html?id=${id}`, '_blank'); }
+function filterAdminOrders() { const search = (document.getElementById('orderSearch')?.value || '').toLowerCase(); const status = document.getElementById('orderStatusFilter')?.value || 'all'; const filtered = adminOrders.filter(o => { const matchSearch = !search || o._id.toLowerCase().includes(search) || (o.customer?.name||'').toLowerCase().includes(search); const matchStatus = status === 'all' || o.status === status; return matchSearch && matchStatus; }); document.getElementById('adminOrdersTable').innerHTML = filtered.map(o => `<tr><td>${o._id.slice(-6).toUpperCase()}</td><td>${o.customer?.name}</td><td>${o.customer?.email}</td><td>${o.items?.length || 0} items</td><td>₹${(o.total||0).toLocaleString()}</td><td>${new Date(o.createdAt).toLocaleDateString()}</td><td><span class="badge badge-${statusBadge[o.status]}">${o.status}</span></td><td><button class="btn btn-sm btn-icon" onclick="viewOrder('${o._id}')"><i class="fas fa-eye"></i></button></td></tr>`).join(''); }
+
+function openLiveMonitor(id) {
+  document.getElementById('monitorJobId').textContent = id.slice(-8).toUpperCase();
+  document.getElementById('liveMonitorModal').classList.add('active');
+  let progress = 0;
+  const interval = setInterval(() => {
+    progress += Math.random() * 5;
+    if (progress >= 100) { progress = 100; clearInterval(interval); }
+    document.getElementById('monitorProgress').textContent = Math.round(progress) + '%';
+    document.getElementById('monitorBar').style.width = progress + '%';
+  }, 1000);
+  window.currentMonitorInterval = interval;
+}
+
+function closeLiveMonitor() {
+  document.getElementById('liveMonitorModal').classList.remove('active');
+  if (window.currentMonitorInterval) clearInterval(window.currentMonitorInterval);
+}
+async function updateSTLJobStatus(id, status) { 
+  const res = await fetch(`/api/stl-jobs/${id}`, { 
+    method: 'PATCH', 
+    headers: {'Content-Type':'application/json'}, 
+    body: JSON.stringify({
+      status, 
+      remark: `Status changed to ${status.toUpperCase()}`,
+      updatedBy: 'Admin'
+    }) 
+  }); 
+  if((await res.json()).success) {
+    showToast('✅ Workflow Updated','success'); 
+    fetchSTLJobs(); 
+    // If modal is open, refresh it
+    if(document.getElementById('stlJobDetailModal').classList.contains('active') && activeSTLJobId === id) {
+      viewSTLJob(id);
+    }
+  }
+}
+
+async function fetchPricingConfig() {
+  const res = await fetch('/api/settings/pricing'); const cfg = await res.json();
+  const f = (id, val) => { const el = document.getElementById(id); if(el) el.value = val; };
+  f('cfgElec', cfg.ELECTRICITY_RATE); f('cfgLabor', cfg.LABOR_RATE); f('cfgDepr', cfg.DEPRECIATION_RATE); f('cfgMaint', cfg.MAINTENANCE_RATE);
+  f('cfgWatt', cfg.PRINTER_WATTAGE); f('cfgOverhead', cfg.OVERHEAD_PCT); f('cfgProfit', cfg.PROFIT_PCT); f('cfgGst', cfg.GST_PCT);
+  f('cfgShipMin', cfg.MIN_SHIPPING); f('cfgShipFree', cfg.FREE_SHIPPING_THRESHOLD);
+  f('cfgSetupFee', cfg.SETUP_FEE); f('cfgFilBase', cfg.FILAMENT_BASE); f('cfgResBase', cfg.RESIN_BASE); f('cfgFailBuffer', cfg.FAIL_BUFFER_PCT);
+  if (cfg.SERVICES_STATUS) { f('statusDesign', cfg.SERVICES_STATUS.design); f('statusPrinting', cfg.SERVICES_STATUS.printing); f('statusRepair', cfg.SERVICES_STATUS.repair); f('statusAMC', cfg.SERVICES_STATUS.amc); }
+  document.getElementById('designServicesConfigTable').innerHTML = (cfg.DESIGN_SERVICES||[]).map(s => `<tr class="ds-row" data-id="${s.id}"><td><input class="form-control ds-name" value="${s.name}"></td><td><textarea class="form-control ds-desc">${s.desc||''}</textarea></td><td><input type="number" class="form-control ds-price" value="${s.price}"></td><td><input class="form-control ds-icon" value="${s.icon||'🎨'}"></td><td><select class="form-control ds-status"><option value="active" ${s.status==='active'?'selected':''}>Active</option><option value="maintenance" ${s.status==='maintenance'?'selected':''}>Stop</option></select></td><td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">X</button></td></tr>`).join('');
+  document.getElementById('materialsConfigTable').innerHTML = (cfg.MATERIALS||[]).map(m => `<tr class="mat-row"><td><input class="form-control mat-name" value="${m.name}"></td><td><input type="number" class="form-control mat-price" value="${m.price}"></td><td><input type="text" class="form-control mat-unit" value="${m.unit}"></td><td><input type="number" step="0.01" class="form-control mat-density" value="${m.density}"></td><td><input type="color" class="mat-color" value="${m.color}"></td><td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">X</button></td></tr>`).join('');
+  document.getElementById('categoriesConfigTable').innerHTML = (cfg.STORE_CATEGORIES||[]).map(c => `<tr class="cat-cfg-row"><td><input class="form-control cat-name" value="${c.name}"></td><td><input class="form-control cat-slug" value="${c.slug}"></td><td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">X</button></td></tr>`).join('');
+  document.getElementById('brandsConfigTable').innerHTML = (cfg.STORE_BRANDS||[]).map(b => `<tr class="brand-cfg-row"><td><input class="form-control brand-name" value="${b.name}"></td><td><select class="brand-status form-control"><option value="active" ${b.status==='active'?'selected':''}>Active</option><option value="disabled" ${b.status==='disabled'?'selected':''}>Hide</option></select></td><td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">X</button></td></tr>`).join('');
+  document.getElementById('colorsConfigTable').innerHTML = (cfg.COLORS||[]).map(c => `<tr class="col-row"><td><input class="form-control col-name" value="${c.name}"></td><td><input type="color" class="col-hex" value="${c.hex}"></td><td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">X</button></td></tr>`).join('');
+  document.getElementById('layerHeightsConfigTable').innerHTML = (cfg.LAYER_HEIGHTS||[]).map(l => `<tr class="layer-row"><td><input class="form-control layer-name" value="${l.name}"></td><td><input type="number" step="0.01" class="layer-value" value="${l.value}"></td><td><input type="number" step="0.01" class="layer-mult" value="${l.multiplier}"></td><td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">X</button></td></tr>`).join('');
+  document.getElementById('finishesConfigTable').innerHTML = (cfg.FINISHES||[]).map(f => `<tr class="fin-row"><td><input class="form-control fin-name" value="${f.name}"></td><td><input type="number" class="form-control fin-price" value="${f.price}"></td><td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">X</button></td></tr>`).join('');
+
+  // Upgraded Sections
+  document.getElementById('bulkTiersConfigTable').innerHTML = (cfg.BULK_DISCOUNTS||[]).map(t => `<tr class="bulk-row"><td><input type="number" class="bulk-min" value="${t.minQty}"></td><td><input type="number" class="bulk-max" value="${t.maxQty}"></td><td><input type="number" class="bulk-disc" value="${t.discountPct}"></td><td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">X</button></td></tr>`).join('');
+  if (cfg.REGIONAL_PRICING) {
+    f('regDomTax', cfg.REGIONAL_PRICING.domesticTax); f('regDomShip', cfg.REGIONAL_PRICING.domesticShipMult);
+    f('regIntTax', cfg.REGIONAL_PRICING.internationalTax); f('regIntShip', cfg.REGIONAL_PRICING.internationalShipMult); f('regIntCustoms', cfg.REGIONAL_PRICING.internationalCustoms);
+  }
+  if (cfg.TIME_SURCHARGES) {
+    f('timeRush', cfg.TIME_SURCHARGES.rush); f('timeWeekend', cfg.TIME_SURCHARGES.weekend); f('timeHoliday', cfg.TIME_SURCHARGES.holiday);
+  }
+  document.getElementById('volumeBreaksConfigTable').innerHTML = (cfg.VOLUME_BREAKS||[]).map(b => `<tr class="vol-row"><td><input type="number" class="vol-max" value="${b.maxVolume}"></td><td><input type="number" step="0.1" class="vol-mult" value="${b.multiplier}"></td><td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">X</button></td></tr>`).join('');
+}
+
+function addBulkTierRow() {
+  const tbody = document.getElementById('bulkTiersConfigTable');
+  const row = document.createElement('tr'); row.className = 'bulk-row';
+  row.innerHTML = `<td><input type="number" class="bulk-min" value="10"></td><td><input type="number" class="bulk-max" value="50"></td><td><input type="number" class="bulk-disc" value="5"></td><td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">X</button></td>`;
+  tbody.appendChild(row);
+}
+function addVolumeBreakRow() {
+  const tbody = document.getElementById('volumeBreaksConfigTable');
+  const row = document.createElement('tr'); row.className = 'vol-row';
+  row.innerHTML = `<td><input type="number" class="vol-max" value="500"></td><td><input type="number" step="0.1" class="vol-mult" value="0.9"></td><td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">X</button></td>`;
+  tbody.appendChild(row);
+}
+
+function addDesignServiceRow() {
+  const tbody = document.getElementById('designServicesConfigTable');
+  const row = document.createElement('tr');
+  row.className = 'ds-row';
+  row.innerHTML = `<td><input class="form-control ds-name" value="New Service"></td><td><textarea class="form-control ds-desc"></textarea></td><td><input type="number" class="form-control ds-price" value="0"></td><td><input class="form-control ds-icon" value="🎨"></td><td><select class="form-control ds-status"><option value="active">Active</option><option value="maintenance">Stop</option></select></td><td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">X</button></td>`;
+  tbody.appendChild(row);
+}
+function addMaterialRow() {
+  const tbody = document.getElementById('materialsConfigTable');
+  const row = document.createElement('tr');
+  row.className = 'mat-row';
+  row.innerHTML = `<td><input class="form-control mat-name" value="New Material"></td><td><input type="number" class="form-control mat-price" value="1000"></td><td><input type="text" class="form-control mat-unit" value="kg"></td><td><input type="number" step="0.01" class="form-control mat-density" value="1.25"></td><td><input type="color" class="mat-color" value="#ffffff"></td><td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">X</button></td>`;
+  tbody.appendChild(row);
+}
+function addCategoryRow() {
+  const tbody = document.getElementById('categoriesConfigTable');
+  const row = document.createElement('tr');
+  row.className = 'cat-cfg-row';
+  row.innerHTML = `<td><input class="form-control cat-name" value="New Category"></td><td><input class="form-control cat-slug" value="new-cat"></td><td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">X</button></td>`;
+  tbody.appendChild(row);
+}
+function addBrandRow() {
+  const tbody = document.getElementById('brandsConfigTable');
+  const row = document.createElement('tr');
+  row.className = 'brand-cfg-row';
+  row.innerHTML = `<td><input class="form-control brand-name" value="New Brand"></td><td><select class="brand-status form-control"><option value="active">Active</option><option value="disabled">Hide</option></select></td><td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">X</button></td>`;
+  tbody.appendChild(row);
+}
+function addColorRow() {
+  const tbody = document.getElementById('colorsConfigTable');
+  const row = document.createElement('tr');
+  row.className = 'col-row';
+  row.innerHTML = `<td><input class="form-control col-name" value="New Color"></td><td><input type="color" class="col-hex" value="#000000"></td><td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">X</button></td>`;
+  tbody.appendChild(row);
+}
+function addLayerHeightRow() {
+  const tbody = document.getElementById('layerHeightsConfigTable');
+  const row = document.createElement('tr');
+  row.className = 'layer-row';
+  row.innerHTML = `<td><input class="form-control layer-name" value="New Layer"></td><td><input type="number" step="0.01" class="layer-value" value="0.2"></td><td><input type="number" step="0.01" class="layer-mult" value="1.0"></td><td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">X</button></td>`;
+  tbody.appendChild(row);
+}
+function addFinishRow() {
+  const tbody = document.getElementById('finishesConfigTable');
+  const row = document.createElement('tr');
+  row.className = 'fin-row';
+  row.innerHTML = `<td><input class="form-control fin-name" value="New Finish"></td><td><input type="number" class="form-control fin-price" value="0"></td><td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">X</button></td>`;
+  tbody.appendChild(row);
+}
+
+async function savePricingConfig() {
+  const config = {
+    ELECTRICITY_RATE: parseFloat(document.getElementById('cfgElec').value), LABOR_RATE: parseFloat(document.getElementById('cfgLabor').value),
+    DEPRECIATION_RATE: parseFloat(document.getElementById('cfgDepr').value), MAINTENANCE_RATE: parseFloat(document.getElementById('cfgMaint').value),
+    PRINTER_WATTAGE: parseFloat(document.getElementById('cfgWatt').value), OVERHEAD_PCT: parseFloat(document.getElementById('cfgOverhead').value),
+    PROFIT_PCT: parseFloat(document.getElementById('cfgProfit').value), GST_PCT: parseFloat(document.getElementById('cfgGst').value),
+    MIN_SHIPPING: parseFloat(document.getElementById('cfgShipMin').value), FREE_SHIPPING_THRESHOLD: parseFloat(document.getElementById('cfgShipFree').value),
+    SETUP_FEE: parseFloat(document.getElementById('cfgSetupFee').value), FILAMENT_BASE: parseFloat(document.getElementById('cfgFilBase').value),
+    RESIN_BASE: parseFloat(document.getElementById('cfgResBase').value), FAIL_BUFFER_PCT: parseFloat(document.getElementById('cfgFailBuffer').value),
+    SERVICES_STATUS: { design: document.getElementById('statusDesign').value, repair: document.getElementById('statusRepair').value, amc: document.getElementById('statusAMC').value, printing: document.getElementById('statusPrinting').value },
+    DESIGN_SERVICES: Array.from(document.querySelectorAll('.ds-row')).map((r, i) => ({ id: r.dataset.id || 'ds'+(i+1), name: r.querySelector('.ds-name').value, desc: r.querySelector('.ds-desc').value, price: parseFloat(r.querySelector('.ds-price').value), icon: r.querySelector('.ds-icon').value, status: r.querySelector('.ds-status').value })),
+    STORE_CATEGORIES: Array.from(document.querySelectorAll('.cat-cfg-row')).map(r => ({ name: r.querySelector('.cat-name').value, slug: r.querySelector('.cat-slug').value, status: 'active' })),
+    STORE_BRANDS: Array.from(document.querySelectorAll('.brand-cfg-row')).map(r => ({ name: r.querySelector('.brand-name').value, status: r.querySelector('.brand-status').value })),
+    MATERIALS: Array.from(document.querySelectorAll('.mat-row')).map(r => ({ name: r.querySelector('.mat-name').value, price: parseFloat(r.querySelector('.mat-price').value), unit: r.querySelector('.mat-unit').value, density: parseFloat(r.querySelector('.mat-density').value), color: r.querySelector('.mat-color').value })),
+    COLORS: Array.from(document.querySelectorAll('.col-row')).map(r => ({ name: r.querySelector('.col-name').value, hex: r.querySelector('.col-hex').value })),
+    LAYER_HEIGHTS: Array.from(document.querySelectorAll('.layer-row')).map(r => ({ name: r.querySelector('.layer-name').value, value: r.querySelector('.layer-value').value, multiplier: parseFloat(r.querySelector('.layer-mult').value) })),
+    FINISHES: Array.from(document.querySelectorAll('.fin-row')).map(r => ({ name: r.querySelector('.fin-name').value, price: parseFloat(r.querySelector('.fin-price').value) })),
+    
+    // Upgraded Fields
+    BULK_DISCOUNTS: Array.from(document.querySelectorAll('.bulk-row')).map(r => ({ minQty: parseInt(r.querySelector('.bulk-min').value), maxQty: parseInt(r.querySelector('.bulk-max').value), discountPct: parseFloat(r.querySelector('.bulk-disc').value) })),
+    REGIONAL_PRICING: {
+      domesticTax: parseFloat(document.getElementById('regDomTax').value), domesticShipMult: parseFloat(document.getElementById('regDomShip').value),
+      internationalTax: parseFloat(document.getElementById('regIntTax').value), internationalShipMult: parseFloat(document.getElementById('regIntShip').value), internationalCustoms: parseFloat(document.getElementById('regIntCustoms').value)
+    },
+    TIME_SURCHARGES: {
+      rush: parseFloat(document.getElementById('timeRush').value), weekend: parseFloat(document.getElementById('timeWeekend').value), holiday: parseFloat(document.getElementById('timeHoliday').value)
+    },
+    VOLUME_BREAKS: Array.from(document.querySelectorAll('.vol-row')).map(r => ({ maxVolume: parseFloat(r.querySelector('.vol-max').value), multiplier: parseFloat(r.querySelector('.vol-mult').value) }))
+  };
+  await fetch('/api/settings/pricing', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(config) }); showToast('✅ Saved','success');
+}
+
+async function initAdminDashboard() {
+  const [pRes, oRes] = await Promise.all([fetch('/api/products'), fetch('/api/orders')]);
+  const products = await pRes.json(), orders = await oRes.json();
+  const revenue = orders.reduce((s,o) => s + (o.total||0), 0);
+  document.getElementById('stat-revenue').textContent = '₹' + Math.round(revenue/1000) + 'K';
+  document.getElementById('stat-orders').textContent = orders.length;
+  document.getElementById('stat-avg').textContent = '₹' + Math.round(revenue/orders.length||0);
+  document.getElementById('stat-pending').textContent = orders.filter(o => o.status === 'pending').length;
+  document.getElementById('overviewOrdersTable').innerHTML = orders.slice(0,5).map(o => `<tr><td>${o._id.slice(-8).toUpperCase()}</td><td>${o.customer?.name || 'Guest'}</td><td style="color:var(--gold)">₹${(o.total||0).toLocaleString()}</td><td><span class="badge badge-${statusBadge[o.status]}">${o.status.toUpperCase()}</span></td></tr>`).join('');
+  document.getElementById('lowStockList').innerHTML = products.filter(p => p.stock < 5).map(p => `<div style="display:flex;justify-content:space-between;padding:10px;background:rgba(255,0,0,0.05)"><div>${p.name}</div><div class="text-error">${p.stock} left</div></div>`).join('');
+  renderRevenueChart(orders); renderCategoryChart(products);
+}
+
+function renderRevenueChart(orders) {
+  const ctx = document.getElementById('revenueChart')?.getContext('2d'); if(!ctx) return;
+  const days = [...Array(7)].map((_,i) => { const d=new Date(); d.setDate(d.getDate()-(6-i)); return d.toLocaleDateString('en-IN',{day:'numeric',month:'short'}); });
+  const data = days.map(dStr => orders.filter(o => new Date(o.createdAt).toLocaleDateString('en-IN',{day:'numeric',month:'short'}) === dStr).reduce((s,o)=>s+(o.total||0),0));
+  new Chart(ctx, { type: 'line', data: { labels: days, datasets: [{ label: 'Revenue', data: data, borderColor: '#1a3aff', fill: true, backgroundColor: 'rgba(26,58,255,0.1)' }] }, options: { responsive: true, maintainAspectRatio: false } });
+}
+
+function renderCategoryChart(products) {
+  const ctx = document.getElementById('categoryChart')?.getContext('2d'); if(!ctx) return;
+  const cats = {}; products.forEach(p => cats[p.category] = (cats[p.category]||0)+1);
+  new Chart(ctx, { type: 'doughnut', data: { labels: Object.keys(cats), datasets: [{ data: Object.values(cats), backgroundColor: ['#1a3aff','#FFD700','#00e676','#ff9800','#ff1744'] }] }, options: { responsive: true, maintainAspectRatio: false } });
+}
+
+let viewingOrderId = null;
+async function viewOrder(id) {
+  viewingOrderId = id;
+  const res = await fetch(`/api/orders/${id}`);
+  const o = await res.json();
+  if (!o) return;
+
+  document.getElementById('detailOrderId').textContent = '#' + o._id.slice(-8).toUpperCase();
+  document.getElementById('detailOrderDate').textContent = 'Placed on ' + new Date(o.createdAt).toLocaleString();
+  document.getElementById('detailCustName').textContent = o.customer?.name;
+  document.getElementById('detailCustEmail').textContent = o.customer?.email;
+  document.getElementById('detailCustPhone').textContent = o.customer?.phone;
+  document.getElementById('detailCustAddr').textContent = `${o.customer?.address}, ${o.customer?.city}, ${o.customer?.pin}`;
+  document.getElementById('detailStatusSelect').value = o.status;
+  document.getElementById('detailPayMethod').textContent = 'Payment: ' + (o.paymentMethod || 'Razorpay Online');
+  
+  document.getElementById('detailItemsTable').innerHTML = o.items.map(i => `
+    <tr>
+      <td><div style="display:flex; align-items:center; gap:8px"><span>${i.emoji || '📦'}</span> <span>${i.name}</span></div></td>
+      <td>${i.qty}</td>
+      <td>₹${(i.price||0).toLocaleString()}</td>
+      <td style="font-weight:600">₹${((i.price||0)*i.qty).toLocaleString()}</td>
+    </tr>
+  `).join('');
+  
+  document.getElementById('detailSubtotal').textContent = 'Subtotal: ₹' + (o.subtotal||0).toLocaleString();
+  document.getElementById('detailGst').textContent = 'GST (18%): ₹' + (o.gst||0).toLocaleString();
+  document.getElementById('detailGrandTotal').textContent = 'Total: ₹' + (o.total||0).toLocaleString();
+  
+  // Render Timeline
+  const timeline = o.timeline || [];
+  if (timeline.length === 0) timeline.push({ status: 'pending', date: o.createdAt, remark: 'Order placed successfully' });
+  
+  document.getElementById('detailTimeline').innerHTML = timeline.map((t, idx) => `
+    <div style="position:relative; padding-bottom:20px; border-left:2px solid ${idx===0 ? 'var(--gold)' : 'var(--dark-border)'}; padding-left:20px">
+      <div style="position:absolute; left:-7px; top:0; width:12px; height:12px; border-radius:50%; background:${idx===0 ? 'var(--gold)' : 'var(--dark-border)'}; border:2px solid var(--dark-bg)"></div>
+      <div style="font-size:0.8rem; font-weight:700; color:${idx===0 ? 'var(--gold)' : 'var(--text-main)'}; text-transform:uppercase">${t.status}</div>
+      <div style="font-size:0.7rem; color:var(--text-muted)">${new Date(t.date).toLocaleString()}</div>
+      <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:4px">${t.remark || ''}</div>
+    </div>
+  `).join('');
+
+  // Render Admin Notes
+  document.getElementById('detailAdminNotesList').innerHTML = (o.adminNotes || []).map(n => `
+    <div style="background:rgba(255,255,255,0.03); padding:10px; border-radius:6px; margin-bottom:8px; border-left:3px solid var(--gold)">
+      <div style="font-size:0.8rem">${n.text}</div>
+      <div style="font-size:0.65rem; color:var(--text-muted); margin-top:4px">${n.author} • ${new Date(n.date).toLocaleString()}</div>
+    </div>
+  `).join('') || '<div style="color:var(--text-muted); font-size:0.8rem; font-style:italic">No internal notes yet.</div>';
+
+  document.getElementById('orderDetailModal').classList.add('active');
+}
+
+function closeOrderDetailModal() {
+  document.getElementById('orderDetailModal').classList.remove('active');
+  viewingOrderId = null;
+}
+
+async function updateOrderStatusFromModal(status) {
+  if(!viewingOrderId) return;
+  const remark = document.getElementById('statusRemark').value;
+  const res = await fetch(`/api/orders/${viewingOrderId}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ status, remark })
+  });
+  if((await res.json()).success) {
+    document.getElementById('statusRemark').value = '';
+    showToast('✅ Order status updated', 'success');
+    viewOrder(viewingOrderId);
+    fetchOrders();
+  }
+}
+
+async function addOrderAdminNote() {
+  if(!viewingOrderId) return;
+  const text = document.getElementById('newAdminOrderNote').value.trim();
+  if(!text) return;
+  
+  const res = await fetch(`/api/orders/${viewingOrderId}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ adminNote: text })
+  });
+  if((await res.json()).success) {
+    document.getElementById('newAdminOrderNote').value = '';
+    showToast('📝 Note added', 'success');
+    viewOrder(viewingOrderId);
+  }
+}
+function printInvoiceFromDetail() { if(viewingOrderId) window.open(`invoice.html?id=${viewingOrderId}`, '_blank'); }
+
+async function fetchSTLJobs() { const res = await fetch('/api/stl-jobs'); adminSTLJobs = await res.json(); renderSTLManager(); updateAdminBadges(); }
+
+function renderSTLManager() {
+  const searchTerm = (document.getElementById('stlSearch')?.value || '').toLowerCase();
+  const list = document.getElementById('stlManagerTable');
+  
+  const filtered = adminSTLJobs.filter(j => 
+    j.filename.toLowerCase().includes(searchTerm) || 
+    j._id.toLowerCase().includes(searchTerm) || 
+    j.customer?.name.toLowerCase().includes(searchTerm)
+  );
+
+  list.innerHTML = filtered.map(j => {
+    const statusMap = {
+      pending: { label: 'New Request', color: 'var(--text-muted)' },
+      slicing: { label: 'Slicing', color: 'var(--royal-blue-light)' },
+      queued: { label: 'In Queue', color: 'var(--gold)' },
+      printing: { label: 'Printing', color: 'var(--success)' },
+      processing: { label: 'Post-Process', color: '#ff9800' },
+      ready: { label: 'Ready', color: '#00e676' },
+      shipped: { label: 'Shipped', color: 'var(--royal-blue-main)' }
+    };
+    const s = statusMap[j.status] || { label: j.status, color: 'var(--text-main)' };
+    
+    return `<tr>
+      <td><input type="checkbox" class="stl-bulk-check" data-id="${j._id}"></td>
+      <td>
+        <div style="font-weight:600; color:var(--text-main)">${j.filename}</div>
+        <div style="font-size:0.7rem; color:var(--text-muted)">${j.settings?.material} • ${j.settings?.layerHeight}</div>
+      </td>
+      <td style="font-family:var(--font-tech); font-size:0.8rem">#${j._id.slice(-6).toUpperCase()}</td>
+      <td>
+        <div style="font-size:0.85rem">${j.customer?.name}</div>
+        <div style="font-size:0.7rem; color:var(--text-muted)">${j.customer?.phone}</div>
+      </td>
+      <td>
+        <div class="badge badge-ghost" style="font-size:0.7rem; border:1px solid var(--border-glow)">${j.printerId || 'UNASSIGNED'}</div>
+      </td>
+      <td style="font-family:var(--font-tech); font-size:0.8rem">${j.weightEst || '--'}g</td>
+      <td>
+        <div style="display:flex; align-items:center; gap:8px">
+          <div style="width:8px; height:8px; border-radius:50%; background:${s.color}"></div>
+          <span style="font-size:0.8rem; font-weight:700; color:${s.color}; text-transform:uppercase">${s.label}</span>
+        </div>
+      </td>
+      <td><div style="display:flex;gap:5px">
+        <button class="btn btn-sm btn-icon btn-outline" onclick="viewSTLJob('${j._id}')" title="Production Details"><i class="fas fa-cog"></i></button>
+        <button class="btn btn-sm btn-icon btn-ghost" onclick="viewSTL('${j.fileData}', '${j.filename}')" title="3D View"><i class="fas fa-cube"></i></button>
+        <button class="btn btn-sm btn-icon btn-royal" onclick="openLiveMonitor('${j._id}')" title="Live Monitor"><i class="fas fa-video"></i></button>
+        <button class="btn btn-sm btn-icon btn-outline" onclick="downloadSTL('${j.fileData}', '${j.filename}')" title="Download"><i class="fas fa-download"></i></button>
+      </div></td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="8" style="text-align:center; padding:40px; color:var(--text-muted)">No matching print jobs found.</td></tr>';
+}
+
+function toggleAllSTL(checked) {
+  document.querySelectorAll('.stl-bulk-check').forEach(cb => cb.checked = checked);
+}
+
+async function applyBulkSTLStatus() {
+  const status = document.getElementById('bulkSTLStatus').value;
+  if(!status) return;
+  
+  const selectedIds = Array.from(document.querySelectorAll('.stl-bulk-check:checked')).map(cb => cb.dataset.id);
+  if(selectedIds.length === 0) return showToast('No jobs selected', 'info');
+  
+  if(!confirm(`Update ${selectedIds.length} jobs to ${status.toUpperCase()}?`)) return;
+  
+  showToast(`Updating ${selectedIds.length} jobs...`, 'info');
+  for(const id of selectedIds) {
+    await fetch(`/api/stl-jobs/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status })
+    });
+  }
+  showToast('✅ Bulk update complete', 'success');
+  fetchSTLJobs();
+}
+
+let activeSTLJobId = null;
+let currentSTLJob = null;
+
+async function viewSTLJob(id) {
+  activeSTLJobId = id;
+  const res = await fetch(`/api/stl-jobs/${id}`);
+  currentSTLJob = await res.json();
+  if (!currentSTLJob) return;
+
+  document.getElementById('jobDetailId').textContent = '#' + currentSTLJob._id.slice(-8).toUpperCase();
+  document.getElementById('jobDetailFilename').textContent = currentSTLJob.filename;
+  
+  // Tab 1: Overview
+  document.getElementById('stlJobDetailBody').innerHTML = `
+    <div class="grid-2">
+      <div>
+        <h4 style="color:var(--royal-blue-light); margin-bottom:10px">👤 Customer Info</h4>
+        <div style="background:var(--dark-surface); padding:15px; border-radius:8px">
+          <div style="font-weight:700; font-size:1.1rem">${currentSTLJob.customer?.name}</div>
+          <div style="color:var(--text-muted); margin-bottom:10px">${currentSTLJob.customer?.email}</div>
+          <div style="font-size:0.85rem"><i class="fas fa-phone"></i> ${currentSTLJob.customer?.phone}</div>
+          <div style="font-size:0.85rem; margin-top:5px"><i class="fas fa-map-marker-alt"></i> ${currentSTLJob.customer?.address}, ${currentSTLJob.customer?.city}</div>
+        </div>
+        
+        <h4 style="color:var(--gold); margin-top:20px; margin-bottom:10px">📦 Model Settings</h4>
+        <div class="grid-2" style="gap:10px">
+          <div class="stat-card" style="padding:10px">
+            <div style="font-size:0.6rem; color:var(--text-muted)">MATERIAL</div>
+            <div style="font-size:0.85rem; font-weight:700">${currentSTLJob.settings?.material}</div>
+          </div>
+          <div class="stat-card" style="padding:10px">
+            <div style="font-size:0.6rem; color:var(--text-muted)">RESOLUTION</div>
+            <div style="font-size:0.85rem; font-weight:700">${currentSTLJob.settings?.layerHeight}</div>
+          </div>
+          <div class="stat-card" style="padding:10px">
+            <div style="font-size:0.6rem; color:var(--text-muted)">INFILL</div>
+            <div style="font-size:0.85rem; font-weight:700">${currentSTLJob.settings?.infill}%</div>
+          </div>
+          <div class="stat-card" style="padding:10px">
+            <div style="font-size:0.6rem; color:var(--text-muted)">FINISH</div>
+            <div style="font-size:0.85rem; font-weight:700">${currentSTLJob.settings?.finish}</div>
+          </div>
+        </div>
+      </div>
+      
+      <div>
+        <h4 style="color:var(--success); margin-bottom:10px">💰 Quote & Billing</h4>
+        <div style="background:rgba(0,230,118,0.03); padding:20px; border-radius:12px; border:1px solid rgba(0,230,118,0.1)">
+          <div style="display:flex; justify-content:space-between; margin-bottom:8px"><span>Material Cost:</span> <span style="font-weight:600">₹${(currentSTLJob.quote?.materialCost||0).toLocaleString()}</span></div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:8px"><span>Labor & Electricity:</span> <span style="font-weight:600">₹${((currentSTLJob.quote?.laborCost||0)+(currentSTLJob.quote?.electricityCost||0)).toLocaleString()}</span></div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:8px"><span>Shipping:</span> <span style="font-weight:600">₹${(currentSTLJob.quote?.shipping||0).toLocaleString()}</span></div>
+          <div style="display:flex; justify-content:space-between; font-weight:800; color:var(--gold); border-top:1px solid var(--dark-border); margin-top:10px; padding-top:10px; font-size:1.4rem">
+            <span>TOTAL:</span> <span>₹${(currentSTLJob.quote?.total || 0).toLocaleString()}</span>
+          </div>
+        </div>
+        
+        <div style="margin-top:20px">
+          <label class="form-label">Internal Status Change</label>
+          <select class="form-control" onchange="updateSTLJobStatus('${currentSTLJob._id}', this.value)">
+            <option value="pending" ${currentSTLJob.status==='pending'?'selected':''}>New Request</option>
+            <option value="slicing" ${currentSTLJob.status==='slicing'?'selected':''}>Slicing</option>
+            <option value="queued" ${currentSTLJob.status==='queued'?'selected':''}>Queued</option>
+            <option value="printing" ${currentSTLJob.status==='printing'?'selected':''}>Printing</option>
+            <option value="processing" ${currentSTLJob.status==='processing'?'selected':''}>Post-Processing</option>
+            <option value="ready" ${currentSTLJob.status==='ready'?'selected':''}>Ready for Dispatch</option>
+            <option value="shipped" ${currentSTLJob.status==='shipped'?'selected':''}>Shipped</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Tab 2: Production
+  document.getElementById('assignPrinterId').value = currentSTLJob.printerId || '';
+  document.getElementById('jobWeightEst').value = currentSTLJob.weightEst || '';
+  
+  if(currentSTLJob.slicingSpecs) {
+    document.getElementById('specWalls').value = currentSTLJob.slicingSpecs.wallLoops || 2;
+    document.getElementById('specTop').value = currentSTLJob.slicingSpecs.topLayers || 4;
+    document.getElementById('specInfillPattern').value = currentSTLJob.slicingSpecs.infillPattern || 'grid';
+    document.getElementById('specSupport').value = currentSTLJob.slicingSpecs.supportType || 'auto';
+  }
+
+  // Tab 3: Timeline
+  renderSTLWorkflowTimeline();
+
+  switchSTLJobTab('overview', document.querySelector('#stlJobDetailModal .product-tab'));
+  document.getElementById('stlJobDetailModal').classList.add('active');
+}
+
+function renderSTLWorkflowTimeline() {
+  const timeline = currentSTLJob.workflowTimeline || [];
+  if(timeline.length === 0) timeline.push({ status: 'pending', date: currentSTLJob.createdAt, remark: 'Job created', updatedBy: 'System' });
+  
+  document.getElementById('stlWorkflowTimeline').innerHTML = timeline.map(t => `
+    <div style="position:relative; padding-bottom:20px">
+      <div style="position:absolute; left:-26px; top:0; width:10px; height:10px; border-radius:50%; background:var(--gold); border:2px solid var(--dark-bg)"></div>
+      <div style="font-weight:700; color:var(--text-main); font-size:0.85rem; text-transform:uppercase">${t.status}</div>
+      <div style="font-size:0.7rem; color:var(--text-muted)">${new Date(t.date).toLocaleString()} • By ${t.updatedBy}</div>
+      <div style="font-size:0.8rem; color:var(--text-secondary); margin-top:4px">${t.remark || ''}</div>
+    </div>
+  `).join('');
+}
+
+function switchSTLJobTab(tabId, el) {
+  document.querySelectorAll('#stlJobDetailModal .product-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.stl-tab-content').forEach(c => c.style.display = 'none');
+  document.getElementById('stl-job-tab-' + tabId).style.display = 'block';
+}
+
+async function updateSTLProduction() {
+  const printerId = document.getElementById('assignPrinterId').value;
+  const weightEst = document.getElementById('jobWeightEst').value;
+  
+  const res = await fetch(`/api/stl-jobs/${activeSTLJobId}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ printerId, weightEst: Number(weightEst) })
+  });
+  
+  if((await res.json()).success) {
+    showToast('🚀 Printer & Weight updated', 'success');
+    fetchSTLJobs();
+  }
+}
+
+async function updateSTLSlicing() {
+  const specs = {
+    wallLoops: Number(document.getElementById('specWalls').value),
+    topLayers: Number(document.getElementById('specTop').value),
+    infillPattern: document.getElementById('specInfillPattern').value,
+    supportType: document.getElementById('specSupport').value
+  };
+  
+  const res = await fetch(`/api/stl-jobs/${activeSTLJobId}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ slicingSpecs: specs })
+  });
+  
+  if((await res.json()).success) {
+    showToast('📐 Slicing parameters saved', 'success');
+    fetchSTLJobs();
+  }
+}
+
+function closeSTLJobDetailModal() { document.getElementById('stlJobDetailModal').classList.remove('active'); }
+
+let stlScene, stlCamera, stlRenderer, stlControls, stlMesh, stlBoxHelper, stlGridHelper, stlAxesHelper;
+
+function viewSTL(fileId, filename) {
+  if (!fileId) return showToast('❌ No Data ID provided','error');
+  if (typeof THREE === 'undefined') return showToast('❌ Graphics engine not loaded (Check internet)', 'error');
+
+  console.log("Starting 3D Viewer for ID:", fileId);
+  document.getElementById('stlViewFilename').textContent = filename;
+  const modal = document.getElementById('stlViewerModal');
+  const loader = document.getElementById('stlLoader');
+  const container = document.getElementById('stlContainer');
+  const stats = document.getElementById('stlTechnicalStats');
+  
+  modal.classList.add('active');
+  stats.textContent = 'BOOTING ENGINE...';
+  
+  // Clean up
+  Array.from(container.children).forEach(child => {
+    if(child.tagName === 'CANVAS') container.removeChild(child);
+  });
+  
+  if(loader) {
+    loader.style.display = 'flex';
+    loader.innerHTML = '<i class="fas fa-atom fa-spin" style="font-size:3rem; margin-bottom:15px"></i><div id="loaderStatus">INITIALIZING GPU...</div>';
+  }
+
+  // Increased delay to 500ms to ensure CSS animations finish and container size is stable
+  setTimeout(() => {
+    const width = container.clientWidth || 800;
+    const height = container.clientHeight || 600;
+    console.log("Viewport dimensions:", width, "x", height);
+
+    // 1. Scene setup with DIAGNOSTIC background (Deep Blue)
+    stlScene = new THREE.Scene();
+    stlScene.background = new THREE.Color(0x1a1a2e); 
+
+    // 2. Camera setup
+    const aspect = width / height;
+    stlCamera = new THREE.PerspectiveCamera(45, aspect, 1, 500000);
+    stlCamera.position.set(500, 500, 500);
+
+    // 3. Renderer setup
+    try {
+      stlRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+      stlRenderer.setSize(width, height);
+      stlRenderer.setPixelRatio(window.devicePixelRatio);
+      stlRenderer.setClearColor(0x1a1a2e, 1);
+      container.appendChild(stlRenderer.domElement);
+      console.log("Renderer appended successfully");
+    } catch(e) {
+      console.error("WebGL Critical Error:", e);
+      if(loader) loader.style.display = 'none';
+      return showToast('❌ GPU Initialization Failed', 'error');
+    }
+
+    // 4. Controls setup
+    const OrbitControlsCtor = window.OrbitControls || THREE.OrbitControls;
+    if (OrbitControlsCtor) {
+      stlControls = new OrbitControlsCtor(stlCamera, stlRenderer.domElement);
+      stlControls.enableDamping = true;
+    } else {
+      console.warn("OrbitControls not found in global scope");
+    }
+
+    // 5. Lighting (Ultra Bright for visibility)
+    stlScene.add(new THREE.AmbientLight(0xffffff, 1.0)); 
+    const sun = new THREE.DirectionalLight(0xffffff, 1.5);
+    sun.position.set(1000, 1000, 1000);
+    stlScene.add(sun);
+    
+    const fill = new THREE.DirectionalLight(0x1a3aff, 0.8);
+    fill.position.set(-1000, -500, -1000);
+    stlScene.add(fill);
+
+    // 6. Floor & Space Indicators (These should always be visible)
+    stlGridHelper = new THREE.GridHelper(1000, 50, 0x4444ff, 0x222244);
+    stlScene.add(stlGridHelper);
+    stlAxesHelper = new THREE.AxesHelper(300);
+    stlScene.add(stlAxesHelper); 
+
+    // 7. Render Loop
+    let frames = 0;
+    const animate = () => {
+      if (!modal.classList.contains('active')) {
+        console.log("Cleaning up viewer session");
+        if(stlRenderer) { stlRenderer.dispose(); stlRenderer = null; }
+        return;
+      }
+      requestAnimationFrame(animate);
+      if(stlControls) stlControls.update();
+      if(stlRenderer) {
+        stlRenderer.render(stlScene, stlCamera);
+        frames++;
+        if(frames === 1) console.log("First frame rendered successfully");
+      }
+    };
+    animate();
+
+    // 8. STL Data Pipeline
+    const STLLoaderCtor = window.STLLoader || THREE.STLLoader;
+    if (!STLLoaderCtor) {
+      stats.textContent = 'ERROR: ENGINE CORE MISSING';
+      return showToast('❌ 3D Engine Core Missing', 'error');
+    }
+
+    stats.textContent = 'FETCHING DATA...';
+    const stlLoaderObj = new STLLoaderCtor();
+    
+    stlLoaderObj.load(`/api/image/${fileId}`, (geometry) => {
+      console.log("STL Geometry received");
+      stats.textContent = 'DATA PARSED • ANALYZING MESH...';
+      
+      const material = new THREE.MeshPhongMaterial({ 
+        color: 0x1a3aff, 
+        specular: 0x111111, 
+        shininess: 100,
+        side: THREE.DoubleSide
+      });
+      stlMesh = new THREE.Mesh(geometry, material);
+      
+      geometry.computeBoundingBox();
+      const center = new THREE.Vector3();
+      geometry.boundingBox.getCenter(center);
+      stlMesh.position.set(-center.x, -geometry.boundingBox.min.y, -center.z);
+      stlScene.add(stlMesh);
+
+      // Bounding Box (Glow Gold)
+      stlBoxHelper = new THREE.BoxHelper(stlMesh, 0xffd700);
+      stlBoxHelper.visible = false;
+      stlScene.add(stlBoxHelper);
+
+      // Analysis & Metrics
+      const size = new THREE.Vector3();
+      geometry.boundingBox.getSize(size);
+      document.getElementById('dimX').textContent = size.x.toFixed(2);
+      document.getElementById('dimY').textContent = size.y.toFixed(2);
+      document.getElementById('dimZ').textContent = size.z.toFixed(2);
+      
+      // Volume Background Worker
+      if(geometry.attributes.position) {
+        const pos = geometry.attributes.position.array;
+        const workerCode = `
+          self.onmessage = function(e) {
+            const pos = e.data;
+            let vol = 0;
+            for(let i=0; i < pos.length; i += 9) {
+              vol += ((-pos[i+6]*pos[i+4]*pos[i+2])+(pos[i+3]*pos[i+7]*pos[i+2])+(pos[i+6]*pos[i+1]*pos[i+5])-(pos[i]*pos[i+7]*pos[i+5])-(pos[i+3]*pos[i+1]*pos[i+8])+(pos[i]*pos[i+4]*pos[i+8]));
+            }
+            self.postMessage(Math.abs(vol) / 6000); 
+          };
+        `;
+        const blob = new Blob([workerCode], {type: 'application/javascript'});
+        const worker = new Worker(URL.createObjectURL(blob));
+        worker.postMessage(pos); 
+        worker.onmessage = function(e) {
+          document.getElementById('modelVolume').textContent = e.data.toFixed(2) + ' cm³';
+          stats.textContent = 'READY • ' + (pos.length/9).toLocaleString() + ' TRIANGLES';
+          URL.revokeObjectURL(blob);
+          worker.terminate();
+        };
+      }
+
+      // Camera Auto-Focus
+      const maxDim = Math.max(size.x, size.y, size.z);
+      const fov = stlCamera.fov * (Math.PI / 180);
+      let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2)) * 2.5;
+      stlCamera.position.set(cameraZ, cameraZ, cameraZ);
+      stlCamera.lookAt(0, size.y/2, 0);
+      if(stlControls) {
+        stlControls.target.set(0, size.y/2, 0);
+        stlControls.update();
+      }
+
+      if(loader) loader.style.display = 'none';
+      showToast('✨ Analysis Successful', 'success');
+    }, 
+    (xhr) => {
+      if (xhr.lengthComputable && loader) {
+        const p = Math.round((xhr.loaded / xhr.total) * 100);
+        loader.innerHTML = `<i class="fas fa-atom fa-spin" style="font-size:3rem; margin-bottom:15px"></i><div style="font-family:var(--font-tech)">STREAMING: ${p}%</div>`;
+      }
+    }, 
+    (err) => {
+      console.error("Fetch Error:", err);
+      stats.textContent = 'DATA UNAVAILABLE';
+      if(loader) loader.style.display = 'none';
+      showToast('❌ Failed to stream data', 'error');
+    });
+  }, 500); 
+}
+
+function toggleSTLWireframe() {
+  if(stlMesh) {
+    stlMesh.material.wireframe = !stlMesh.material.wireframe;
+    showToast(stlMesh.material.wireframe ? '🕸️ Wireframe Active' : '🧊 Shaded View');
+  }
+}
+
+function toggleSTLAutoRotate() {
+  if(stlControls) {
+    stlControls.autoRotate = !stlControls.autoRotate;
+    showToast(stlControls.autoRotate ? '🔄 Auto-Orbit Active' : '📍 Rotation Locked');
+  }
+}
+
+function toggleSTLBoudingBox() {
+  if(stlBoxHelper) {
+    stlBoxHelper.visible = !stlBoxHelper.visible;
+    showToast(stlBoxHelper.visible ? '📦 Bounding Box Shown' : '📦 Bounding Box Hidden');
+  }
+}
+
+function toggleSTLGrid() {
+  if(stlGridHelper && stlAxesHelper) {
+    stlGridHelper.visible = !stlGridHelper.visible;
+    stlAxesHelper.visible = !stlAxesHelper.visible;
+    showToast(stlGridHelper.visible ? '📏 Grid & Axes Shown' : '📏 Grid & Axes Hidden');
+  }
+}
+
+function takeSTLScreenshot() {
+  if(!stlRenderer) return;
+  try {
+    const dataURL = stlRenderer.domElement.toDataURL('image/png');
+    const link = document.createElement('a');
+    link.href = dataURL;
+    link.download = '3D_Model_Screenshot.png';
+    link.click();
+    showToast('📸 Screenshot Saved!', 'success');
+  } catch(e) {
+    console.error('Screenshot failed:', e);
+    showToast('❌ Failed to take screenshot', 'error');
+  }
+}
+
+function rotateSTLModel(axis) {
+  if(!stlMesh) return;
+  const angle = Math.PI / 2; // 90 degrees
+  if(axis === 'x') stlMesh.rotation.x += angle;
+  else if(axis === 'y') stlMesh.rotation.y += angle;
+  else if(axis === 'z') stlMesh.rotation.z += angle;
+  
+  // Re-calculate bounding box after rotation for helpers
+  stlMesh.geometry.computeBoundingBox();
+  if(stlBoxHelper) stlBoxHelper.update();
+  
+  showToast(`🔄 Rotated 90° on ${axis.toUpperCase()} axis`);
+}
+
+function setSTLView(view) {
+  if(!stlMesh) return;
+  const size = new THREE.Vector3();
+  stlMesh.geometry.boundingBox.getSize(size);
+  const maxDim = Math.max(size.x, size.y, size.z);
+  const dist = maxDim * 2.5;
+  
+  if(view === 'top') stlCamera.position.set(0, dist, 0);
+  else if(view === 'front') stlCamera.position.set(0, size.y/2, dist);
+  else if(view === 'side') stlCamera.position.set(dist, size.y/2, 0);
+  else if(view === 'iso') stlCamera.position.set(dist*0.7, dist*0.7, dist*0.7);
+  
+  stlCamera.lookAt(0, size.y/2, 0);
+  if(stlControls) {
+    stlControls.target.set(0, size.y/2, 0);
+    stlControls.update();
+  }
+}
+
+function updateSTLColor(color) {
+  if(stlMesh) stlMesh.material.color.set(color);
+}
+
+function closeSTLViewer() { 
+  document.getElementById('stlViewerModal').classList.remove('active'); 
+  if(stlRenderer) {
+    stlRenderer.dispose();
+    stlRenderer = null;
+  }
+}
+
+function resetView() { 
+  if(stlControls) {
+    stlControls.reset();
+    if(stlMesh) {
+      const size = new THREE.Vector3();
+      stlMesh.geometry.boundingBox.getSize(size);
+      stlControls.target.set(0, size.y/2, 0);
+      stlControls.update();
+    }
+  }
+}
+function downloadSTL(fileId, filename) { if(!fileId) return; const link = document.createElement('a'); link.href = `/api/image/${fileId}`; link.download = filename || 'model.stl'; link.click(); }
+
+async function deleteProduct(id) { if (confirm('Delete Product?')) { await fetch(`/api/products/${id}`, { method: 'DELETE' }); fetchProducts(); } }
+
+async function saveProduct() {
+  const specs = {}; document.querySelectorAll('.tech-spec-row').forEach(row => { const k = row.querySelector('.spec-key').value.trim(), v = row.querySelector('.spec-value').value.trim(); if(k && v) specs[k] = v; });
+  const p = {
+    name: document.getElementById('productNameField').value, brand: document.getElementById('brandField').value, category: document.getElementById('categoryField').value, sku: document.getElementById('skuField').value,
+    price: Number(document.getElementById('priceField').value), original: Number(document.getElementById('originalPriceField').value), stock: Number(document.getElementById('stockField').value), lowStockAlert: Number(document.getElementById('lowStockField').value) || 5,
+    description: document.getElementById('descriptionField').value, emoji: document.getElementById('emojiField').value, badge: document.getElementById('badgeField').value, tags: document.getElementById('tagsField').value.split(',').map(t=>t.trim()).filter(t=>t),
+    imageIds: Array.from(document.querySelectorAll('#imagePreviewContainer [data-real-id]')).map(el => el.dataset.realId), specs: specs,
+    isFeatured: document.getElementById('isFeaturedField').checked,
+    metaTitle: document.getElementById('metaTitleField').value,
+    metaDescription: document.getElementById('metaDescriptionField').value
+  };
+  const res = await fetch(editingProductId ? `/api/products/${editingProductId}` : '/api/products', { method: editingProductId ? 'PUT' : 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(p) });
+  if((await res.json()).success) { showToast('✅ Saved','success'); closeAddProductModal(); fetchProducts(); }
+}
+
+async function openAddProductModal(id = null) {
+  editingProductId = id; document.getElementById('addProductModal').classList.add('active');
+  const res = await fetch('/api/settings/pricing'); const cfg = await res.json();
+  if(cfg.STORE_CATEGORIES) document.getElementById('categoryField').innerHTML = cfg.STORE_CATEGORIES.map(c => `<option value="${c.slug}">${c.name}</option>`).join('');
+  document.getElementById('productNameField').value = ''; document.getElementById('brandField').value = ''; document.getElementById('skuField').value = 'PR-' + Date.now().toString().slice(-6); document.getElementById('priceField').value = ''; document.getElementById('originalPriceField').value = ''; document.getElementById('stockField').value = ''; document.getElementById('descriptionField').value = ''; document.getElementById('emojiField').value = ''; document.getElementById('tagsField').value = ''; document.getElementById('badgeField').value = ''; document.getElementById('lowStockField').value = 5; document.getElementById('techSpecsList').innerHTML = ''; document.getElementById('imagePreviewContainer').innerHTML = '';
+  document.getElementById('isFeaturedField').checked = false;
+  document.getElementById('metaTitleField').value = '';
+  document.getElementById('metaDescriptionField').value = '';
+  
+  switchProductTab('general', document.querySelector('.product-tab'));
+  if(id) {
+    const p = adminProducts.find(x => x._id === id);
+    document.getElementById('productNameField').value = p.name; document.getElementById('skuField').value = p.sku; document.getElementById('priceField').value = p.price; document.getElementById('stockField').value = p.stock;
+    document.getElementById('brandField').value = p.brand||''; document.getElementById('categoryField').value = p.category;
+    document.getElementById('descriptionField').value = p.description||''; document.getElementById('emojiField').value = p.emoji||'';
+    document.getElementById('tagsField').value = (p.tags||[]).join(','); document.getElementById('badgeField').value = p.badge||''; document.getElementById('lowStockField').value = p.lowStockAlert||5;
+    document.getElementById('isFeaturedField').checked = p.isFeatured || false;
+    document.getElementById('metaTitleField').value = p.metaTitle || '';
+    document.getElementById('metaDescriptionField').value = p.metaDescription || '';
+    document.getElementById('imagePreviewContainer').innerHTML = (p.imageIds||[]).map(imgId => `<div style="position:relative" data-real-id="${imgId._id||imgId}"><img src="/api/image/${imgId._id||imgId}" style="height:80px;width:80px;object-fit:cover"><button onclick="this.parentElement.remove()" style="position:absolute;top:0;right:0;background:red;color:white;border:none">✕</button></div>`).join('');
+    if(p.specs) Object.entries(p.specs).forEach(([k,v]) => addTechSpecRow(k,v));
+  }
+}
+
+async function duplicateProduct(id) {
+  if(!confirm('Duplicate this product?')) return;
+  const res = await fetch(`/api/products/${id}/duplicate`, { method: 'POST' });
+  if((await res.json()).success) {
+    showToast('👯 Product duplicated!', 'success');
+    fetchProducts();
+  }
+}
+async function quickAddCategory() {
+  const name = prompt('Enter new category name:');
+  if(!name) return;
+  const slug = name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+  
+  try {
+    // 1. Fetch current pricing config
+    const res = await fetch('/api/settings/pricing');
+    const cfg = await res.json();
+    
+    if(!cfg.STORE_CATEGORIES) cfg.STORE_CATEGORIES = [];
+    if(cfg.STORE_CATEGORIES.find(c => c.slug === slug)) {
+      return showToast('Category already exists', 'info');
+    }
+    
+    // 2. Add new category
+    cfg.STORE_CATEGORIES.push({ name, slug, status: 'active' });
+    
+    // 3. Save updated config
+    const saveRes = await fetch('/api/settings/pricing', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(cfg)
+    });
+    
+    if((await saveRes.json())) {
+      showToast(`✅ Category "${name}" added!`, 'success');
+      
+      // 4. Refresh selects in modal and main view
+      document.getElementById('categoryField').innerHTML = cfg.STORE_CATEGORIES.map(c => `<option value="${c.slug}">${c.name}</option>`).join('');
+      document.getElementById('categoryField').value = slug;
+      
+      // Update the main product filter as well
+      const catFilter = document.getElementById('productCatFilter');
+      if(catFilter) {
+        const opt = document.createElement('option');
+        opt.value = slug;
+        opt.textContent = name;
+        catFilter.appendChild(opt);
+      }
+      
+      fetchProducts(); // Sync internal state
+    }
+  } catch (err) {
+    showToast('❌ Error adding category', 'error');
+  }
+}
+
+function closeAddProductModal() { document.getElementById('addProductModal').classList.remove('active'); }
+function switchProductTab(id, el) { document.querySelectorAll('.product-tab').forEach(t => t.classList.remove('active')); el.classList.add('active'); document.querySelectorAll('.p-tab-content').forEach(c => c.style.display = 'none'); document.getElementById('p-tab-'+id).style.display = 'block'; }
+function addTechSpecRow(key = '', value = '') {
+  const div = document.createElement('div'); div.className='tech-spec-row';
+  div.innerHTML=`<input class="form-control spec-key" placeholder="Key" value="${key}"><input class="form-control spec-value" placeholder="Value" value="${value}"><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove()">X</button>`;
+  document.getElementById('techSpecsList').appendChild(div);
+}
+function toggleSidebar() { document.getElementById('adminSidebar').classList.toggle('open'); }
+function showToast(m, t='info') { const c = document.getElementById('toastContainer'); const div = document.createElement('div'); div.className = `toast ${t}`; div.innerHTML = `<span>${m}</span>`; c.appendChild(div); setTimeout(() => div.remove(), 3000); }
+
+async function openMediaLibrary() {
+  document.getElementById('mediaLibraryModal').classList.add('active');
+  const gallery = document.getElementById('libraryGallery');
+  gallery.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:20px">Loading library...</div>';
+  
+  try {
+    const res = await fetch('/api/images');
+    const images = await res.json();
+    
+    if (images.length === 0) {
+      gallery.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:20px">No images found in library.</div>';
+      return;
+    }
+    
+    gallery.innerHTML = images.map(img => `
+      <div style="cursor:pointer; position:relative; border:1px solid var(--dark-border); border-radius:4px; overflow:hidden" onclick="selectImageFromLibrary('${img._id}')">
+        <img src="/api/image/${img._id}" style="width:100%; height:100px; object-fit:cover">
+        <div style="font-size:0.6rem; padding:4px; background:rgba(0,0,0,0.7); color:white; white-space:nowrap; overflow:hidden; text-overflow:ellipsis" title="${img.filename}">
+          ${img.filename}
+        </div>
+      </div>
+    `).join('');
+  } catch (err) {
+    gallery.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:20px; color:var(--error)">Error loading images.</div>';
+  }
+}
+
+function closeMediaLibrary() {
+  document.getElementById('mediaLibraryModal').classList.remove('active');
+}
+
+function selectImageFromLibrary(id) {
+  // Check if image already linked
+  if (document.querySelector(`#imagePreviewContainer [data-real-id="${id}"]`)) {
+    return showToast('Image already linked', 'info');
+  }
+  
+  document.getElementById('imagePreviewContainer').innerHTML += `
+    <div style="position:relative" data-real-id="${id}">
+      <img src="/api/image/${id}" style="height:80px;width:80px;object-fit:cover">
+      <button onclick="this.parentElement.remove()" style="position:absolute;top:0;right:0;background:var(--error);color:white;border:none;width:20px;height:20px;display:flex;align-items:center;justify-content:center;cursor:pointer">✕</button>
+    </div>`;
+  showToast('Image linked!', 'success');
+}
+
+async function handleProductImageUpload(event) {
+  const files = event.target.files;
+  for (let file of files) {
+    const formData = new FormData(); formData.append('image', file);
+    const res = await fetch('/api/upload', { method: 'POST', body: formData });
+    const data = await res.json();
+    if (data.success) { document.getElementById('imagePreviewContainer').innerHTML += `<div style="position:relative" data-real-id="${data.imageId}"><img src="/api/image/${data.imageId}" style="height:80px;width:80px;object-fit:cover"><button onclick="this.parentElement.remove()" style="position:absolute;top:0;right:0;background:red;color:white;border:none">✕</button></div>`; }
+  }
+}
+
+async function renderRepairRequests() {
+  try {
+    const res = await fetch('/api/repairs');
+    const repairs = await res.json();
+    document.getElementById('repairTableBody').innerHTML = repairs.map(r => `
+      <tr>
+        <td style="font-family:var(--font-tech)">#${r._id.slice(-6).toUpperCase()}</td>
+        <td>
+          <div style="font-weight:600">${r.customer?.name}</div>
+          <div style="font-size:0.75rem; color:var(--text-muted)">${r.customer?.phone}</div>
+        </td>
+        <td>
+          <div>${r.device || 'Unknown Device'}</div>
+          <div style="font-size:0.8rem; color:var(--text-secondary)">${r.issue}</div>
+        </td>
+        <td><span class="badge badge-${r.urgency==='high'?'error':r.urgency==='medium'?'warning':'success'}">${r.urgency.toUpperCase()}</span></td>
+        <td>
+          <select class="form-control" style="width:130px; font-size:0.8rem" onchange="updateRepairStatus('${r._id}', this.value)">
+            <option value="pending" ${r.status==='pending'?'selected':''}>Pending</option>
+            <option value="assigned" ${r.status==='assigned'?'selected':''}>Assigned</option>
+            <option value="in_repair" ${r.status==='in_repair'?'selected':''}>In Repair</option>
+            <option value="completed" ${r.status==='completed'?'selected':''}>Completed</option>
+            <option value="cancelled" ${r.status==='cancelled'?'selected':''}>Cancelled</option>
+          </select>
+        </td>
+        <td><button class="btn btn-sm btn-icon" onclick="viewRepairDetail('${r._id}')"><i class="fas fa-edit"></i></button></td>
+      </tr>
+    `).join('') || '<tr><td colspan="6" style="text-align:center; padding:40px; color:var(--text-muted)">No service requests found</td></tr>';
+  } catch (err) { showToast('❌ Error loading repairs', 'error'); }
+}
+
+async function updateRepairStatus(id, status) {
+  await fetch(`/api/repairs/${id}`, { method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify({status}) });
+  showToast('✅ Status Updated', 'success');
+}
+
+async function renderAMC() {
+  try {
+    const res = await fetch('/api/amc');
+    const plans = await res.json();
+    document.getElementById('amcTableBody').innerHTML = plans.map(p => {
+      const isExpired = new Date(p.expiryDate) < new Date();
+      return `
+        <tr>
+          <td style="font-family:var(--font-tech)">#${p._id.slice(-6).toUpperCase()}</td>
+          <td>
+            <div style="font-weight:600">${p.customer?.name}</div>
+            <div style="font-size:0.75rem; color:var(--text-muted)">${p.customer?.email}</div>
+          </td>
+          <td><span class="badge badge-royal">${p.planName}</span></td>
+          <td>
+            <div style="font-size:0.85rem">${new Date(p.expiryDate).toLocaleDateString()}</div>
+            <div style="font-size:0.7rem; color:${isExpired?'var(--error)':'var(--success)'}">${isExpired?'EXPIRED':'Valid'}</div>
+          </td>
+          <td><span class="badge badge-${p.status==='active'?'success':'warning'}">${p.status.toUpperCase()}</span></td>
+          <td>
+            <div style="display:flex; gap:5px">
+              <button class="btn btn-sm btn-outline" onclick="openAMCNotes('${p._id}')" title="Service Journal"><i class="fas fa-book"></i></button>
+              <button class="btn btn-sm btn-ghost" onclick="renewAMC('${p._id}')">Renew</button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('') || '<tr><td colspan="6" style="text-align:center; padding:40px; color:var(--text-muted)">No AMC plans found</td></tr>';
+  } catch (err) { showToast('❌ Error loading AMC plans', 'error'); }
+}
+
+let activeAMCId = null;
+let currentAMCPlan = null;
+
+async function openAMCNotes(id) {
+  activeAMCId = id;
+  const res = await fetch('/api/amc');
+  const plans = await res.json();
+  currentAMCPlan = plans.find(p => p._id === id);
+  
+  document.getElementById('amcNotesModal').classList.add('active');
+  document.getElementById('amcModalSubtitle').innerText = `${currentAMCPlan.customer.name} - ${currentAMCPlan.planName}`;
+  
+  // Set default date to now
+  const now = new Date();
+  now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+  document.getElementById('newNoteDate').value = now.toISOString().slice(0, 16);
+  
+  renderAMCNotesList();
+}
+
+function renderAMCNotesList() {
+  const searchTerm = document.getElementById('noteSearch').value.toLowerCase();
+  const filterCat = document.getElementById('filterCategory').value;
+  const list = document.getElementById('amcNotesList');
+  
+  if (!currentAMCPlan || !currentAMCPlan.notes) return;
+  
+  let filtered = currentAMCPlan.notes.filter(n => {
+    const textMatch = n.text.toLowerCase().includes(searchTerm) || n.author.toLowerCase().includes(searchTerm);
+    const catMatch = filterCat === 'all' || n.category === filterCat;
+    return textMatch && catMatch;
+  });
+  
+  // Sorting: Pinned first, then by date (newest first)
+  filtered.sort((a, b) => {
+    if (a.isPinned && !b.isPinned) return -1;
+    if (!a.isPinned && b.isPinned) return 1;
+    return new Date(b.date) - new Date(a.date);
+  });
+
+  list.innerHTML = filtered.map(n => {
+    const statusClass = n.status === 'follow-up' ? 'badge-urgent' : (n.status === 'resolved' ? 'badge-success' : 'badge-ghost');
+    const statusText = n.status === 'follow-up' ? 'Follow-up' : (n.status === 'resolved' ? 'Resolved' : 'Info');
+    const catColor = n.category === 'Maintenance' ? '#ffd700' : (n.category === 'Repair' ? '#ff4b2b' : (n.category === 'Payment' ? '#00e676' : '#1a3aff'));
+    
+    return `
+      <div style="background:var(--dark-surface); padding:16px; border-radius:12px; margin-bottom:12px; border:1px solid ${n.isPinned ? 'var(--gold)' : 'rgba(255,255,255,0.05)'}; position:relative; transition:0.3s">
+        ${n.isPinned ? '<div style="position:absolute; top:-10px; left:15px; background:var(--gold); color:var(--dark-bg); font-size:0.6rem; font-weight:700; padding:2px 8px; border-radius:10px; text-transform:uppercase">Pinned</div>' : ''}
+        
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px">
+          <div>
+            <span style="font-size:0.7rem; color:${catColor}; font-weight:700; text-transform:uppercase; border:1px solid ${catColor}44; padding:2px 6px; border-radius:4px; margin-right:8px">${n.category}</span>
+            <span class="badge ${statusClass}">${statusText}</span>
+          </div>
+          <div style="display:flex; gap:8px">
+            <button class="btn btn-xs btn-ghost" onclick="togglePinNote('${n._id}')" title="${n.isPinned ? 'Unpin' : 'Pin'}"><i class="fas fa-thumbtack" style="color:${n.isPinned ? 'var(--gold)' : 'inherit'}"></i></button>
+            <button class="btn btn-xs btn-ghost" onclick="toggleNoteStatus('${n._id}')" title="Change Status"><i class="fas fa-sync"></i></button>
+            <button class="btn btn-xs btn-ghost" onclick="deleteNote('${n._id}')" title="Delete"><i class="fas fa-trash" style="color:#ff4b2b"></i></button>
+          </div>
+        </div>
+        
+        <div style="font-size:0.95rem; line-height:1.5; margin-bottom:12px; color:var(--text-main)">${n.text}</div>
+        
+        <div style="display:flex; justify-content:space-between; font-size:0.7rem; color:var(--text-muted); border-top:1px solid rgba(255,255,255,0.05); padding-top:8px">
+          <span><i class="fas fa-user-circle"></i> ${n.author}</span>
+          <span><i class="fas fa-calendar-alt"></i> ${new Date(n.date).toLocaleString()}</span>
+        </div>
+      </div>
+    `;
+  }).join('') || '<div style="text-align:center; padding:40px; color:var(--text-muted); opacity:0.5"><i class="fas fa-book-open" style="font-size:2rem; margin-bottom:15px"></i><p>No journal entries found matching filters.</p></div>';
+}
+
+function filterAMCNotes() {
+  renderAMCNotesList();
+}
+
+async function addAMCNote() {
+  const text = document.getElementById('newAMCNoteText').value.trim();
+  const category = document.getElementById('newNoteCategory').value;
+  const status = document.getElementById('newNoteStatus').value;
+  const isPinned = document.getElementById('newNotePinned').checked;
+  const date = document.getElementById('newNoteDate').value;
+  
+  if(!text) return;
+  
+  const res = await fetch(`/api/amc/${activeAMCId}/notes`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text, category, status, isPinned, date, author: 'Admin' })
+  });
+  
+  if((await res.json()).success) {
+    document.getElementById('newAMCNoteText').value = '';
+    document.getElementById('newNotePinned').checked = false;
+    await openAMCNotes(activeAMCId);
+    showToast('✅ Entry added to journal', 'success');
+  }
+}
+
+async function togglePinNote(noteId) {
+  const note = currentAMCPlan.notes.find(n => n._id === noteId);
+  const res = await fetch(`/api/amc/${activeAMCId}/notes/${noteId}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ isPinned: !note.isPinned })
+  });
+  if((await res.json()).success) {
+    await openAMCNotes(activeAMCId);
+  }
+}
+
+async function toggleNoteStatus(noteId) {
+  const note = currentAMCPlan.notes.find(n => n._id === noteId);
+  const nextStatus = note.status === 'none' ? 'follow-up' : (note.status === 'follow-up' ? 'resolved' : 'none');
+  const res = await fetch(`/api/amc/${activeAMCId}/notes/${noteId}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ status: nextStatus })
+  });
+  if((await res.json()).success) {
+    await openAMCNotes(activeAMCId);
+  }
+}
+
+async function deleteNote(noteId) {
+  if(!confirm('Delete this entry permanently?')) return;
+  const res = await fetch(`/api/amc/${activeAMCId}/notes/${noteId}`, {
+    method: 'DELETE'
+  });
+  if((await res.json()).success) {
+    await openAMCNotes(activeAMCId);
+    showToast('🗑️ Entry deleted', 'success');
+  }
+}
+
+async function renewAMC(id) {
+  if(!confirm('Renew this plan for 1 year?')) return;
+  const newExpiry = new Date();
+  newExpiry.setFullYear(newExpiry.getFullYear() + 1);
+  await fetch(`/api/amc/${id}`, { method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify({expiryDate: newExpiry, status: 'active'}) });
+  showToast('✅ Plan Renewed', 'success');
+  renderAMC();
+}
+
+function renderPayments() { document.getElementById('paymentsTable').innerHTML = `<tr><td>pay_QZ123</td><td>#PR-8743</td><td>₹92,498</td><td><span class="badge badge-success">SUCCESS</span></td><td><button class="btn btn-sm">Refund</button></td></tr>`; }
+function renderInventory() { document.getElementById('inventoryTable').innerHTML = adminProducts.map(p => `<tr><td>${p.sku}</td><td>${p.name}</td><td>${p.stock}</td><td>${p.lowStockAlert||5}</td><td><span class="badge badge-${p.stock<5?'error':'success'}">${p.stock<5?'LOW':'OK'}</span></td><td><button class="btn btn-sm">Restock</button></td></tr>`).join(''); }
+async function renderAnalyticsCharts() {
+  try {
+    const [oRes, jRes, uRes, aRes] = await Promise.all([fetch('/api/orders'), fetch('/api/stl-jobs'), fetch('/api/users'), fetch('/api/amc')]);
+    const orders = await oRes.json();
+    const jobs = await jRes.json();
+    const users = await uRes.json();
+    const amcs = await aRes.json();
+
+    const totalRev = orders.reduce((sum, o) => sum + (o.total || 0), 0) + jobs.reduce((sum, j) => sum + (j.quote?.total || 0), 0);
+    document.getElementById('analytics-total-rev').textContent = '₹' + totalRev.toLocaleString();
+    document.getElementById('analytics-total-orders').textContent = orders.length + jobs.length;
+    document.getElementById('analytics-total-users').textContent = users.length;
+    document.getElementById('analytics-active-amc').textContent = amcs.filter(a => a.status === 'active').length;
+
+    const days = [...Array(7)].map((_,i) => { const d=new Date(); d.setDate(d.getDate()-(6-i)); return d.toLocaleDateString('en-IN',{day:'numeric',month:'short'}); });
+    
+    const orderData = days.map(dStr => orders.filter(o => new Date(o.createdAt).toLocaleDateString('en-IN',{day:'numeric',month:'short'}) === dStr).reduce((s,o)=>s+(o.total||0),0));
+    const jobData = days.map(dStr => jobs.filter(j => new Date(j.createdAt).toLocaleDateString('en-IN',{day:'numeric',month:'short'}) === dStr).reduce((s,j)=>s+(j.quote?.total||0),0));
+
+    const ctxSales = document.getElementById('salesChartFull')?.getContext('2d'); 
+    if(window.salesChartInstance) window.salesChartInstance.destroy();
+    if(ctxSales) window.salesChartInstance = new Chart(ctxSales, { type: 'bar', data: { labels: days, datasets: [{ label: 'Store Orders', data: orderData, backgroundColor: '#1a3aff', borderRadius: 4 }, { label: '3D Print Jobs', data: jobData, backgroundColor: '#ffd700', borderRadius: 4 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' } }, x: { stacked: true, grid: { display: false } } }, plugins: { legend: { labels: { color: '#ccc' } } } } });
+
+    const ctxUsers = document.getElementById('userGrowthChart')?.getContext('2d');
+    const userGrowth = days.map(dStr => users.filter(u => new Date(u.createdAt).toLocaleDateString('en-IN',{day:'numeric',month:'short'}) === dStr).length);
+    if(window.userChartInstance) window.userChartInstance.destroy();
+    if(ctxUsers) window.userChartInstance = new Chart(ctxUsers, { type: 'line', data: { labels: days, datasets: [{ label: 'New Users', data: userGrowth, borderColor: '#00e676', fill: true, backgroundColor: 'rgba(0,230,118,0.1)', tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' } }, x: { grid: { display: false } } }, plugins: { legend: { labels: { color: '#ccc' } } } } });
+  } catch (err) {
+    showToast('❌ Error loading analytics', 'error');
+  }
+}
+
+async function updateAdminBadges() { 
+  const pO = adminOrders.filter(o => o.status === 'pending').length; const pS = adminSTLJobs.filter(j => j.status === 'pending').length;
+  const oB = document.getElementById('badge-orders'); const sB = document.getElementById('badge-stl');
+  if(oB) { oB.textContent = pO; oB.style.display = pO > 0 ? 'flex' : 'none'; }
+  if(sB) { sB.textContent = pS; sB.style.display = pS > 0 ? 'flex' : 'none'; }
+}
+
+function addDesignServiceRow() { const tr = document.createElement('tr'); tr.className = 'ds-row'; tr.innerHTML = `<td><input class="form-control ds-name"></td><td><textarea class="form-control ds-desc"></textarea></td><td><input type="number" class="form-control ds-price"></td><td><input class="form-control ds-icon" value="🎨"></td><td><select class="form-control ds-status"><option value="active">Active</option><option value="maintenance">Stop</option></select></td><td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">X</button></td>`; document.getElementById('designServicesConfigTable').appendChild(tr); }
+function addMaterialRow() { const tr = document.createElement('tr'); tr.className = 'mat-row'; tr.innerHTML = `<td><input class="form-control mat-name"></td><td><input type="number" class="form-control mat-price"></td><td><input class="form-control mat-unit" value="kg"></td><td><input type="number" step="0.01" class="form-control mat-density" value="1.25"></td><td><input type="color" class="mat-color"></td><td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">X</button></td>`; document.getElementById('materialsConfigTable').appendChild(tr); }
+function addCategoryRow() { const tr = document.createElement('tr'); tr.className = 'cat-cfg-row'; tr.innerHTML = `<td><input class="form-control cat-name"></td><td><input class="form-control cat-slug"></td><td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">X</button></td>`; document.getElementById('categoriesConfigTable').appendChild(tr); }
+function addBrandRow() { const tr = document.createElement('tr'); tr.className = 'brand-cfg-row'; tr.innerHTML = `<td><input class="form-control brand-name"></td><td><select class="brand-status form-control"><option value="active">Active</option><option value="disabled">Hide</option></select></td><td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">X</button></td>`; document.getElementById('brandsConfigTable').appendChild(tr); }
+function addColorRow() { const tr = document.createElement('tr'); tr.className = 'col-row'; tr.innerHTML = `<td><input class="form-control col-name"></td><td><input type="color" class="col-hex"></td><td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">X</button></td>`; document.getElementById('colorsConfigTable').appendChild(tr); }
+function addLayerHeightRow() { const tr = document.createElement('tr'); tr.className = 'layer-row'; tr.innerHTML = `<td><input class="form-control layer-name"></td><td><input type="number" step="0.01" class="layer-value"></td><td><input type="number" step="0.01" class="layer-mult"></td><td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">X</button></td>`; document.getElementById('layerHeightsConfigTable').appendChild(tr); }
+function addFinishRow() { const tr = document.createElement('tr'); tr.className = 'fin-row'; tr.innerHTML = `<td><input class="form-control fin-name"></td><td><input type="number" class="form-control fin-price"></td><td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">X</button></td>`; document.getElementById('finishesConfigTable').appendChild(tr); }
+
+if(window.location.hash === '#auto') adminLogin();
+
+document.addEventListener('DOMContentLoaded', () => {
+  if(localStorage.getItem('adminToken')) {
+    updateDBStatus();
+  }
+});
+</script>
+</body>
+</html>

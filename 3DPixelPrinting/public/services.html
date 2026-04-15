@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Services — 3D Pixel Printing</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🖨️</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/royal-theme.css">
+  <style>
+    .service-status-overlay {
+      position: absolute;
+      inset: -10px;
+      background: rgba(13, 13, 26, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--dark-border);
+      padding: 20px;
+    }
+    .status-badge-floating {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      z-index: 101;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    }
+    .status-maintenance { background: var(--gradient-gold); color: var(--dark-bg); }
+    .status-coming-soon { background: var(--royal-blue); color: white; }
+    .status-disabled { background: var(--error); color: white; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar scrolled">
+  <div class="container">
+    <div class="navbar-inner">
+      <a href="index.html" class="navbar-logo"><div class="logo-icon">🖨️</div><div class="logo-text">3D Pixel <span>Printing</span></div></a>
+      <div style="flex:1"></div>
+      <nav class="navbar-nav">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="products.html" class="nav-link">Shop</a>
+        <a href="services.html" class="nav-link active">Services</a>
+        <a href="print-service.html" class="nav-link">3D Print</a>
+      </nav>
+      <div class="navbar-actions">
+        <button class="cart-badge-btn" onclick="window.location='cart.html'"><i class="fas fa-shopping-cart"></i><span class="cart-count">3</span></button>
+        <button class="cart-badge-btn" onclick="window.location='dashboard.html'"><i class="fas fa-user"></i></button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="page-header" style="padding-bottom:80px">
+  <div class="glow-orb glow-orb-blue" style="width:500px;height:500px;top:-100px;left:-100px;opacity:0.2"></div>
+  <div class="glow-orb glow-orb-gold" style="width:300px;height:300px;bottom:-50px;right:10%;opacity:0.15"></div>
+  <div class="container" style="position:relative;z-index:1">
+    <div class="section-label">Premium Services</div>
+    <h1 class="page-header-title">Complete 3D Printing <span class="text-gradient-gold">Solutions</span></h1>
+    <p style="color:var(--text-secondary);margin:16px auto 32px;max-width:600px">From custom prints to repair, design to AMC — 3D Pixel Printing is your one-stop 3D printing partner for every need.</p>
+    <div class="breadcrumb">
+      <a href="index.html">Home</a><span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-active">Services</span>
+    </div>
+  </div>
+</div>
+
+<!-- PRINTING SERVICE -->
+<section class="section service-section-node" id="print" data-service="printing">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;position:relative">
+      <div class="service-status-overlay" style="display:none"></div>
+      <div>
+        <div class="section-label" style="justify-content:flex-start">Most Popular</div>
+        <h2 class="section-title" style="text-align:left">3D <span class="text-gradient-royal">Printing Service</span></h2>
+        <p style="color:var(--text-secondary);line-height:1.8;margin-bottom:24px">
+          Professional FDM and resin 3D printing service. Upload your STL file and we'll handle the rest — from slicing to delivery.
+        </p>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:32px">
+          <div style="display:flex;align-items:center;gap:10px"><span style="color:var(--success)">✓</span> <span>Multiple materials: PLA, PETG, ABS, TPU, Nylon, Resin</span></div>
+          <div style="display:flex;align-items:center;gap:10px"><span style="color:var(--success)">✓</span> <span>100+ color options available</span></div>
+          <div style="display:flex;align-items:center;gap:10px"><span style="color:var(--success)">✓</span> <span>Layer height from 0.1mm to 0.3mm</span></div>
+          <div style="display:flex;align-items:center;gap:10px"><span style="color:var(--success)">✓</span> <span>Up to 300×300×300mm build volume</span></div>
+          <div style="display:flex;align-items:center;gap:10px"><span style="color:var(--success)">✓</span> <span>Instant price calculator</span></div>
+          <div style="display:flex;align-items:center;gap:10px"><span style="color:var(--success)">✓</span> <span>2–5 business day delivery pan-India</span></div>
+        </div>
+        <a href="print-service.html" class="btn btn-gold btn-lg service-cta"><i class="fas fa-upload"></i> Upload STL & Get Quote</a>
+      </div>
+      <div>
+        <div class="card" style="padding:0;overflow:hidden">
+          <div style="background:linear-gradient(135deg,rgba(26,58,255,0.15),rgba(255,215,0,0.05));padding:40px;text-align:center">
+            <div style="font-size:6rem;margin-bottom:16px;animation:float 4s ease-in-out infinite">🖨️</div>
+            <div style="font-family:var(--font-tech);color:var(--gold);font-size:1.4rem;font-weight:700">From ₹199</div>
+            <div style="color:var(--text-muted);font-size:0.85rem;margin-top:4px">per 25cm³ in PLA</div>
+          </div>
+          <div style="padding:20px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <div style="text-align:center;padding:12px;background:var(--dark-surface);border-radius:var(--radius-sm)">
+                <div style="color:var(--gold);font-weight:700">0.1mm</div>
+                <div style="font-size:0.75rem;color:var(--text-muted)">Min layer</div>
+              </div>
+              <div style="text-align:center;padding:12px;background:var(--dark-surface);border-radius:var(--radius-sm)">
+                <div style="color:var(--gold);font-weight:700">2–5 days</div>
+                <div style="font-size:0.75rem;color:var(--text-muted)">Delivery</div>
+              </div>
+              <div style="text-align:center;padding:12px;background:var(--dark-surface);border-radius:var(--radius-sm)">
+                <div style="color:var(--gold);font-weight:700">9 materials</div>
+                <div style="font-size:0.75rem;color:var(--text-muted)">Available</div>
+              </div>
+              <div style="text-align:center;padding:12px;background:var(--dark-surface);border-radius:var(--radius-sm)">
+                <div style="color:var(--gold);font-weight:700">100+ colors</div>
+                <div style="font-size:0.75rem;color:var(--text-muted)">Color options</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REPAIR SERVICE -->
+<section class="section service-section-node" id="repair" data-service="repair" style="background:var(--dark-surface);border-top:var(--border-glow);border-bottom:var(--border-glow)">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;position:relative">
+      <div class="service-status-overlay" style="display:none"></div>
+      <div class="card" style="text-align:center;padding:40px">
+        <div style="font-size:5rem;margin-bottom:16px">🔧</div>
+        <h3 style="font-family:var(--font-display);font-size:1.5rem;font-weight:700;margin-bottom:8px">Certified Repair Center</h3>
+        <p style="color:var(--text-secondary);font-size:0.9rem;line-height:1.8;margin-bottom:24px">All major brands. Expert technicians. Doorstep pickup.</p>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="background:var(--dark-surface);padding:12px;border-radius:var(--radius-sm);display:flex;justify-content:space-between">
+            <span style="font-size:0.9rem">Diagnosis Fee</span><span style="color:var(--gold);font-weight:700">FREE</span>
+          </div>
+          <div style="background:var(--dark-surface);padding:12px;border-radius:var(--radius-sm);display:flex;justify-content:space-between">
+            <span style="font-size:0.9rem">Basic Repair</span><span style="color:var(--gold);font-weight:700">₹499+</span>
+          </div>
+          <div style="background:var(--dark-surface);padding:12px;border-radius:var(--radius-sm);display:flex;justify-content:space-between">
+            <span style="font-size:0.9rem">Advanced Repair</span><span style="color:var(--gold);font-weight:700">₹999+</span>
+          </div>
+          <div style="background:var(--dark-surface);padding:12px;border-radius:var(--radius-sm);display:flex;justify-content:space-between">
+            <span style="font-size:0.9rem">Doorstep Pickup</span><span style="color:var(--success);font-weight:700">FREE (BLR)</span>
+          </div>
+        </div>
+        <button class="btn btn-gold btn-lg w-full service-cta" style="width:100%;margin-top:20px" onclick="showRepairModal()">
+          <i class="fas fa-tools"></i> Book Repair Service
+        </button>
+      </div>
+      <div>
+        <div class="section-label" style="justify-content:flex-start">Expert Service</div>
+        <h2 class="section-title" style="text-align:left">3D Printer <span class="text-gradient-royal">Repair & Maintenance</span></h2>
+        <p style="color:var(--text-secondary);line-height:1.8;margin-bottom:24px">Our certified technicians handle all 3D printer brands and models. From simple nozzle clogs to complex board failures.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:32px">
+          <div style="padding:14px;background:var(--dark-card);border:var(--border-glow);border-radius:var(--radius-sm)">
+            <div style="font-size:1.3rem;margin-bottom:6px">🔌</div>
+            <div style="font-size:0.85rem;font-weight:600">Electrical Repairs</div>
+            <div style="font-size:0.75rem;color:var(--text-muted)">Board, PSU, wiring</div>
+          </div>
+          <div style="padding:14px;background:var(--dark-card);border:var(--border-glow);border-radius:var(--radius-sm)">
+            <div style="font-size:1.3rem;margin-bottom:6px">🔩</div>
+            <div style="font-size:0.85rem;font-weight:600">Mechanical Repairs</div>
+            <div style="font-size:0.75rem;color:var(--text-muted)">Motors, belts, rods</div>
+          </div>
+          <div style="padding:14px;background:var(--dark-card);border:var(--border-glow);border-radius:var(--radius-sm)">
+            <div style="font-size:1.3rem;margin-bottom:6px">🌡️</div>
+            <div style="font-size:0.85rem;font-weight:600">HotEnd Service</div>
+            <div style="font-size:0.75rem;color:var(--text-muted)">Nozzle, heater, thermistor</div>
+          </div>
+          <div style="padding:14px;background:var(--dark-card);border:var(--border-glow);border-radius:var(--radius-sm)">
+            <div style="font-size:1.3rem;margin-bottom:6px">⚖️</div>
+            <div style="font-size:0.85rem;font-weight:600">Calibration</div>
+            <div style="font-size:0.75rem;color:var(--text-muted)">Bed leveling, PID tuning</div>
+          </div>
+        </div>
+        <div class="alert alert-success" style="font-size:0.85rem">
+          <i class="fas fa-clock"></i> <strong>Quick turnaround:</strong> 95% repairs completed within 48 hours. Express 24h service available.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DESIGN SERVICE -->
+<section class="section service-section-node" id="design" data-service="design">
+  <div class="container">
+    <div class="section-header" style="position:relative">
+      <div class="service-status-overlay" style="display:none"></div>
+      <div class="section-label">Creative Studio</div>
+      <h2 class="section-title">3D <span class="text-gradient-gold">Design Services</span></h2>
+      <p class="section-subtitle">From concept to printable 3D model. Our designers work across industries to bring your ideas to life.</p>
+    </div>
+    <div class="grid-3" style="margin-bottom:40px;position:relative">
+      <div class="service-status-overlay" style="display:none"></div>
+      <div class="service-card">
+        <div class="service-card-num">01</div>
+        <div class="service-card-icon">🏗️</div>
+        <h3 class="service-card-title">Product Design & Prototyping</h3>
+        <p class="service-card-desc">Turn your idea into a manufacturable 3D model. Multiple iterations included until you're satisfied.</p>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="color:var(--gold);font-family:var(--font-tech);font-weight:600">From ₹999</span>
+          <button class="btn btn-outline-gold btn-sm service-cta" onclick="openDesignModal()">Get Quote</button>
+        </div>
+      </div>
+      <div class="service-card">
+        <div class="service-card-num">02</div>
+        <div class="service-card-icon">🔄</div>
+        <h3 class="service-card-title">Reverse Engineering</h3>
+        <p class="service-card-desc">Send us a physical object or reference images. We'll create precise 3D models for reproduction or modification.</p>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="color:var(--gold);font-family:var(--font-tech);font-weight:600">From ₹1,499</span>
+          <button class="btn btn-outline-gold btn-sm service-cta" onclick="openDesignModal()">Get Quote</button>
+        </div>
+      </div>
+      <div class="service-card">
+        <div class="service-card-num">03</div>
+        <div class="service-card-icon">⚙️</div>
+        <h3 class="service-card-title">Mechanical CAD</h3>
+        <p class="service-card-desc">Functional parts with tight tolerances, assembly models, and engineering-grade designs using SolidWorks or Fusion 360.</p>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="color:var(--gold);font-family:var(--font-tech);font-weight:600">From ₹2,499</span>
+          <button class="btn btn-outline-gold btn-sm service-cta" onclick="openDesignModal()">Get Quote</button>
+        </div>
+      </div>
+      <div class="service-card">
+        <div class="service-card-num">04</div>
+        <div class="service-card-icon">🎨</div>
+        <h3 class="service-card-title">Artistic & Decorative</h3>
+        <p class="service-card-desc">Custom figurines, jewelry, trophies, home décor, and artistic sculptures — beautifully designed for display printing.</p>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="color:var(--gold);font-family:var(--font-tech);font-weight:600">From ₹1,999</span>
+          <button class="btn btn-outline-gold btn-sm service-cta" onclick="openDesignModal()">Get Quote</button>
+        </div>
+      </div>
+      <div class="service-card">
+        <div class="service-card-num">05</div>
+        <div class="service-card-icon">🏢</div>
+        <h3 class="service-card-title">Architectural Models</h3>
+        <p class="service-card-desc">Scale models for architectural presentations, interior design mockups, and urban planning with precise detail.</p>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="color:var(--gold);font-family:var(--font-tech);font-weight:600">From ₹4,999</span>
+          <button class="btn btn-outline-gold btn-sm service-cta" onclick="openDesignModal()">Get Quote</button>
+        </div>
+      </div>
+      <div class="service-card">
+        <div class="service-card-num">06</div>
+        <div class="service-card-icon">🔧</div>
+        <h3 class="service-card-title">STL Repair & Optimization</h3>
+        <p class="service-card-desc">Fix non-manifold meshes, optimize for printability, reduce polygon count, and repair corrupted files.</p>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="color:var(--gold);font-family:var(--font-tech);font-weight:600">From ₹299</span>
+          <button class="btn btn-outline-gold btn-sm service-cta" onclick="openDesignModal()">Get Quote</button>
+        </div>
+      </div>
+      <div class="service-card">
+        <div class="service-card-num">07</div>
+        <div class="service-card-icon">🖼️</div>
+        <h3 class="service-card-title">2D Image to 3D Printing</h3>
+        <p class="service-card-desc">Convert your photos, sketches, or logos into high-detail 3D lithophanes, wall art, or embossed physical models.</p>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="color:var(--gold);font-family:var(--font-tech);font-weight:600">From ₹499</span>
+          <a href="2d-to-3d.html" class="btn btn-outline-gold btn-sm service-cta">Try Magic Conversion</a>
+        </div>
+      </div>
+      <div class="service-card">
+        <div class="service-card-num">08</div>
+        <div class="service-card-icon">🎭</div>
+        <h3 class="service-card-title">Advanced 3D Modeling</h3>
+        <p class="service-card-desc">Complex organic modeling, character sculpting, and detailed asset creation for high-end 3D printing projects.</p>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="color:var(--gold);font-family:var(--font-tech);font-weight:600">From ₹2,999</span>
+          <button class="btn btn-outline-gold btn-sm service-cta" onclick="openDesignModal()">Get Quote</button>
+        </div>
+      </div>
+    </div>
+    <div class="text-center" style="position:relative">
+      <div class="service-status-overlay" style="display:none"></div>
+      <button class="btn btn-royal btn-xl service-cta" onclick="openDesignModal()"><i class="fas fa-pen"></i> Request Custom Design</button>
+    </div>
+  </div>
+</section>
+
+<!-- AMC PLANS -->
+<section class="section service-section-node" id="amc" data-service="amc" style="background:var(--dark-surface);border-top:var(--border-glow)">
+  <div class="container">
+    <div class="section-header" style="position:relative">
+      <div class="service-status-overlay" style="display:none"></div>
+      <div class="section-label">Enterprise & Business</div>
+      <h2 class="section-title">Annual Maintenance <span class="text-gradient-royal">Contracts</span></h2>
+      <p class="section-subtitle">Keep your 3D printer fleet running smoothly with our AMC plans. Priority support, scheduled maintenance, and peace of mind.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:40px;position:relative">
+      <div class="service-status-overlay" style="display:none"></div>
+      <!-- Basic AMC -->
+      <div class="card" style="text-align:center;position:relative">
+        <div style="font-family:var(--font-display);font-size:1.3rem;font-weight:700;margin-bottom:8px">Basic</div>
+        <div style="font-family:var(--font-tech);font-size:2.5rem;font-weight:700;color:var(--gold);line-height:1">₹2,999</div>
+        <div style="color:var(--text-muted);font-size:0.8rem;margin-bottom:24px">per printer / year</div>
+        <ul style="text-align:left;display:flex;flex-direction:column;gap:10px;margin-bottom:28px">
+          <li style="display:flex;gap:8px"><span style="color:var(--success)">✓</span> 2 scheduled services/year</li>
+          <li style="display:flex;gap:8px"><span style="color:var(--success)">✓</span> Email & WhatsApp support</li>
+          <li style="display:flex;gap:8px"><span style="color:var(--success)">✓</span> Parts at cost price</li>
+          <li style="display:flex;gap:8px"><span style="color:var(--success)">✓</span> Response within 48 hours</li>
+          <li style="display:flex;gap:8px"><span style="color:var(--text-muted)">—</span> <span style="color:var(--text-muted)">No doorstep service</span></li>
+          <li style="display:flex;gap:8px"><span style="color:var(--text-muted)">—</span> <span style="color:var(--text-muted)">No emergency callout</span></li>
+        </ul>
+        <button class="btn btn-outline w-full service-cta" style="width:100%" onclick="showToast('We\'ll call you for Basic AMC!','success')">Get Started</button>
+      </div>
+
+      <!-- Pro AMC (Featured) -->
+      <div class="card" style="text-align:center;position:relative;border-color:rgba(255,215,0,0.4);box-shadow:0 0 40px rgba(255,215,0,0.1)">
+        <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--gradient-gold);color:var(--dark-bg);padding:4px 20px;border-radius:20px;font-size:0.75rem;font-weight:700;white-space:nowrap">MOST POPULAR</div>
+        <div style="font-family:var(--font-display);font-size:1.3rem;font-weight:700;margin-bottom:8px">Business</div>
+        <div style="font-family:var(--font-tech);font-size:2.5rem;font-weight:700;color:var(--gold);line-height:1">₹5,999</div>
+        <div style="color:var(--text-muted);font-size:0.8rem;margin-bottom:24px">per printer / year</div>
+        <ul style="text-align:left;display:flex;flex-direction:column;gap:10px;margin-bottom:28px">
+          <li style="display:flex;gap:8px"><span style="color:var(--success)">✓</span> 4 scheduled services/year</li>
+          <li style="display:flex;gap:8px"><span style="color:var(--success)">✓</span> Priority phone support</li>
+          <li style="display:flex;gap:8px"><span style="color:var(--success)">✓</span> 20% off on spare parts</li>
+          <li style="display:flex;gap:8px"><span style="color:var(--success)">✓</span> Response within 24 hours</li>
+          <li style="display:flex;gap:8px"><span style="color:var(--success)">✓</span> Doorstep service (metro cities)</li>
+          <li style="display:flex;gap:8px"><span style="color:var(--text-muted)">—</span> <span style="color:var(--text-muted)">No emergency callout</span></li>
+        </ul>
+        <button class="btn btn-gold w-full service-cta" style="width:100%" onclick="showToast('Business AMC inquiry sent!','success')">Get Started</button>
+      </div>
+
+      <!-- Enterprise AMC -->
+      <div class="card" style="text-align:center;position:relative;border-color:rgba(26,58,255,0.4)">
+        <div style="font-family:var(--font-display);font-size:1.3rem;font-weight:700;margin-bottom:8px">Enterprise</div>
+        <div style="font-family:var(--font-tech);font-size:2.5rem;font-weight:700;color:var(--gold);line-height:1">₹9,999</div>
+        <div style="color:var(--text-muted);font-size:0.8rem;margin-bottom:24px">per printer / year</div>
+        <ul style="text-align:left;display:flex;flex-direction:column;gap:10px;margin-bottom:28px">
+          <li style="display:flex;gap:8px"><span style="color:var(--success)">✓</span> Monthly scheduled services</li>
+          <li style="display:flex;gap:8px"><span style="color:var(--success)">✓</span> Dedicated support engineer</li>
+          <li style="display:flex;gap:8px"><span style="color:var(--success)">✓</span> Free spare parts (common)</li>
+          <li style="display:flex;gap:8px"><span style="color:var(--success)">✓</span> 4-hour emergency response</li>
+          <li style="display:flex;gap:8px"><span style="color:var(--success)">✓</span> Doorstep service pan-India</li>
+          <li style="display:flex;gap:8px"><span style="color:var(--success)">✓</span> 24/7 emergency callout</li>
+        </ul>
+        <button class="btn btn-royal w-full service-cta" style="width:100%" onclick="showToast('Enterprise AMC team will call you!','success')">Contact Sales</button>
+      </div>
+    </div>
+
+    <div class="alert alert-info text-center" style="max-width:600px;margin:0 auto">
+      <i class="fas fa-phone"></i> Have more than 5 printers? Get a custom quote: <a href="tel:+919876543210" style="color:var(--gold);font-weight:700">+91 98765 43210</a> or <a href="mailto:amc@3dpixelprinting.in" style="color:var(--gold)">amc@3dpixelprinting.in</a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT/BOOK SERVICE -->
+<section class="section">
+  <div class="container">
+    <div class="grid-2">
+      <div>
+        <div class="section-label" style="justify-content:flex-start">Get In Touch</div>
+        <h2 class="section-title" style="text-align:left">Request a <span class="text-gradient-gold">Service Quote</span></h2>
+        <p style="color:var(--text-secondary);line-height:1.8;margin-bottom:24px">Not sure which service you need? Fill out the form and our experts will get back to you within 2 hours with a personalized quote.</p>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;gap:12px;align-items:center">
+            <div style="width:40px;height:40px;background:rgba(26,58,255,0.1);border:var(--border-glow);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0">📞</div>
+            <div>
+              <div style="font-weight:600">Call / WhatsApp</div>
+              <div style="color:var(--text-muted);font-size:0.875rem">+91 98765 43210 (9AM–7PM)</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:center">
+            <div style="width:40px;height:40px;background:rgba(26,58,255,0.1);border:var(--border-glow);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0">✉️</div>
+            <div>
+              <div style="font-weight:600">Email</div>
+              <div style="color:var(--text-muted);font-size:0.875rem">services@3dpixelprinting.in</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:center">
+            <div style="width:40px;height:40px;background:rgba(26,58,255,0.1);border:var(--border-glow);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0">📍</div>
+            <div>
+              <div style="font-weight:600">Service Center</div>
+              <div style="color:var(--text-muted);font-size:0.875rem">Koramangala, Bengaluru — 560095</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h3 style="font-weight:700;margin-bottom:20px">Quick Enquiry</h3>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Your Name *</label>
+            <input type="text" class="form-control" placeholder="Full name" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone *</label>
+            <input type="tel" class="form-control" placeholder="+91 XXXXX XXXXX" required>
+          </div>
+          <div class="form-group" style="grid-column:1/-1">
+            <label class="form-label">Service Required *</label>
+            <select class="form-control" required>
+              <option value="">Select Service</option>
+              <option>3D Printing Service</option>
+              <option>Repair & Maintenance</option>
+              <option>3D Design Service</option>
+              <option>AMC Plan</option>
+              <option>Bulk Order / B2B</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group" style="grid-column:1/-1">
+            <label class="form-label">Message</label>
+            <textarea class="form-control" rows="3" placeholder="Describe your requirement..."></textarea>
+          </div>
+        </div>
+        <button class="btn btn-gold w-full" style="width:100%" onclick="submitEnquiry()">
+          <i class="fas fa-paper-plane"></i> Send Enquiry
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
+      <div class="navbar-logo"><div class="logo-icon">🖨️</div><div class="logo-text">3D Pixel <span>Printing</span></div></div>
+      <p style="color:var(--text-muted);font-size:0.85rem">© 2025 3D Pixel Printing Technologies Pvt. Ltd.</p>
+      <div style="display:flex;gap:12px">
+        <a href="index.html" class="footer-link">Home</a>
+        <a href="products.html" class="footer-link">Shop</a>
+        <a href="print-service.html" class="footer-link">3D Print</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- DESIGN REQUEST MODAL -->
+<div class="modal-overlay" id="designModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 style="font-weight:700">🎨 Request 3D Design</h3>
+    </div>
+    <div class="grid-2">
+      <div class="form-group">
+        <label class="form-label">Your Name *</label>
+        <input type="text" class="form-control" placeholder="Name" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email *</label>
+        <input type="email" class="form-control" placeholder="email@example.com" required>
+      </div>
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">Design Service Type</label>
+        <select class="form-control">
+          <option>Product Design & Prototyping</option>
+          <option>Reverse Engineering</option>
+          <option>Mechanical CAD</option>
+          <option>Artistic & Decorative</option>
+          <option>Architectural Model</option>
+          <option>STL Repair & Optimization</option>
+          <option>2D Image to 3D Conversion</option>
+          <option>Advanced 3D Modeling</option>
+        </select>
+      </div>
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">Describe Your Project *</label>
+        <textarea class="form-control" rows="4" placeholder="Describe what you need designed — dimensions, purpose, reference images..." required></textarea>
+      </div>
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">Budget Range</label>
+        <select class="form-control">
+          <option>Under ₹1,000</option>
+          <option>₹1,000 – ₹5,000</option>
+          <option>₹5,000 – ₹20,000</option>
+          <option>Above ₹20,000</option>
+          <option>No budget limit — quality matters</option>
+        </select>
+      </div>
+      <!-- Sample Images Upload -->
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label"><i class="fas fa-images mr-2"></i>Sample / Reference Images</label>
+        <div id="designImageUpload" style="border:1px dashed rgba(26,58,255,0.4);border-radius:var(--radius-sm);padding:16px;text-align:center;cursor:pointer;background:rgba(26,58,255,0.02);transition:var(--transition)" onclick="document.getElementById('designFiles').click()">
+          <div style="font-size:1.5rem;margin-bottom:8px">📤</div>
+          <div style="font-size:0.8rem;color:var(--text-muted)">Click to upload reference photos or sketches (Max 5 images)</div>
+          <input type="file" id="designFiles" multiple accept="image/*" style="display:none" onchange="handleDesignFiles(event)">
+        </div>
+        <div id="designImagePreview" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:12px">
+      <button class="btn btn-gold" style="flex:1" onclick="submitDesignRequest()"><i class="fas fa-paper-plane"></i> Submit Request</button>
+      <button class="btn btn-ghost" onclick="closeDesignModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- REPAIR MODAL -->
+<div class="modal-overlay" id="repairModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 style="font-weight:700">🔧 Book Repair Service</h3>
+    </div>
+    <div class="grid-2">
+      <div class="form-group">
+        <label class="form-label">Your Name *</label>
+        <input type="text" class="form-control" placeholder="Name" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Phone *</label>
+        <input type="tel" class="form-control" placeholder="+91 XXXXX XXXXX" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Printer Brand *</label>
+        <select class="form-control" required>
+          <option value="">Select Brand</option>
+          <option>Bambu Lab</option><option>Creality</option><option>Prusa</option>
+          <option>Elegoo</option><option>Anycubic</option><option>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Printer Model *</label>
+        <input type="text" class="form-control" placeholder="e.g. Ender 3 V3" required>
+      </div>
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">Describe the Issue *</label>
+        <textarea class="form-control" rows="3" placeholder="What's wrong with your printer? Any error messages?" required></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">City</label>
+        <input type="text" class="form-control" placeholder="Bengaluru">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Preferred Date</label>
+        <input type="date" class="form-control">
+      </div>
+    </div>
+    <div style="display:flex;gap:12px">
+      <button class="btn btn-gold" style="flex:1" onclick="submitRepairRequest()"><i class="fas fa-tools"></i> Book Service</button>
+      <button class="btn btn-ghost" onclick="closeRepairModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+<a href="https://wa.me/919876543210" class="whatsapp-btn"><i class="fab fa-whatsapp"></i></a>
+
+<script>
+function openDesignModal() { 
+  document.getElementById('designModal').classList.add('active'); 
+  const modal = document.getElementById('designModal');
+  modal.querySelector('input[placeholder="Name"]').value = 'Arjun Mehta';
+  modal.querySelector('input[placeholder="email@example.com"]').value = 'arjun@example.com';
+  modal.querySelector('textarea').value = 'Need a custom prototype for a mechanical gear assembly. Approx 50mm diameter.';
+}
+function closeDesignModal() { 
+  document.getElementById('designModal').classList.remove('active');
+  designFiles = [];
+  document.getElementById('designImagePreview').innerHTML = '';
+}
+
+let designFiles = [];
+function handleDesignFiles(event) {
+  const files = Array.from(event.target.files);
+  const preview = document.getElementById('designImagePreview');
+  
+  if (designFiles.length + files.length > 5) {
+    showToast('⚠️ Maximum 5 images allowed', 'warning');
+    return;
+  }
+
+  files.forEach(file => {
+    if (!file.type.startsWith('image/')) return;
+    designFiles.push(file);
+    
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const div = document.createElement('div');
+      div.style.cssText = 'position:relative;width:60px;height:60px;border-radius:4px;overflow:hidden;border:1px solid rgba(26,58,255,0.3)';
+      div.innerHTML = `
+        <img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover">
+        <div onclick="removeDesignFile(this)" style="position:absolute;top:0;right:0;background:rgba(255,0,0,0.7);color:white;width:18px;height:18px;font-size:10px;display:flex;align-items:center;justify-content:center;cursor:pointer">✕</div>
+      `;
+      preview.appendChild(div);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function removeDesignFile(btn) {
+  const div = btn.parentElement;
+  const index = Array.from(div.parentElement.children).indexOf(div);
+  designFiles.splice(index, 1);
+  div.remove();
+}
+
+function submitDesignRequest() { 
+  const modal = document.getElementById('designModal');
+  const name = modal.querySelector('input[placeholder="Name"]').value.trim();
+  const email = modal.querySelector('input[placeholder="email@example.com"]').value.trim();
+  const desc = modal.querySelector('textarea').value.trim();
+
+  if (!name || !email || !desc) {
+    showToast('⚠️ Please fill in all required design request fields!', 'warning');
+    return;
+  }
+
+  const msg = designFiles.length > 0 ? `✅ Design request with ${designFiles.length} images submitted!` : '✅ Design request submitted!';
+  closeDesignModal(); 
+  showToast(msg, 'success'); 
+}
+
+function showRepairModal() { 
+  document.getElementById('repairModal').classList.add('active'); 
+  const modal = document.getElementById('repairModal');
+  modal.querySelector('input[placeholder="Name"]').value = 'Arjun Mehta';
+  modal.querySelector('input[placeholder="+91 XXXXX XXXXX"]').value = '9876543210';
+  modal.querySelector('input[placeholder="e.g. Ender 3 V3"]').value = 'Ender 3 V3';
+  modal.querySelector('textarea').value = 'Nozzle clogs frequently after 2 hours of printing.';
+}
+function closeRepairModal() { document.getElementById('repairModal').classList.remove('active'); }
+
+function submitRepairRequest() { 
+  const modal = document.getElementById('repairModal');
+  const name = modal.querySelector('input[placeholder="Name"]').value.trim();
+  const phone = modal.querySelector('input[placeholder="+91 XXXXX XXXXX"]').value.trim();
+  const model = modal.querySelector('input[placeholder="e.g. Ender 3 V3"]').value.trim();
+  const desc = modal.querySelector('textarea').value.trim();
+
+  if (!name || !phone || !model || !desc) {
+    showToast('⚠️ Please fill in all required repair fields!', 'warning');
+    return;
+  }
+
+  closeRepairModal(); 
+  showToast('✅ Repair booked! You\'ll get a call within 2 hours.', 'success'); 
+}
+
+function submitEnquiry() { 
+  const name = document.querySelector('.card .form-control[placeholder="Full name"]').value.trim();
+  const phone = document.querySelector('.card .form-control[placeholder="+91 XXXXX XXXXX"]').value.trim();
+  const service = document.querySelector('.card .form-control[placeholder="Full name"]').parentElement.parentElement.querySelector('select').value;
+
+  if (!name || !phone || !service) {
+    showToast('⚠️ Please fill in all required enquiry fields!', 'warning');
+    return;
+  }
+  showToast('✅ Enquiry submitted! We\'ll respond within 2 hours.', 'success'); 
+}
+
+function showToast(msg, type='info') {
+  const c = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<span>${msg}</span><span onclick="this.parentElement.remove()" style="cursor:pointer;margin-left:auto;opacity:0.6">✕</span>`;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 4000);
+}
+
+// Close modals on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', (e) => {
+    if(e.target === overlay) overlay.classList.remove('active');
+  });
+});
+
+async function loadServiceStatuses() {
+  try {
+    const res = await fetch('/api/settings/pricing');
+    const cfg = await res.json();
+    const statuses = cfg.SERVICES_STATUS || {};
+
+    // 1. Render Individual Design Services
+    if (cfg.DESIGN_SERVICES) {
+      const designGrid = document.querySelector('#design .grid-3');
+      if (designGrid) {
+        designGrid.innerHTML = cfg.DESIGN_SERVICES.filter(s => s.status !== 'disabled').map((s, idx) => `
+          <div class="service-card" style="position:relative">
+            ${s.status === 'coming_soon' ? `<div style="position:absolute;inset:0;background:rgba(13,13,26,0.7);backdrop-filter:blur(4px);z-index:5;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-md)"><span class="badge badge-royal">COMING SOON</span></div>` : ''}
+            ${s.status === 'maintenance' ? `<div style="position:absolute;inset:0;background:rgba(13,13,26,0.7);backdrop-filter:blur(4px);z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:var(--radius-md);text-align:center;padding:10px"><div style="font-size:1.5rem;margin-bottom:5px">🟠</div><span class="badge badge-gold" style="font-size:0.6rem">TEMPORARILY STOPPED</span></div>` : ''}
+            <div class="service-card-num">${(idx + 1).toString().padStart(2, '0')}</div>
+            <div class="service-card-icon">${s.icon || '🎨'}</div>
+            <h3 class="service-card-title">${s.name}</h3>
+            <p class="service-card-desc">${s.desc || 'Professional grade 3D design and optimization tailored for your specific needs.'}</p>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <span style="color:var(--gold);font-family:var(--font-tech);font-weight:600">From ₹${(s.price || 0).toLocaleString('en-IN')}</span>
+              <button class="btn btn-outline-gold btn-sm service-cta" ${(s.status === 'coming_soon' || s.status === 'maintenance') ? 'disabled style="opacity:0.5;pointer-events:none"' : ''} onclick="openDesignModal('${s.name}')">Get Quote</button>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    // 2. Handle Global Section Overlays
+    document.querySelectorAll('.service-section-node').forEach(section => {
+      const serviceId = section.getAttribute('data-service');
+      const status = statuses[serviceId] || 'active';
+      const overlay = section.querySelector('.service-status-overlay');
+      const ctas = section.querySelectorAll('.service-cta');
+
+      if (status === 'disabled') {
+        section.style.display = 'none';
+      } else if (status === 'maintenance') {
+        if (overlay) {
+          overlay.style.display = 'flex';
+          overlay.innerHTML = `
+            <div style="background:var(--dark-card);padding:30px;border-radius:12px;border:1px solid var(--gold);box-shadow:0 0 30px rgba(255,215,0,0.1)">
+              <div style="font-size:3rem;margin-bottom:15px">🟠</div>
+              <h3 style="color:var(--gold);margin-bottom:10px">Temporarily Stopped</h3>
+              <p style="color:var(--text-secondary);font-size:0.9rem">This service is currently under maintenance.<br>Please check back in 24-48 hours.</p>
+            </div>
+          `;
+        }
+        ctas.forEach(btn => {
+          btn.classList.add('disabled');
+          btn.style.pointerEvents = 'none';
+          btn.style.opacity = '0.5';
+        });
+      } else if (status === 'coming_soon') {
+        if (overlay) {
+          overlay.style.display = 'flex';
+          overlay.innerHTML = `
+            <div style="background:var(--dark-card);padding:30px;border-radius:12px;border:1px solid var(--royal-blue);box-shadow:0 0 30px rgba(26,58,255,0.1)">
+              <div style="font-size:3rem;margin-bottom:15px">🔵</div>
+              <h3 style="color:var(--royal-blue-light);margin-bottom:10px">Launching Soon</h3>
+              <p style="color:var(--text-secondary);font-size:0.9rem">We are preparing something amazing for you.<br>Stay tuned for the launch!</p>
+            </div>
+          `;
+        }
+        ctas.forEach(btn => {
+          btn.classList.add('disabled');
+          btn.style.pointerEvents = 'none';
+          btn.style.opacity = '0.5';
+        });
+      } else {
+        if (overlay) overlay.style.display = 'none';
+        ctas.forEach(btn => {
+          btn.classList.remove('disabled');
+          btn.style.pointerEvents = 'auto';
+          btn.style.opacity = '1';
+        });
+      }
+    });
+  } catch (err) {
+    console.error('Error loading service statuses:', err);
+  }
+}
+
+// Hash navigation
+window.addEventListener('load', () => {
+  loadServiceStatuses();
+  const hash = window.location.hash;
+  if(hash) {
+    const el = document.querySelector(hash);
+    if(el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
+  }
+  
+  // Pre-fill Quick Enquiry for demo
+  const nameInput = document.querySelector('.card input[placeholder="Full name"]');
+  if(nameInput) nameInput.value = 'Arjun Mehta';
+  const phoneInput = document.querySelector('.card input[placeholder="+91 XXXXX XXXXX"]');
+  if(phoneInput) phoneInput.value = '9876543210';
+  const serviceSelect = document.querySelector('.card select.form-control');
+  if(serviceSelect) serviceSelect.value = '3D Printing Service';
+});
+</script>
+</body>
+</html>
+

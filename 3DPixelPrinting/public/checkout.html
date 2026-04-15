@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout — 3D Pixel Printing</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🖨️</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/royal-theme.css">
+</head>
+<body>
+<nav class="navbar scrolled">
+  <div class="container">
+    <div class="navbar-inner">
+      <a href="index.html" class="navbar-logo"><div class="logo-icon">🖨️</div><div class="logo-text">3D Pixel <span>Printing</span></div></a>
+      <div style="flex:1;display:flex;align-items:center;justify-content:center">
+        <div style="display:flex;gap:0;align-items:center">
+          <div class="checkout-step active" id="cstep1"><span class="cs-num">1</span><span class="cs-label">Address</span></div>
+          <div class="cs-arrow">›</div>
+          <div class="checkout-step" id="cstep2"><span class="cs-num">2</span><span class="cs-label">Review</span></div>
+          <div class="cs-arrow">›</div>
+          <div class="checkout-step" id="cstep3"><span class="cs-num">3</span><span class="cs-label">Payment</span></div>
+        </div>
+      </div>
+      <div class="navbar-actions">
+        <button class="cart-badge-btn" onclick="window.location='cart.html'"><i class="fas fa-shopping-cart"></i><span class="cart-count">3</span></button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<style>
+.checkout-step { display:flex;align-items:center;gap:8px;padding:6px 14px;border-radius:var(--radius-sm); }
+.checkout-step.active { background:rgba(26,58,255,0.12); }
+.checkout-step.done { background:rgba(0,230,118,0.08); }
+.cs-num { width:26px;height:26px;border-radius:50%;background:var(--dark-border);display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;flex-shrink:0; }
+.checkout-step.active .cs-num { background:var(--gradient-royal); }
+.checkout-step.done .cs-num { background:var(--success);color:var(--dark-bg); }
+.cs-label { font-size:0.85rem;font-weight:500;color:var(--text-muted); }
+.checkout-step.active .cs-label { color:var(--text-primary); }
+.cs-arrow { font-size:1.3rem;color:var(--dark-border);padding:0 4px; }
+</style>
+
+<div style="padding-top:70px"></div>
+
+<!-- CHECKOUT STEPS -->
+<div class="container" style="padding-top:32px;padding-bottom:64px">
+  <!-- Step 1: Address -->
+  <div id="checkoutStep1">
+    <div style="display:grid;grid-template-columns:1fr 380px;gap:32px;align-items:start">
+      <div>
+        <!-- Saved Addresses -->
+        <div class="card" style="margin-bottom:24px">
+          <h3 style="font-weight:700;margin-bottom:20px">📍 Delivery Address</h3>
+
+          <!-- Saved address options -->
+          <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px">
+            <label style="display:flex;gap:12px;cursor:pointer;padding:16px;border:1px solid rgba(26,58,255,0.3);border-radius:var(--radius-md);background:rgba(26,58,255,0.05)">
+              <input type="radio" name="address" value="1" checked style="accent-color:var(--royal-blue);margin-top:3px">
+              <div>
+                <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
+                  <span style="font-weight:700">Arjun Mehta</span>
+                  <span class="badge badge-royal">HOME</span>
+                  <span class="badge badge-success">Default</span>
+                </div>
+                <div style="font-size:0.9rem;color:var(--text-secondary)">42, Rose Garden Apartments, Koramangala 5th Block,</div>
+                <div style="font-size:0.9rem;color:var(--text-secondary)">Bengaluru, Karnataka — 560095</div>
+                <div style="font-size:0.85rem;color:var(--text-muted);margin-top:4px">📞 +91 98765 43210</div>
+              </div>
+            </label>
+
+            <label style="display:flex;gap:12px;cursor:pointer;padding:16px;border:var(--border-glow);border-radius:var(--radius-md)">
+              <input type="radio" name="address" value="2" style="accent-color:var(--royal-blue);margin-top:3px">
+              <div>
+                <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
+                  <span style="font-weight:700">Arjun Mehta</span>
+                  <span class="badge badge-muted">OFFICE</span>
+                </div>
+                <div style="font-size:0.9rem;color:var(--text-secondary)">WeWork Prestige Tech Park, Outer Ring Road,</div>
+                <div style="font-size:0.9rem;color:var(--text-secondary)">Bengaluru, Karnataka — 560103</div>
+                <div style="font-size:0.85rem;color:var(--text-muted);margin-top:4px">📞 +91 98765 43210</div>
+              </div>
+            </label>
+          </div>
+
+          <!-- Add New Address -->
+          <button onclick="toggleNewAddress()" class="btn btn-outline btn-sm">
+            <i class="fas fa-plus"></i> Add New Address
+          </button>
+
+          <div id="newAddressForm" style="display:none;margin-top:20px;padding-top:20px;border-top:var(--border-glow)">
+            <h4 style="font-weight:700;margin-bottom:16px">New Address</h4>
+            <div class="grid-2">
+              <div class="form-group">
+                <label class="form-label">Full Name *</label>
+                <input type="text" class="form-control" placeholder="Full name" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Phone *</label>
+                <input type="tel" class="form-control" placeholder="+91 XXXXX XXXXX" required>
+              </div>
+              <div class="form-group" style="grid-column:1/-1">
+                <label class="form-label">Address Line 1 *</label>
+                <input type="text" class="form-control" placeholder="House/Flat, Building, Street" required>
+              </div>
+              <div class="form-group" style="grid-column:1/-1">
+                <label class="form-label">Address Line 2</label>
+                <input type="text" class="form-control" placeholder="Area, Landmark (optional)">
+              </div>
+              <div class="form-group">
+                <label class="form-label">City *</label>
+                <input type="text" class="form-control" placeholder="City" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">PIN Code *</label>
+                <input type="text" class="form-control" placeholder="560001" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">State *</label>
+                <select class="form-control" required>
+                  <option value="">Select State</option>
+                  <option>Karnataka</option><option>Maharashtra</option>
+                  <option>Tamil Nadu</option><option>Delhi</option>
+                  <option>Telangana</option><option>Gujarat</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Address Type</label>
+                <select class="form-control"><option>Home</option><option>Office</option><option>Other</option></select>
+              </div>
+            </div>
+            <button class="btn btn-royal" onclick="saveNewAddress()"><i class="fas fa-save"></i> Save Address</button>
+          </div>
+        </div>
+
+        <!-- Delivery Options -->
+        <div class="card">
+          <h3 style="font-weight:700;margin-bottom:16px">🚚 Delivery Options</h3>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <label style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;padding:14px;border:var(--border-glow);border-radius:var(--radius-md)">
+              <div style="display:flex;gap:12px;align-items:center">
+                <input type="radio" name="delivery" value="standard" checked style="accent-color:var(--royal-blue)">
+                <div>
+                  <div style="font-weight:600">Standard Delivery</div>
+                  <div style="font-size:0.8rem;color:var(--text-muted)">3–7 business days · Tracking included</div>
+                </div>
+              </div>
+              <div style="font-weight:700;color:var(--success)">FREE</div>
+            </label>
+            <label style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;padding:14px;border:var(--border-glow);border-radius:var(--radius-md)">
+              <div style="display:flex;gap:12px;align-items:center">
+                <input type="radio" name="delivery" value="express" style="accent-color:var(--royal-blue)">
+                <div>
+                  <div style="font-weight:600">⚡ Express Delivery</div>
+                  <div style="font-size:0.8rem;color:var(--text-muted)">1–2 business days · Priority packaging</div>
+                </div>
+              </div>
+              <div style="font-weight:700;color:var(--gold)">₹199</div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Summary -->
+      <div id="orderSummaryBox"></div>
+    </div>
+
+    <div style="margin-top:24px;display:flex;gap:12px;justify-content:flex-end">
+      <a href="cart.html" class="btn btn-ghost btn-lg"><i class="fas fa-arrow-left"></i> Back to Cart</a>
+      <button class="btn btn-gold btn-lg" onclick="goToStep2()"><i class="fas fa-arrow-right"></i> Continue to Review</button>
+    </div>
+  </div>
+
+  <!-- Step 2: Review -->
+  <div id="checkoutStep2" style="display:none">
+    <div style="display:grid;grid-template-columns:1fr 380px;gap:32px">
+      <div>
+        <div class="card" style="margin-bottom:20px">
+          <h3 style="font-weight:700;margin-bottom:20px">📦 Order Review</h3>
+          <div id="reviewItemsList"></div>
+        </div>
+        <div class="card">
+          <h3 style="font-weight:700;margin-bottom:16px">📋 GST Invoice Details</h3>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Company Name (Optional)</label>
+              <input type="text" class="form-control" placeholder="For GST Invoice">
+            </div>
+            <div class="form-group">
+              <label class="form-label">GST Number (Optional)</label>
+              <input type="text" class="form-control" placeholder="29AAAAA0000A1Z5">
+            </div>
+          </div>
+          <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> GST invoice will be emailed automatically. Download also available in your dashboard.
+          </div>
+        </div>
+      </div>
+      <div id="orderSummaryBox2"></div>
+    </div>
+    <div style="margin-top:24px;display:flex;gap:12px;justify-content:flex-end">
+      <button class="btn btn-ghost btn-lg" onclick="goToStep(1)"><i class="fas fa-arrow-left"></i> Back</button>
+      <button class="btn btn-gold btn-lg" onclick="goToStep3()"><i class="fas fa-credit-card"></i> Proceed to Payment</button>
+    </div>
+  </div>
+
+  <!-- Step 3: Payment -->
+  <div id="checkoutStep3" style="display:none">
+    <div style="display:grid;grid-template-columns:1fr 380px;gap:32px">
+      <div>
+        <div class="card">
+          <h3 style="font-weight:700;margin-bottom:20px">💳 Payment Method</h3>
+
+          <!-- Razorpay -->
+          <div style="border:1px solid rgba(26,58,255,0.3);border-radius:var(--radius-md);margin-bottom:12px;overflow:hidden">
+            <label style="display:flex;gap:14px;align-items:center;padding:16px;cursor:pointer;background:rgba(26,58,255,0.04)">
+              <input type="radio" name="paymethod" value="razorpay" checked style="accent-color:var(--royal-blue)">
+              <span style="font-size:1.5rem">💙</span>
+              <div style="flex:1">
+                <div style="font-weight:700">Razorpay</div>
+                <div style="font-size:0.8rem;color:var(--text-muted)">UPI, Cards, Net Banking, Wallets, EMI</div>
+              </div>
+              <span class="badge badge-success">Most Popular</span>
+            </label>
+          </div>
+
+          <!-- Stripe -->
+          <div style="border:var(--border-glow);border-radius:var(--radius-md);margin-bottom:12px;overflow:hidden">
+            <label style="display:flex;gap:14px;align-items:center;padding:16px;cursor:pointer">
+              <input type="radio" name="paymethod" value="stripe" style="accent-color:var(--royal-blue)">
+              <span style="font-size:1.5rem">💳</span>
+              <div style="flex:1">
+                <div style="font-weight:700">Stripe</div>
+                <div style="font-size:0.8rem;color:var(--text-muted)">International credit/debit cards</div>
+              </div>
+            </label>
+          </div>
+
+          <!-- UPI -->
+          <div style="border:var(--border-glow);border-radius:var(--radius-md);margin-bottom:12px;overflow:hidden">
+            <label style="display:flex;gap:14px;align-items:center;padding:16px;cursor:pointer">
+              <input type="radio" name="paymethod" value="upi" style="accent-color:var(--royal-blue)">
+              <span style="font-size:1.5rem">📱</span>
+              <div style="flex:1">
+                <div style="font-weight:700">UPI (Direct)</div>
+                <div style="font-size:0.8rem;color:var(--text-muted)">PhonePe, Google Pay, Paytm, BHIM</div>
+              </div>
+            </label>
+            <div id="upiDetails" style="display:none;padding:0 16px 16px">
+              <input type="text" class="form-control" placeholder="Enter UPI ID (e.g. name@paytm)">
+            </div>
+          </div>
+
+          <!-- COD -->
+          <div style="border:var(--border-glow);border-radius:var(--radius-md);margin-bottom:20px;overflow:hidden">
+            <label style="display:flex;gap:14px;align-items:center;padding:16px;cursor:pointer">
+              <input type="radio" name="paymethod" value="cod" style="accent-color:var(--royal-blue)">
+              <span style="font-size:1.5rem">💵</span>
+              <div style="flex:1">
+                <div style="font-weight:700">Cash on Delivery</div>
+                <div style="font-size:0.8rem;color:var(--text-muted)">Available for orders below ₹25,000 · ₹49 COD fee</div>
+              </div>
+            </label>
+          </div>
+
+          <!-- Security -->
+          <div style="display:flex;gap:16px;align-items:center;padding:16px;background:rgba(0,230,118,0.05);border:1px solid rgba(0,230,118,0.15);border-radius:var(--radius-md)">
+            <span style="font-size:2rem">🔒</span>
+            <div>
+              <div style="font-weight:600;font-size:0.9rem;color:var(--success)">100% Secure Checkout</div>
+              <div style="font-size:0.8rem;color:var(--text-muted)">Your payment information is encrypted with 256-bit SSL. We never store card details.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div id="orderSummaryBox3"></div>
+        <div class="card-glow" style="margin-top:16px">
+          <button class="btn btn-gold w-full btn-xl" style="width:100%" onclick="processPayment()">
+            <i class="fas fa-lock"></i> Place Order & Pay ₹<span id="finalPayAmount">0</span>
+          </button>
+          <p style="font-size:0.75rem;color:var(--text-muted);text-align:center;margin-top:12px">
+            By placing this order, you agree to our <a href="#" style="color:var(--royal-blue-light)">Terms & Conditions</a> and <a href="#" style="color:var(--royal-blue-light)">Privacy Policy</a>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:24px;display:flex;justify-content:flex-start">
+      <button class="btn btn-ghost" onclick="goToStep(2)"><i class="fas fa-arrow-left"></i> Back to Review</button>
+    </div>
+  </div>
+
+  <!-- Order Success -->
+  <div id="orderSuccess" style="display:none;text-align:center;padding:80px 24px">
+    <div style="font-size:5rem;margin-bottom:24px;animation:float 3s ease-in-out infinite">🎉</div>
+    <h2 style="font-family:var(--font-display);font-size:2.5rem;font-weight:700;margin-bottom:8px">Order Placed Successfully!</h2>
+    <p style="color:var(--text-secondary);font-size:1.1rem;margin-bottom:24px">Thank you for your order! You'll receive a confirmation email shortly.</p>
+    <div class="card" style="max-width:500px;margin:0 auto 32px;text-align:left">
+      <div style="display:flex;justify-content:space-between;margin-bottom:12px">
+        <span style="color:var(--text-muted)">Order ID</span>
+        <span style="font-family:var(--font-tech);color:var(--gold);font-weight:700" id="successOrderId">#PR-2025-08742</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:12px">
+        <span style="color:var(--text-muted)">Estimated Delivery</span>
+        <span style="font-weight:600">5–7 Business Days</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:12px">
+        <span style="color:var(--text-muted)">Payment</span>
+        <span class="badge badge-success">Confirmed</span>
+      </div>
+      <div style="display:flex;justify-content:space-between">
+        <span style="color:var(--text-muted)">Invoice</span>
+        <button id="successInvoiceBtn" style="background:none;color:var(--royal-blue-light);font-size:0.85rem;cursor:pointer"><i class="fas fa-download mr-1"></i>Download GST Invoice</button>
+      </div>
+    </div>
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+      <a href="dashboard.html" class="btn btn-royal btn-lg"><i class="fas fa-box"></i> Track Order</a>
+      <a href="products.html" class="btn btn-outline btn-lg"><i class="fas fa-store"></i> Continue Shopping</a>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+const cartItems = JSON.parse(localStorage.getItem('pr_cart') || '[]');
+
+if (cartItems.length === 0) {
+  window.location.href = 'cart.html';
+}
+
+const subtotal = cartItems.reduce((s,i) => s + (i.price * i.qty), 0);
+const gst = Math.round(subtotal * 0.18);
+const total = subtotal + gst;
+
+function renderOrderSummary(containerId) {
+  const el = document.getElementById(containerId);
+  if(!el) return;
+  el.innerHTML = `
+    <div class="card-glow">
+      <h3 style="font-weight:700;margin-bottom:20px">Order Summary</h3>
+      ${cartItems.map(i => `
+        <div style="display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--dark-border)">
+          <div style="width:40px;height:40px;background:var(--dark-surface);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:1.5rem;overflow:hidden;flex-shrink:0">
+            ${i.imageId ? `<img src="/api/image/${i.imageId}" style="width:100%;height:100%;object-fit:cover">` : (i.emoji || '📦')}
+          </div>
+          <div style="flex:1">
+            <div style="font-size:0.85rem;font-weight:600">${i.name}</div>
+            <div style="font-size:0.75rem;color:var(--text-muted)">Qty: ${i.qty}</div>
+          </div>
+          <div style="font-family:var(--font-tech);font-size:0.9rem;color:var(--gold)">₹${(i.price*i.qty).toLocaleString('en-IN')}</div>
+        </div>
+      `).join('')}
+      <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;justify-content:space-between;font-size:0.85rem"><span style="color:var(--text-muted)">Subtotal</span><span>₹${subtotal.toLocaleString('en-IN')}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:0.85rem"><span style="color:var(--text-muted)">Shipping</span><span style="color:var(--success)">FREE</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:0.85rem"><span style="color:var(--text-muted)">GST (18%)</span><span>₹${gst.toLocaleString('en-IN')}</span></div>
+        <div class="divider-glow" style="margin:6px 0"></div>
+        <div style="display:flex;justify-content:space-between">
+          <span style="font-weight:700">Total</span>
+          <span style="font-family:var(--font-tech);font-size:1.4rem;font-weight:700;color:var(--gold)">₹${total.toLocaleString('en-IN')}</span>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderReviewItems() {
+  document.getElementById('reviewItemsList').innerHTML = cartItems.map(item => `
+    <div style="display:flex;gap:14px;align-items:center;padding:14px;border:var(--border-glow);border-radius:var(--radius-md);margin-bottom:10px">
+      <div style="width:60px;height:60px;background:var(--dark-surface);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:2.5rem;overflow:hidden;flex-shrink:0">
+        ${item.imageId ? `<img src="/api/image/${item.imageId}" style="width:100%;height:100%;object-fit:cover">` : (item.emoji || '📦')}
+      </div>
+      <div style="flex:1">
+        <div style="font-weight:600">${item.name}</div>
+        <div style="font-size:0.85rem;color:var(--text-muted)">Quantity: ${item.qty}</div>
+      </div>
+      <div style="font-family:var(--font-tech);font-size:1.1rem;color:var(--gold);font-weight:700">₹${(item.price * item.qty).toLocaleString('en-IN')}</div>
+    </div>
+  `).join('');
+}
+
+function goToStep2() {
+  // Simple check for selected address
+  const selectedAddress = document.querySelector('input[name="address"]:checked');
+  if (!selectedAddress) {
+    showToast('⚠️ Please select or add a delivery address!', 'warning');
+    return;
+  }
+
+  document.getElementById('checkoutStep1').style.display = 'none';
+  document.getElementById('checkoutStep2').style.display = 'block';
+  document.getElementById('cstep1').classList.remove('active');
+  document.getElementById('cstep1').classList.add('done');
+  document.getElementById('cstep2').classList.add('active');
+  renderOrderSummary('orderSummaryBox2');
+  renderReviewItems();
+}
+
+function goToStep3() {
+  document.getElementById('checkoutStep2').style.display = 'none';
+  document.getElementById('checkoutStep3').style.display = 'block';
+  document.getElementById('cstep2').classList.remove('active');
+  document.getElementById('cstep2').classList.add('done');
+  document.getElementById('cstep3').classList.add('active');
+  renderOrderSummary('orderSummaryBox3');
+  document.getElementById('finalPayAmount').textContent = total.toLocaleString('en-IN');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function goToStep(n) {
+  [1,2,3].forEach(i => {
+    document.getElementById('checkoutStep'+i).style.display = n === i ? 'block' : 'none';
+  });
+  if(n === 1) { document.getElementById('cstep2').classList.remove('active','done'); document.getElementById('cstep1').classList.add('active'); document.getElementById('cstep1').classList.remove('done'); }
+  if(n === 2) { document.getElementById('cstep3').classList.remove('active','done'); document.getElementById('cstep2').classList.add('active'); }
+}
+
+function toggleNewAddress() {
+  const form = document.getElementById('newAddressForm');
+  const isOpening = form.style.display === 'none';
+  form.style.display = isOpening ? 'block' : 'none';
+  
+  if (isOpening) {
+    // Pre-fill for demo convenience
+    form.querySelector('input[placeholder="Full name"]').value = 'Sneha Patel';
+    form.querySelector('input[placeholder="+91 XXXXX XXXXX"]').value = '9876543211';
+    form.querySelector('input[placeholder="House/Flat, Building, Street"]').value = '15, Skyline Apartments, MG Road';
+    form.querySelector('input[placeholder="City"]').value = 'Bengaluru';
+    form.querySelector('input[placeholder="560001"]').value = '560001';
+    form.querySelector('select').value = 'Karnataka';
+  }
+}
+
+function saveNewAddress() {
+  const form = document.getElementById('newAddressForm');
+  const name = form.querySelector('input[placeholder="Full name"]').value.trim();
+  const phone = form.querySelector('input[placeholder="+91 XXXXX XXXXX"]').value.trim();
+  const line1 = form.querySelector('input[placeholder="House/Flat, Building, Street"]').value.trim();
+  const city = form.querySelector('input[placeholder="City"]').value.trim();
+  const pin = form.querySelector('input[placeholder="560001"]').value.trim();
+
+  if (!name || !phone || !line1 || !city || !pin) {
+    showToast('⚠️ Please fill in all required address fields!', 'warning');
+    return;
+  }
+
+  showToast('✅ Address saved!', 'success');
+  document.getElementById('newAddressForm').style.display = 'none';
+}
+
+window.onerror = function(msg, url, line, col, error) {
+  alert("GLOBAL ERROR: " + msg + "\nAt: " + url + ":" + line);
+  return false;
+};
+
+async function processPayment() {
+  console.log('Payment process started');
+  const method = document.querySelector('input[name="paymethod"]:checked')?.value || 'razorpay';
+  
+  if (!cartItems || cartItems.length === 0) {
+    showToast('⚠️ Your cart is empty!', 'warning');
+    return;
+  }
+
+  const payBtn = document.querySelector('#checkoutStep3 .btn-gold');
+  const originalBtnHtml = payBtn.innerHTML;
+  
+  try {
+    payBtn.disabled = true;
+    payBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+    // Get selected address data
+    const selectedAddrRadio = document.querySelector('input[name="address"]:checked');
+    let customerData = { email: 'user@mail.com' };
+    
+    if (selectedAddrRadio) {
+      if (selectedAddrRadio.value == "1") {
+        customerData = {
+          name: 'Arjun Mehta',
+          email: 'arjun@mail.com',
+          phone: '+91 98765 43210',
+          address: '42, Rose Garden Apartments, Koramangala 5th Block',
+          city: 'Bengaluru', pin: '560095', state: 'Karnataka'
+        };
+      } else if (selectedAddrRadio.value == "2") {
+        customerData = {
+          name: 'Arjun Mehta',
+          email: 'arjun@mail.com',
+          phone: '+91 98765 43210',
+          address: 'WeWork Prestige Tech Park, Outer Ring Road',
+          city: 'Bengaluru', pin: '560103', state: 'Karnataka'
+        };
+      }
+    } else {
+      const form = document.getElementById('newAddressForm');
+      if (form && form.style.display !== 'none') {
+        customerData = {
+          name: form.querySelector('input[placeholder="Full name"]').value || 'New Customer',
+          phone: form.querySelector('input[placeholder="+91 XXXXX XXXXX"]').value || '',
+          address: form.querySelector('input[placeholder="House/Flat, Building, Street"]').value || '',
+          city: form.querySelector('input[placeholder="City"]').value || '',
+          pin: form.querySelector('input[placeholder="560001"]').value || '',
+          state: form.querySelector('select').value || 'Karnataka',
+          email: 'user@mail.com'
+        };
+      } else {
+        showToast('⚠️ Please select a delivery address!', 'warning');
+        payBtn.disabled = false; payBtn.innerHTML = originalBtnHtml;
+        return;
+      }
+    }
+
+    showToast('🔄 Processing payment...', 'info');
+    
+    // Ensure numeric values
+    const currentSubtotal = cartItems.reduce((s,i) => {
+      const p = Number(String(i.price).replace(/[^0-9.]/g, '')) || 0;
+      const q = Number(i.qty) || 0;
+      return s + (p * q);
+    }, 0);
+    const currentGst = Math.round(currentSubtotal * 0.18);
+    const currentTotal = currentSubtotal + currentGst;
+
+    const orderData = {
+      customer: customerData,
+      items: cartItems.map(i => ({
+        name: i.name,
+        price: Number(String(i.price).replace(/[^0-9.]/g, '')) || 0,
+        qty: Number(i.qty) || 0,
+        emoji: i.emoji || '📦',
+        productId: (i.id && String(i.id).length === 24) ? i.id : undefined
+      })),
+      subtotal: currentSubtotal,
+      gst: currentGst,
+      total: currentTotal,
+      paymentMethod: method
+    };
+
+    console.log('Sending order request...', orderData);
+    const response = await fetch('/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(orderData)
+    });
+    
+    const data = await response.json();
+    console.log('Server response:', data);
+    
+    if (response.ok && data.success) {
+      console.log('Order success! ID:', data.orderId);
+      // Clean up UI and show success
+      document.getElementById('checkoutStep3').style.display = 'none';
+      document.getElementById('orderSuccess').style.display = 'block';
+      
+      const orderIdStr = String(data.orderId || 'N/A');
+      document.getElementById('successOrderId').textContent = '#' + (orderIdStr.length > 8 ? orderIdStr.slice(-8).toUpperCase() : orderIdStr);
+      
+      if (data.orderId) {
+        document.getElementById('successInvoiceBtn').onclick = () => window.open(`invoice.html?id=${data.orderId}`, '_blank');
+      }
+      
+      localStorage.removeItem('pr_cart');
+      showToast('🎉 Order placed successfully!', 'success');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      throw new Error(data.error || 'Server rejected the order');
+    }
+  } catch (error) {
+    console.error('CRITICAL ORDER ERROR:', error);
+    alert('❌ Order Placement Failed!\nError: ' + error.message);
+    showToast('❌ Error: ' + error.message, 'error');
+    payBtn.disabled = false;
+    payBtn.innerHTML = originalBtnHtml;
+  }
+}
+
+function showToast(msg, type='info') {
+  const c = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<span>${msg}</span><span onclick="this.parentElement.remove()" style="cursor:pointer;margin-left:auto;opacity:0.6">✕</span>`;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 4000);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderOrderSummary('orderSummaryBox');
+});
+</script>
+</body>
+</html>
+

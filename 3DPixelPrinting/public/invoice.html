@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invoice — 3D Pixel Printing</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;600;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root { --royal-blue: #1a3aff; --gold: #FFD700; --dark: #0d0d1a; }
+    body { font-family: 'Inter', sans-serif; background: #fff; color: #333; margin: 0; padding: 40px; line-height: 1.5; }
+    .invoice-box { max-width: 850px; margin: auto; border: 1px solid #eee; padding: 40px; position: relative; }
+    .header { display: flex; justify-content: space-between; border-bottom: 3px solid var(--royal-blue); padding-bottom: 20px; margin-bottom: 30px; }
+    .logo { font-family: 'Orbitron', sans-serif; font-size: 1.6rem; font-weight: 800; color: var(--dark); }
+    .logo span { color: var(--royal-blue); }
+    .invoice-title { font-family: 'Cinzel', serif; font-size: 2.2rem; color: var(--royal-blue); text-align: right; }
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+    .info-section h4 { text-transform: uppercase; color: #888; font-size: 0.75rem; margin-bottom: 10px; letter-spacing: 1.5px; font-weight: 700; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+    th { background: #f8f9ff; text-align: left; padding: 14px; border-bottom: 2px solid var(--royal-blue); font-size: 0.8rem; text-transform: uppercase; color: var(--royal-blue); }
+    td { padding: 14px; border-bottom: 1px solid #eee; font-size: 0.9rem; }
+    .totals { margin-left: auto; width: 300px; margin-top: 20px; }
+    .total-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed #eee; }
+    .grand-total { border-top: 3px solid var(--royal-blue); border-bottom: none; margin-top: 10px; padding-top: 15px; font-weight: 800; font-size: 1.5rem; color: var(--royal-blue); }
+    .footer { margin-top: 60px; text-align: center; color: #666; font-size: 0.8rem; border-top: 1px solid #eee; padding-top: 30px; }
+    .payment-qr { text-align: left; margin-top: 40px; display: flex; align-items: center; gap: 20px; }
+    .qr-placeholder { width: 100px; height: 100px; background: #eee; display: flex; align-items: center; justify-content: center; border-radius: 8px; border: 1px solid #ddd; }
+    @media print {
+      body { padding: 0; }
+      .no-print { display: none; }
+      .invoice-box { border: none; padding: 20px; }
+    }
+    .btn-print { background: var(--royal-blue); color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-weight: 700; box-shadow: 0 4px 12px rgba(26,58,255,0.2); }
+    .badge-type { padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; margin-top: 10px; display: inline-block; }
+    .badge-invoice { background: #e3f2fd; color: #1a3aff; }
+    .badge-quote { background: #fffde7; color: #fbc02d; }
+  </style>
+</head>
+<body>
+
+<div class="no-print" style="max-width:850px;margin:0 auto 20px;display:flex;justify-content:space-between;align-items:center">
+  <a href="javascript:window.close()" style="text-decoration:none;color:var(--royal-blue);font-weight:600">← Return to Dashboard</a>
+  <button class="btn-print" id="printBtn" onclick="window.print()">🖨️ Print Document</button>
+</div>
+
+<div class="invoice-box">
+  <div class="header">
+    <div>
+      <div class="logo">3D Pixel <span>Printing</span></div>
+      <div id="docTypeBadge" class="badge-type badge-invoice">Official Document</div>
+    </div>
+    <div class="invoice-title" id="docTitle">INVOICE</div>
+  </div>
+
+  <div class="info-grid">
+    <div class="info-section">
+      <h4 id="billedToLabel">Billed To</h4>
+      <div style="font-weight:800;font-size:1.2rem;color:var(--dark)" id="custName">...</div>
+      <div id="custAddr" style="margin-top:5px; color:#555">...</div>
+      <div id="custCity">...</div>
+      <div id="custPhone" style="margin-top:10px; font-weight:600">...</div>
+    </div>
+    <div class="info-section" style="text-align:right">
+      <div style="margin-bottom:20px">
+        <h4 id="numLabel">Invoice Number</h4>
+        <div style="font-weight:800; font-size:1.1rem" id="invNum">...</div>
+      </div>
+      <div>
+        <h4 id="dateLabel">Date of Issue</h4>
+        <div id="invDate" style="font-weight:600">...</div>
+      </div>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width:50%">Description</th>
+        <th style="text-align:center">Qty</th>
+        <th style="text-align:center">Unit</th>
+        <th style="text-align:right">Rate</th>
+        <th style="text-align:right">Total</th>
+      </tr>
+    </thead>
+    <tbody id="itemsBody"></tbody>
+  </table>
+
+  <div style="display:flex; justify-content:space-between; align-items:start">
+    <div style="max-width:400px">
+      <div class="payment-qr" id="qrContainer">
+        <div class="qr-placeholder"><i class="fas fa-qrcode fa-2x"></i></div>
+        <div>
+          <div style="font-weight:700; font-size:0.8rem; color:var(--dark)">PAY VIA UPI</div>
+          <div style="font-size:0.7rem; color:#888; margin-top:2px">Scan to pay securely via any UPI App</div>
+          <div id="upiId" style="font-size:0.75rem; font-weight:600; color:var(--royal-blue); margin-top:4px">amc@3dpixelprinting.in</div>
+        </div>
+      </div>
+      <div style="margin-top:30px">
+        <h4 style="text-transform:uppercase; color:#888; font-size:0.65rem; margin-bottom:8px; font-weight:700; letter-spacing:1px">Terms & Instructions</h4>
+        <div id="thanksNote" style="font-size:0.8rem; color:#555; white-space:pre-line">Thank you for choosing 3D Pixel Printing!</div>
+      </div>
+    </div>
+
+    <div class="totals">
+      <div class="total-row">
+        <span>Subtotal</span>
+        <span id="subtotal">₹0</span>
+      </div>
+      <div class="total-row">
+        <span id="gstLabel">GST Total</span>
+        <span id="gst">₹0</span>
+      </div>
+      <div class="total-row" id="discountRow" style="display:none; color:var(--royal-blue)">
+        <span>Discount</span>
+        <span id="discount">-₹0</span>
+      </div>
+      <div class="total-row grand-total">
+        <span>Grand Total</span>
+        <span id="grandTotal">₹0</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p><strong>3D Pixel Printing Technologies Pvt. Ltd.</strong></p>
+    <p>Bengaluru, KA, India | support@3dpixelprinting.in | www.3dpixelprinting.in</p>
+    <p style="margin-top:10px; font-size:0.7rem">This is a computer generated document and does not require a physical signature.</p>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+async function loadDocument() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const id = urlParams.get('id');
+  const type = urlParams.get('type') || 'invoice'; 
+  const source = urlParams.get('source') || 'order'; 
+
+  if (!id) return;
+
+  const badge = document.getElementById('docTypeBadge');
+  if(type === 'quote') {
+    document.title = 'Quotation — 3D Pixel Printing';
+    document.getElementById('docTitle').textContent = 'QUOTATION';
+    document.getElementById('billedToLabel').textContent = 'Quotation For';
+    document.getElementById('numLabel').textContent = 'Quote Number';
+    document.getElementById('dateLabel').textContent = 'Quote Date';
+    badge.textContent = 'Price Estimate';
+    badge.className = 'badge-type badge-quote';
+    document.getElementById('thanksNote').textContent = 'Valid for 15 days. Prices are subject to material availability.';
+  }
+
+  try {
+    const endpoint = source === 'job' ? `/api/stl-jobs/${id}` : `/api/orders/${id}`;
+    const res = await fetch(endpoint);
+    const data = await res.json();
+    if (!data || data.error) throw new Error('Data not found');
+
+    const c = data.customer || {};
+    document.getElementById('custName').textContent = c.name || 'Guest';
+    document.getElementById('custAddr').textContent = c.address || 'N/A';
+    document.getElementById('custCity').textContent = `${c.city||''}`;
+    document.getElementById('custPhone').textContent = 'Contact: ' + (c.phone || 'N/A');
+    
+    // Custom Doc Number support
+    const prefix = type === 'quote' ? 'QT-' : 'INV-';
+    document.getElementById('invNum').textContent = data.customDocNum || (prefix + (data._id || data.id).slice(-8).toUpperCase());
+    
+    // Custom Date support
+    const dateToUse = data.customDate ? new Date(data.customDate) : new Date(data.createdAt);
+    document.getElementById('invDate').textContent = dateToUse.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+
+    if (data.notes) document.getElementById('thanksNote').textContent = data.notes;
+
+    if (source === 'job' && !data.items) {
+      const set = data.settings || {};
+      document.getElementById('itemsBody').innerHTML = `
+        <tr>
+          <td>
+            <div style="font-weight:700">3D Printing: ${data.filename}</div>
+            <div style="font-size:0.75rem; color:#777; margin-top:4px">Material: ${set.material} | Resolution: ${set.layerHeight} | Weight: ${data.weightEst || '--'}g</div>
+          </td>
+          <td style="text-align:center">1</td>
+          <td style="text-align:center">Unit</td>
+          <td style="text-align:right">₹${((data.quote?.total - data.quote?.gst)||0).toLocaleString('en-IN')}</td>
+          <td style="text-align:right">₹${((data.quote?.total - data.quote?.gst)||0).toLocaleString('en-IN')}</td>
+        </tr>
+      `;
+    } else {
+      document.getElementById('itemsBody').innerHTML = (data.items || []).map(i => `
+        <tr>
+          <td><div style="font-weight:700">${i.name}</div></td>
+          <td style="text-align:center">${i.qty}</td>
+          <td style="text-align:center">${i.unit || 'Qty'}</td>
+          <td style="text-align:right">₹${(i.price||0).toLocaleString('en-IN')}</td>
+          <td style="text-align:right">₹${((i.price||0) * i.qty).toLocaleString('en-IN')}</td>
+        </tr>
+      `).join('');
+    }
+
+    document.getElementById('subtotal').textContent = '₹' + (data.subtotal||0).toLocaleString('en-IN');
+    document.getElementById('gst').textContent = '₹' + (data.gst||0).toLocaleString('en-IN');
+    
+    if(data.discount > 0) {
+      document.getElementById('discountRow').style.display = 'flex';
+      document.getElementById('discount').textContent = '-₹' + (data.discount||0).toLocaleString('en-IN');
+    }
+
+    const finalTotal = data.total || 0;
+    document.getElementById('grandTotal').textContent = '₹' + finalTotal.toLocaleString('en-IN');
+
+    // UPI QR Generation
+    const upiId = "amc@3dpixelprinting.in"; // Can be dynamic from settings later
+    const upiUrl = `upi://pay?pa=${upiId}&pn=3D%20Pixel%20Printing&am=${finalTotal}&cu=INR`;
+    const qrEl = document.getElementById('qrContainer').querySelector('.qr-placeholder');
+    qrEl.innerHTML = '';
+    new QRCode(qrEl, { text: upiUrl, width: 100, height: 100, colorDark: "#0d0d1a" });
+
+  } catch (err) {
+    console.error(err);
+    document.body.innerHTML = `<div style="text-align:center;padding:50px"><h2>Error loading document</h2><p>${err.message}</p></div>`;
+  }
+}
+
+loadDocument();
+</script>
+
+</body>
+</html>
+

@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details — 3D Pixel Printing</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🖨️</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/royal-theme.css">
+</head>
+<body>
+<nav class="navbar scrolled">
+  <div class="container">
+    <div class="navbar-inner">
+      <a href="index.html" class="navbar-logo">
+        <div class="logo-icon">🖨️</div>
+        <div class="logo-text">3D Pixel <span>Printing</span></div>
+      </a>
+      <div style="flex:1"></div>
+      <nav class="navbar-nav">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="products.html" class="nav-link active">Shop</a>
+        <a href="services.html" class="nav-link">Services</a>
+        <a href="print-service.html" class="nav-link">3D Print</a>
+      </nav>
+      <div class="navbar-actions">
+        <button class="cart-badge-btn" onclick="window.location='cart.html'"><i class="fas fa-shopping-cart"></i><span class="cart-count">3</span></button>
+        <button class="cart-badge-btn" onclick="window.location='dashboard.html'"><i class="fas fa-user"></i></button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- BREADCRUMB -->
+<div style="padding:90px 0 20px;background:var(--dark-surface);border-bottom:var(--border-glow)">
+  <div class="container">
+    <div class="breadcrumb" style="justify-content:flex-start">
+      <a href="index.html">Home</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="products.html">Shop</a>
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-active" id="breadcrumbName">Loading...</span>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCT DETAIL -->
+<div class="section" style="padding-top:40px">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start" id="productDetail">
+      <div style="text-align:center;padding:80px;background:var(--dark-card);border:var(--border-glow);border-radius:var(--radius-xl)">
+        <div style="font-size:1rem;color:var(--text-muted)">Loading product...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REVIEWS SECTION -->
+<div class="section" style="padding-top:0">
+  <div class="container">
+    <div class="tabs" style="margin-bottom:40px">
+      <div class="tab active" onclick="switchTab('specs',this)">📋 Specifications</div>
+      <div class="tab" onclick="switchTab('reviews',this)">⭐ Reviews</div>
+      <div class="tab" onclick="switchTab('shipping',this)">🚚 Shipping & Returns</div>
+      <div class="tab" onclick="switchTab('emi',this)">💳 EMI Options</div>
+    </div>
+
+    <div id="tabSpecs"></div>
+    <div id="tabReviews" style="display:none"></div>
+    <div id="tabShipping" style="display:none">
+      <div class="grid-3">
+        <div class="card">
+          <div style="font-size:2rem;margin-bottom:12px">🚚</div>
+          <h4 style="font-weight:700;margin-bottom:8px">Standard Delivery</h4>
+          <p style="font-size:0.9rem;color:var(--text-secondary)">3-7 business days. Free on orders above ₹2999.</p>
+        </div>
+        <div class="card">
+          <div style="font-size:2rem;margin-bottom:12px">⚡</div>
+          <h4 style="font-weight:700;margin-bottom:8px">Express Delivery</h4>
+          <p style="font-size:0.9rem;color:var(--text-secondary)">1-2 business days. ₹199 extra. Available in metro cities.</p>
+        </div>
+        <div class="card">
+          <div style="font-size:2rem;margin-bottom:12px">↩️</div>
+          <h4 style="font-weight:700;margin-bottom:8px">Easy Returns</h4>
+          <p style="font-size:0.9rem;color:var(--text-secondary)">7-day return window. Free pickup for defective items.</p>
+        </div>
+      </div>
+    </div>
+    <div id="tabEmi" style="display:none">
+      <h3 style="font-weight:700;margin-bottom:24px">EMI Plans Available</h3>
+      <div id="emiTable"></div>
+    </div>
+  </div>
+</div>
+
+<!-- RELATED PRODUCTS UPGRADE -->
+<div class="section" style="padding-top:0; background:var(--dark-surface); border-top:var(--border-glow)">
+  <div class="container">
+    <div class="section-header" style="margin-bottom:36px; display:flex; justify-content:space-between; align-items:flex-end">
+      <div>
+        <div class="section-label">Tailored for You</div>
+        <h2 class="section-title">You May <span class="text-gradient-gold">Also Like</span></h2>
+      </div>
+      <a href="products.html" class="btn btn-text" style="color:var(--royal-blue-light)">View All Products ›</a>
+    </div>
+    <div class="grid-4" id="relatedProducts"></div>
+
+    <div id="crossSellSection" style="margin-top:60px; display:none">
+      <div style="background:rgba(255,215,0,0.03); padding:30px; border-radius:20px; border:1px solid rgba(255,215,0,0.1)">
+        <h3 style="font-weight:700; margin-bottom:20px; font-size:1.2rem"><i class="fas fa-plus-circle" style="color:var(--gold)"></i> Essential Accessories</h3>
+        <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap:20px" id="crossSellProducts"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+<a href="https://wa.me/919876543210" class="whatsapp-btn"><i class="fab fa-whatsapp"></i></a>
+
+<script>
+const allProducts = [
+  { id: 1, name: 'Bambu Lab X1 Carbon Combo', brand: 'Bambu Lab', category: 'printers', price: 124999, original: 139999, rating: 4.9, reviews: 234, emoji: '🖨️', badge: 'Best Seller', stock: true,
+    desc: 'The X1 Carbon is a fully automated multi-material CoreXY 3D printer. With CoreXY structure and 600mm/s print speed, it delivers studio-quality results right out of the box.',
+    specs: { 'Technology': 'FDM / CoreXY', 'Build Volume': '256 × 256 × 256 mm', 'Max Speed': '600 mm/s', 'Layer Resolution': '0.05 - 0.35 mm', 'Nozzle Diameter': '0.4mm (Swappable)', 'Nozzle Temp': 'Up to 300°C', 'Bed Temp': 'Up to 120°C', 'Connectivity': 'Wi-Fi, LAN, SD Card', 'Camera': '1080p, AI Spaghetti Detection', 'Materials': 'PLA, PETG, TPU, ABS, ASA, PA, CF/GF filaments', 'Power': '1000W', 'Weight': '14.13 kg', 'Warranty': '1 Year 3D Pixel Printing + Bambu Lab' },
+    images: ['🖨️', '⚙️', '📐', '🔩']
+  },
+  { id: 2, name: 'Creality K1 Max Speed 300mm/s', brand: 'Creality', category: 'printers', price: 54999, original: 64999, rating: 4.7, reviews: 187, emoji: '🖨️', badge: 'Hot', stock: true,
+    desc: 'The K1 Max features a 600mm/s print speed with auto-leveling, fully enclosed design, and a huge 300×300×300mm build volume. Perfect for large model production.',
+    specs: { 'Technology': 'FDM / CoreXY', 'Build Volume': '300 × 300 × 300 mm', 'Max Speed': '600 mm/s', 'Layer Resolution': '0.1 - 0.35 mm', 'Nozzle Temp': 'Up to 300°C', 'Bed Temp': 'Up to 100°C', 'Connectivity': 'Wi-Fi, USB, SD Card', 'Leveling': 'Automatic (LIDAR)', 'Materials': 'PLA, PETG, TPU, ABS', 'Display': '4.3" Touch Screen', 'Warranty': '1 Year' },
+    images: ['🖨️', '⚙️', '🔧', '📦']
+  },
+  { id: 4, name: 'eSUN PLA+ 1kg Silk Black', brand: 'eSUN', category: 'filaments', price: 1299, original: 1599, rating: 4.6, reviews: 541, emoji: '🧵', badge: 'Top Rated', stock: true,
+    desc: 'eSUN PLA+ offers improved toughness and strength over standard PLA. Excellent for functional parts and detailed models with beautiful surface finish.',
+    specs: { 'Material': 'PLA+', 'Diameter': '1.75mm ± 0.03mm', 'Weight': '1000g Net', 'Print Temp': '190-220°C', 'Bed Temp': '25-60°C', 'Tensile Strength': '65 MPa', 'Elongation at Break': '13.8%', 'MFI': '14g/10min', 'Density': '1.24 g/cm³', 'Color': 'Silk Black', 'Certifications': 'RoHS, FDA, SGS' },
+    images: ['🧵', '📦', '🎨', '⚗️']
+  },
+];
+
+const reviewData = [
+  { name: 'Rajesh Kumar', rating: 5, date: '3 days ago', text: 'Absolutely stunning printer. The print quality is out of this world. Very happy with 3D Pixel Printing\'s service — packed extremely well, delivered on time!', verified: true, helpful: 23 },
+  { name: 'Anita Singh', rating: 5, date: '1 week ago', text: 'This is my 3rd printer from 3D Pixel Printing. The X1 Carbon is leagues ahead. Multi-color prints come out flawlessly. The AMS system is a game changer.', verified: true, helpful: 18 },
+  { name: 'Suresh Nair', rating: 4, date: '2 weeks ago', text: 'Great printer, prints are excellent. Took a while to get used to all the settings but 3D Pixel Printing\'s support team was very helpful guiding me through the setup.', verified: true, helpful: 12 },
+  { name: 'Deepika Rao', rating: 5, date: '3 weeks ago', text: 'Ordered for our design studio. The speed and accuracy are incredible. Worth every rupee. 3D Pixel Printing gave us best pricing compared to other sellers!', verified: true, helpful: 31 },
+  { name: 'Vikram Bhat', rating: 4, date: '1 month ago', text: 'Build quality feels very premium. The pre-installed camera is a nice touch. Slight learning curve but documentation is comprehensive.', verified: false, helpful: 7 },
+];
+
+let product = null;
+
+async function loadProduct() {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+  
+  if (!id) {
+    showToast('❌ Product ID missing', 'error');
+    return;
+  }
+
+  try {
+    const response = await fetch(`/api/products/${id}`);
+    product = await response.json();
+    
+    if (product.error) {
+      showToast('❌ Product not found', 'error');
+      return;
+    }
+
+    document.title = product.name + ' — 3D Pixel Printing';
+    document.getElementById('breadcrumbName').textContent = product.name;
+    renderProductDetail(product);
+    renderSpecs(product);
+    renderReviews();
+    renderRelated(product);
+    renderEMI(product.price);
+  } catch (error) {
+    console.error('Error loading product:', error);
+    showToast('❌ Failed to load product', 'error');
+  }
+}
+
+function renderProductDetail(p) {
+  const discount = p.original ? Math.round((1 - p.price/p.original) * 100) : 0;
+  const emi = Math.round(p.price / 12);
+  const productId = p._id || p.id;
+  
+  // Create a gallery array: prioritizing database images, fallback to emoji
+  let gallery = [];
+  if (p.imageIds && p.imageIds.length > 0) {
+    p.imageIds.forEach(img => {
+      const imgId = img._id || img;
+      gallery.push({ type: 'img', src: `/api/image/${imgId}` });
+    });
+  }
+  if (p.emoji) gallery.push({ type: 'text', src: p.emoji });
+  if (gallery.length === 0) gallery.push({ type: 'text', src: '📦' });
+
+  document.getElementById('productDetail').innerHTML = `
+    <!-- Gallery -->
+    <div class="animate-fade-in-left">
+      <div class="product-gallery">
+        <div class="product-thumbnails">
+          ${gallery.map((img, i) => `
+            <div class="product-thumbnail ${i===0?'active':''}" onclick="setMainImg(this, '${img.src}', '${img.type}')">
+              ${img.type === 'img' ? `<img src="${img.src}" style="width:100%;height:100%;object-fit:cover">` : img.src}
+            </div>
+          `).join('')}
+        </div>
+        <div class="product-main-image" id="mainImage">
+          ${gallery[0].type === 'img' ? 
+            `<img src="${gallery[0].src}" alt="${p.name}" style="width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 30px rgba(26,58,255,0.2))">` : 
+            `<span style="font-size:10rem;filter:drop-shadow(0 0 30px rgba(26,58,255,0.4))">${gallery[0].src}</span>`
+          }
+          ${p.badge ? `<div style="position:absolute;top:16px;left:16px"><span class="badge badge-gold">${p.badge}</span></div>` : ''}
+        </div>
+      </div>
+    </div>
+
+    <!-- Info -->
+    <div class="product-info animate-fade-in-right">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+        <span class="badge badge-royal">${p.category}</span>
+        ${p.badge ? `<span class="badge badge-gold">${p.badge}</span>` : ''}
+        ${p.stock > 0 ? '<span class="badge badge-success">● In Stock</span>' : '<span class="badge badge-error">Out of Stock</span>'}
+      </div>
+
+      <h1 style="font-family:var(--font-display);font-size:1.8rem;font-weight:700;line-height:1.3;margin-bottom:8px">${p.name}</h1>
+      <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:16px">Brand: <span style="color:var(--royal-blue-light)">${p.brand}</span> · SKU: ${p.sku}</p>
+
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
+        <div class="star-rating">${renderStars(p.rating)}</div>
+        <span style="color:var(--gold);font-weight:700">${p.rating}</span>
+        <span style="color:var(--text-muted);font-size:0.85rem">(${p.reviews} reviews)</span>
+        <span style="color:var(--text-muted)">|</span>
+        <span style="color:var(--success);font-size:0.85rem">✓ Verified Seller</span>
+      </div>
+
+      <p style="color:var(--text-secondary);line-height:1.7;margin-bottom:20px">${p.description}</p>
+
+      <div style="background:var(--dark-card);border:var(--border-glow);border-radius:var(--radius-md);padding:20px;margin-bottom:20px">
+        <div style="display:flex;align-items:baseline;gap:16px;margin-bottom:8px">
+          <span class="product-detail-price">₹${p.price.toLocaleString('en-IN')}</span>
+          ${p.original ? `<span class="product-price-original" style="font-size:1.1rem">₹${p.original.toLocaleString('en-IN')}</span>
+          <span class="badge badge-success">${discount}% OFF</span>` : ''}
+        </div>
+        <p style="font-size:0.85rem;color:var(--text-muted)">Inclusive of all taxes · GST invoice available</p>
+        <p style="font-size:0.85rem;color:var(--royal-blue-light);margin-top:4px">💳 No-cost EMI from ₹${emi.toLocaleString('en-IN')}/month</p>
+      </div>
+
+      <!-- Quantity & Actions -->
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+        <span style="font-size:0.9rem;color:var(--text-muted)">Qty:</span>
+        <div class="cart-item-qty">
+          <button class="qty-btn" onclick="updateQty(-1)">−</button>
+          <span class="qty-val" id="qtyVal">1</span>
+          <button class="qty-btn" onclick="updateQty(1)">+</button>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap">
+        ${p.stock > 0 ? `
+          <button class="btn btn-gold btn-lg" style="flex:1;min-width:160px" onclick="addToCart()">
+            <i class="fas fa-cart-plus"></i> Add to Cart
+          </button>
+          <button class="btn btn-royal btn-lg" style="flex:1;min-width:160px" onclick="buyNow()">
+            <i class="fas fa-bolt"></i> Buy Now
+          </button>` : `
+          <button class="btn btn-ghost btn-lg" style="flex:2" disabled>Out of Stock</button>
+          <button class="btn btn-outline btn-lg" onclick="notifyMe()"><i class="fas fa-bell"></i> Notify Me</button>`}
+        <button class="btn btn-ghost btn-icon btn-lg" onclick="addToWishlist()" title="Add to Wishlist"><i class="far fa-heart"></i></button>
+      </div>
+
+      <!-- Services -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
+        <div style="background:var(--dark-surface);border:var(--border-glow);border-radius:var(--radius-sm);padding:12px;display:flex;align-items:center;gap:10px">
+          <span>🚚</span><span style="font-size:0.8rem;color:var(--text-secondary)">Free shipping above ₹2999</span>
+        </div>
+        <div style="background:var(--dark-surface);border:var(--border-glow);border-radius:var(--radius-sm);padding:12px;display:flex;align-items:center;gap:10px">
+          <span>🛡️</span><span style="font-size:0.8rem;color:var(--text-secondary)">1-Year Warranty</span>
+        </div>
+        <div style="background:var(--dark-surface);border:var(--border-glow);border-radius:var(--radius-sm);padding:12px;display:flex;align-items:center;gap:10px">
+          <span>↩️</span><span style="font-size:0.8rem;color:var(--text-secondary)">7-Day Easy Returns</span>
+        </div>
+        <div style="background:var(--dark-surface);border:var(--border-glow);border-radius:var(--radius-sm);padding:12px;display:flex;align-items:center;gap:10px">
+          <span>✅</span><span style="font-size:0.8rem;color:var(--text-secondary)">100% Authentic Product</span>
+        </div>
+      </div>
+
+      <!-- Share -->
+      <div style="display:flex;align-items:center;gap:10px;padding-top:16px;border-top:var(--border-glow)">
+        <span style="font-size:0.85rem;color:var(--text-muted)">Share:</span>
+        <button class="btn btn-ghost btn-sm btn-icon" onclick="shareProduct('whatsapp')"><i class="fab fa-whatsapp" style="color:#25D366"></i></button>
+        <button class="btn btn-ghost btn-sm btn-icon" onclick="shareProduct('twitter')"><i class="fab fa-twitter" style="color:#1DA1F2"></i></button>
+        <button class="btn btn-ghost btn-sm btn-icon" onclick="shareProduct('copy')"><i class="fas fa-link"></i></button>
+      </div>
+    </div>
+  `;
+}
+
+function renderSpecs(p) {
+  const specs = p.specs || {};
+  document.getElementById('tabSpecs').innerHTML = `
+    <div class="grid-2">
+      <div class="card">
+        <h3 style="font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:8px">
+          <span style="color:var(--royal-blue-light)">📋</span> Technical Specifications
+        </h3>
+        <div class="table-wrapper">
+          <table class="table">
+            <tbody>
+              ${Object.entries(specs).map(([k,v]) => `
+                <tr>
+                  <td style="width:45%;color:var(--text-muted);font-weight:500">${k}</td>
+                  <td style="font-weight:600">${v}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="card mb-4" style="margin-bottom:20px">
+          <h4 style="font-weight:700;margin-bottom:16px">📦 What's in the Box</h4>
+          <ul style="display:flex;flex-direction:column;gap:8px">
+            <li style="display:flex;align-items:center;gap:8px;color:var(--text-secondary)"><span style="color:var(--success)">✓</span> ${p.name}</li>
+            <li style="display:flex;align-items:center;gap:8px;color:var(--text-secondary)"><span style="color:var(--success)">✓</span> Power Cable & Adapter</li>
+            <li style="display:flex;align-items:center;gap:8px;color:var(--text-secondary)"><span style="color:var(--success)">✓</span> Sample Filament Spool</li>
+            <li style="display:flex;align-items:center;gap:8px;color:var(--text-secondary)"><span style="color:var(--success)">✓</span> Calibration Tools</li>
+            <li style="display:flex;align-items:center;gap:8px;color:var(--text-secondary)"><span style="color:var(--success)">✓</span> User Manual (English)</li>
+            <li style="display:flex;align-items:center;gap:8px;color:var(--text-secondary)"><span style="color:var(--success)">✓</span> 3D Pixel Printing Setup Guide</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4 style="font-weight:700;margin-bottom:16px">💡 Quick Tips</h4>
+          <ul style="display:flex;flex-direction:column;gap:8px">
+            <li style="font-size:0.85rem;color:var(--text-secondary)">🔧 Free setup assistance via WhatsApp</li>
+            <li style="font-size:0.85rem;color:var(--text-secondary)">📹 Watch setup video on 3D Pixel Printing YouTube</li>
+            <li style="font-size:0.85rem;color:var(--text-secondary)">🛠️ Schedule professional installation (₹499)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderReviews() {
+  const avgRating = 4.8;
+  const ratingDist = [40, 10, 8, 5, 3]; // 5 star to 1 star counts (reversed)
+  const total = ratingDist.reduce((a,b) => a+b, 0);
+
+  document.getElementById('tabReviews').innerHTML = `
+    <div style="display:grid;grid-template-columns:280px 1fr;gap:32px;margin-bottom:32px">
+      <div class="card text-center">
+        <div style="font-family:var(--font-tech);font-size:4rem;font-weight:900;color:var(--gold);line-height:1">${avgRating}</div>
+        <div class="star-rating" style="justify-content:center;margin:8px 0">${renderStars(avgRating)}</div>
+        <div style="color:var(--text-muted);font-size:0.85rem">${reviewData.length} verified reviews</div>
+        <div style="margin-top:20px;display:flex;flex-direction:column;gap:6px">
+          ${[5,4,3,2,1].map((s,i) => `
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:0.8rem;width:20px;text-align:right">${s}★</span>
+              <div class="progress-bar" style="flex:1">
+                <div class="progress-fill" style="width:${Math.round((ratingDist[4-i]/total)*100)}%"></div>
+              </div>
+              <span style="font-size:0.75rem;color:var(--text-muted);width:24px">${ratingDist[4-i]}</span>
+            </div>
+          `).join('')}
+        </div>
+        <button class="btn btn-royal w-full mt-4" style="width:100%;margin-top:16px" onclick="openReviewModal()">
+          <i class="fas fa-pen"></i> Write a Review
+        </button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        ${reviewData.map(r => `
+          <div class="card">
+            <div style="display:flex;align-items:start;justify-content:space-between;margin-bottom:12px">
+              <div style="display:flex;align-items:center;gap:12px">
+                <div style="width:40px;height:40px;background:var(--gradient-royal);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700">${r.name[0]}</div>
+                <div>
+                  <div style="font-weight:600">${r.name} ${r.verified ? '<span class="badge badge-success" style="font-size:0.65rem;padding:2px 6px">✓ Verified</span>' : ''}</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted)">${r.date}</div>
+                </div>
+              </div>
+              <div class="star-rating">${renderStars(r.rating)}</div>
+            </div>
+            <p style="font-size:0.9rem;color:var(--text-secondary);line-height:1.7">${r.text}</p>
+            <div style="margin-top:10px;font-size:0.8rem;color:var(--text-muted)">
+              👍 ${r.helpful} people found this helpful
+              <button style="margin-left:12px;background:none;color:var(--royal-blue-light);cursor:pointer;font-size:0.8rem" onclick="markHelpful(this, ${r.helpful})">Helpful?</button>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function renderEMI(price) {
+  const banks = [
+    { bank: 'HDFC Bank', months: 3, rate: 0, logo: '🏦' },
+    { bank: 'ICICI Bank', months: 6, rate: 0, logo: '🏦' },
+    { bank: 'SBI Card', months: 9, rate: 12, logo: '🏦' },
+    { bank: 'Axis Bank', months: 12, rate: 14, logo: '🏦' },
+    { bank: 'Kotak Bank', months: 18, rate: 16, logo: '🏦' },
+    { bank: 'Bajaj Finance', months: 24, rate: 14, logo: '💳' },
+  ];
+
+  document.getElementById('emiTable').innerHTML = `
+    <div class="table-wrapper">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Bank/Provider</th>
+            <th>Tenure</th>
+            <th>Interest Rate</th>
+            <th>Monthly EMI</th>
+            <th>Total Amount</th>
+            <th>Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${banks.map(b => {
+            const emi = b.rate === 0 ? Math.round(price / b.months) : Math.round(price * (1 + b.rate/100) / b.months);
+            const total = emi * b.months;
+            return `
+              <tr>
+                <td>${b.logo} ${b.bank}</td>
+                <td>${b.months} months</td>
+                <td>${b.rate === 0 ? '<span class="badge badge-success">0% (No Cost)</span>' : b.rate + '% p.a.'}</td>
+                <td style="color:var(--gold);font-family:var(--font-tech);font-weight:700">₹${emi.toLocaleString('en-IN')}</td>
+                <td>₹${total.toLocaleString('en-IN')}</td>
+                <td>${b.rate === 0 ? '<span class="badge badge-success">No Cost EMI</span>' : '<span class="badge badge-muted">Standard EMI</span>'}</td>
+              </tr>
+            `;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+    <div class="alert alert-info" style="margin-top:16px">
+      <i class="fas fa-info-circle"></i> EMI availability depends on your card/bank. Final EMI amount may vary. Check with your bank for eligibility.
+    </div>
+  `;
+}
+
+async function renderRelated(current) {
+  try {
+    const response = await fetch('/api/products');
+    const all = await response.json();
+    const currentId = current._id || current.id;
+
+    // 1. Smarter Related Algorithm (Category Match + Brand match prioritized)
+    let related = all
+      .filter(p => (p._id || p.id) !== currentId)
+      .map(p => {
+        let score = 0;
+        if (p.category === current.category) score += 3;
+        if (p.brand === current.brand) score += 2;
+        if (p.isFeatured) score += 1;
+        return { ...p, score };
+      })
+      .filter(p => p.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 4);
+
+    if (related.length === 0) {
+      document.getElementById('relatedProducts').innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--text-muted)">No related products found</p>';
+    } else {
+      document.getElementById('relatedProducts').innerHTML = related.map(p => renderProductCardSmall(p)).join('');
+    }
+
+    // 2. Cross-Sell / Upsell (Essential Accessories)
+    // Logic: If looking at a printer, show nozzles/cleaning kits. If looking at filament, show storage/dryers.
+    let crossSell = [];
+    const name = current.name.toLowerCase();
+    
+    if (current.category === 'printers' || name.includes('printer')) {
+      crossSell = all.filter(p => p.category === 'spare-parts' || p.category === 'accessories').slice(0, 4);
+    } else if (current.category === 'filaments' || name.includes('filament')) {
+      crossSell = all.filter(p => name.includes('silk') ? p.name.includes('finish') : p.category === 'accessories').slice(0, 4);
+    }
+
+    if (crossSell.length > 0) {
+      document.getElementById('crossSellSection').style.display = 'block';
+      document.getElementById('crossSellProducts').innerHTML = crossSell.map(p => `
+        <div style="display:flex; align-items:center; gap:15px; background:var(--dark-surface); padding:12px; border-radius:12px; border:1px solid rgba(255,255,255,0.05); cursor:pointer" onclick="window.location='product.html?id=${p._id}'">
+          <div style="width:50px; height:50px; background:var(--dark-card); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; overflow:hidden">
+            ${(p.imageIds && p.imageIds.length > 0) ? `<img src="/api/image/${p.imageIds[0]._id || p.imageIds[0]}" style="width:100%; height:100%; object-fit:cover">` : (p.emoji || '📦')}
+          </div>
+          <div style="flex:1">
+            <div style="font-size:0.8rem; font-weight:600; color:var(--text-main); margin-bottom:2px">${p.name}</div>
+            <div style="font-size:0.85rem; color:var(--gold); font-weight:700">₹${p.price.toLocaleString()}</div>
+          </div>
+          <button class="btn btn-icon btn-xs btn-outline" onclick="event.stopPropagation(); quickAddCart('${p._id}')"><i class="fas fa-plus"></i></button>
+        </div>
+      `).join('');
+    }
+
+    observeElements();
+
+  } catch (error) {
+    console.error('Error loading related products:', error);
+  }
+}
+
+function renderProductCardSmall(p) {
+  const imageSrc = (p.imageIds && p.imageIds.length > 0) ? `/api/image/${p.imageIds[0]._id || p.imageIds[0]}` : null;
+  const productId = p._id || p.id;
+  
+  return `
+    <div class="product-card in-view" onclick="window.location='product.html?id=${productId}'">
+      <div class="product-card-image" style="height:200px">
+        ${imageSrc ? `<img src="${imageSrc}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover">` : 
+          `<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:4rem">${p.emoji || '📦'}</div>`}
+        ${p.isFeatured ? '<div class="product-badge-corner"><span class="badge badge-gold">TOP</span></div>' : ''}
+      </div>
+      <div class="product-card-body">
+        <div style="font-size:0.7rem; color:var(--text-muted); text-transform:uppercase; margin-bottom:4px">${p.brand}</div>
+        <div class="product-card-name" style="font-size:0.9rem; margin-bottom:8px; height:2.4em; overflow:hidden">${p.name}</div>
+        <div style="display:flex; justify-content:space-between; align-items:center">
+          <div class="product-price" style="font-size:1.1rem">₹${p.price.toLocaleString('en-IN')}</div>
+          <div class="star-rating" style="font-size:0.7rem">${renderStars(p.rating)}</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function quickAddCart(id) {
+  const p = allProducts.find(x => (x._id || x.id) == id) || { _id: id, name: 'Product', price: 0 };
+  // Implementation of simple add
+  showToast('✅ Added to cart', 'success');
+}
+
+let qty = 1;
+function updateQty(delta) {
+  qty = Math.max(1, qty + delta);
+  document.getElementById('qtyVal').textContent = qty;
+}
+
+function addToCart() {
+  if(!product) return;
+  
+  let cart = JSON.parse(localStorage.getItem('pr_cart') || '[]');
+  const productId = product._id || product.id;
+  const ex = cart.find(i => i.id == productId);
+  
+  if(ex) {
+    ex.qty += qty;
+  } else {
+    const mainImgId = (product.imageIds && product.imageIds.length > 0) ? (product.imageIds[0]._id || product.imageIds[0]) : null;
+    cart.push({
+      id: productId,
+      name: product.name,
+      price: product.price,
+      qty: qty,
+      emoji: product.emoji,
+      imageId: mainImgId,
+      brand: product.brand
+    });
+  }
+  
+  localStorage.setItem('pr_cart', JSON.stringify(cart));
+  
+  // Update nav count
+  const navCount = document.querySelector('.cart-count');
+  if(navCount) {
+    const total = cart.reduce((s,i) => s + i.qty, 0);
+    navCount.textContent = total;
+  }
+
+  showToast(`✅ ${qty}x ${product.name} added to cart!`, 'success');
+}
+function buyNow() {
+  showToast('Redirecting to checkout...', 'info');
+  setTimeout(() => window.location.href = 'checkout.html', 800);
+}
+function notifyMe() { showToast('🔔 We\'ll notify you when back in stock!', 'success'); }
+function addToWishlist() { showToast('❤️ Added to wishlist!', 'success'); }
+function shareProduct(platform) {
+  if(platform === 'copy') { showToast('🔗 Link copied!', 'success'); }
+  else { showToast('Opening share...', 'info'); }
+}
+function markHelpful(btn, count) { btn.textContent = 'Thanks!'; btn.style.color = 'var(--success)'; }
+function openReviewModal() { showToast('Review form coming soon!', 'info'); }
+
+function setMainImg(thumb, src, type='text') {
+  document.querySelectorAll('.product-thumbnail').forEach(t => t.classList.remove('active'));
+  thumb.classList.add('active');
+  const main = document.getElementById('mainImage');
+  if (type === 'img') {
+    main.innerHTML = `<img src="${src}" alt="Product" style="width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 30px rgba(26,58,255,0.2))">`;
+  } else {
+    main.innerHTML = `<span style="font-size:10rem;filter:drop-shadow(0 0 30px rgba(26,58,255,0.4))">${src}</span>`;
+  }
+}
+
+function switchTab(tab, el) {
+  document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  ['Specs','Reviews','Shipping','Emi'].forEach(t => {
+    document.getElementById('tab'+t).style.display = 'none';
+  });
+  document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).style.display = 'block';
+}
+
+function renderStars(r) {
+  return [1,2,3,4,5].map(i => `<span class="star ${i<=Math.floor(r)?'':'empty'}">★</span>`).join('');
+}
+
+function showToast(msg, type='info') {
+  const c = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<span>${msg}</span><span onclick="this.parentElement.remove()" style="cursor:pointer;margin-left:auto;opacity:0.6">✕</span>`;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+
+/* ─── INTERSECTION OBSERVER ─────────────────────────────────── */
+const scrollObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting) {
+      entry.target.classList.add('in-view');
+      scrollObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+function observeElements() {
+  document.querySelectorAll('.product-card, .card, .section-header').forEach(el => scrollObserver.observe(el));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadProduct();
+});
+</script>
+</body>
+</html>
+

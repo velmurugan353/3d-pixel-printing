@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Dashboard — 3D Pixel Printing</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🖨️</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/royal-theme.css">
+</head>
+<body>
+<nav class="navbar scrolled">
+  <div class="container">
+    <div class="navbar-inner">
+      <a href="index.html" class="navbar-logo"><div class="logo-icon">🖨️</div><div class="logo-text">3D Pixel <span>Printing</span></div></a>
+      <div style="flex:1"></div>
+      <nav class="navbar-nav">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="products.html" class="nav-link">Shop</a>
+      </nav>
+      <div class="navbar-actions">
+        <button class="cart-badge-btn" onclick="window.location='cart.html'"><i class="fas fa-shopping-cart"></i><span class="cart-count">3</span></button>
+        <button class="cart-badge-btn" onclick="window.location='dashboard.html'" style="border-color:var(--royal-blue)"><i class="fas fa-user" style="color:var(--royal-blue-light)"></i></button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div style="padding-top:70px;display:flex;min-height:100vh">
+  <!-- SIDEBAR -->
+  <div style="width:260px;background:var(--dark-surface);border-right:var(--border-glow);padding:32px 16px;position:sticky;top:70px;height:calc(100vh - 70px);overflow-y:auto;flex-shrink:0">
+    <!-- User Profile -->
+    <div style="text-align:center;padding:20px 0;border-bottom:var(--border-glow);margin-bottom:16px">
+      <div style="width:72px;height:72px;background:var(--gradient-royal);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;margin:0 auto 12px;box-shadow:var(--shadow-royal)">A</div>
+      <div style="font-weight:700;font-size:1rem">Arjun Mehta</div>
+      <div style="font-size:0.8rem;color:var(--text-muted);margin-top:2px">arjun@example.com</div>
+      <div style="margin-top:10px"><span class="badge badge-gold">👑 Royal Member</span></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+      <div class="admin-nav-item active" onclick="switchSection('overview', this)">
+        <span class="admin-nav-icon">📊</span> Overview
+      </div>
+      <div class="admin-nav-item" onclick="switchSection('orders', this)" id="navOrders">
+        <span class="admin-nav-icon">📦</span> My Orders
+        <span class="admin-nav-badge">2</span>
+      </div>
+      <div class="admin-nav-item" onclick="switchSection('tracking', this)">
+        <span class="admin-nav-icon">🚚</span> Track Orders
+      </div>
+      <div class="admin-nav-item" onclick="switchSection('stl', this)" id="navSTL">
+        <span class="admin-nav-icon">📐</span> My STL Files
+      </div>
+      <div class="admin-nav-item" onclick="switchSection('wishlist', this)">
+        <span class="admin-nav-icon">❤️</span> Wishlist
+      </div>
+      <div class="admin-nav-item" onclick="switchSection('addresses', this)">
+        <span class="admin-nav-icon">📍</span> Addresses
+      </div>
+      <div class="admin-nav-item" onclick="switchSection('invoices', this)">
+        <span class="admin-nav-icon">🧾</span> Invoices
+      </div>
+      <div class="admin-nav-item" onclick="switchSection('support', this)">
+        <span class="admin-nav-icon">🎫</span> Support Tickets
+      </div>
+      <div class="admin-nav-item" onclick="switchSection('profile', this)">
+        <span class="admin-nav-icon">👤</span> Edit Profile
+      </div>
+      <div style="height:1px;background:var(--dark-border);margin:12px 0"></div>
+      <div class="admin-nav-item" onclick="window.location='index.html'" style="color:var(--text-muted)">
+        <span class="admin-nav-icon">🏠</span> Back to Shop
+      </div>
+      <div class="admin-nav-item" onclick="showToast('Logged out','info')" style="color:var(--error)">
+        <span class="admin-nav-icon">🚪</span> Logout
+      </div>
+    </nav>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div style="flex:1;padding:32px;overflow-y:auto">
+
+    <!-- OVERVIEW -->
+    <div id="section-overview">
+      <h2 style="font-family:var(--font-display);font-size:1.8rem;font-weight:700;margin-bottom:4px">
+        Welcome back, <span class="text-gradient-gold">Arjun</span>! 👋
+      </h2>
+      <p style="color:var(--text-muted);margin-bottom:32px">Here's a summary of your 3D Pixel Printing activity</p>
+
+      <!-- Stats -->
+      <div class="grid-4" style="margin-bottom:32px">
+        <div class="stat-card blue">
+          <div class="stat-icon blue"><i class="fas fa-box"></i></div>
+          <div class="stat-label">Total Orders</div>
+          <div class="stat-value">12</div>
+          <div class="stat-change stat-up"><i class="fas fa-arrow-up"></i> 3 this month</div>
+        </div>
+        <div class="stat-card gold">
+          <div class="stat-icon gold"><i class="fas fa-rupee-sign"></i></div>
+          <div class="stat-label">Total Spent</div>
+          <div class="stat-value" style="font-size:1.4rem">₹2.4L</div>
+          <div class="stat-change stat-up"><i class="fas fa-arrow-up"></i> Lifetime value</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-icon green"><i class="fas fa-print"></i></div>
+          <div class="stat-label">Print Jobs</div>
+          <div class="stat-value">8</div>
+          <div class="stat-change stat-up"><i class="fas fa-check"></i> 7 completed</div>
+        </div>
+        <div class="stat-card red">
+          <div class="stat-icon red"><i class="fas fa-ticket-alt"></i></div>
+          <div class="stat-label">Open Tickets</div>
+          <div class="stat-value">1</div>
+          <div class="stat-change stat-down">Response in 2h</div>
+        </div>
+      </div>
+
+      <!-- Recent Orders + Quick Actions -->
+      <div class="grid-2">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+            <h3 style="font-weight:700">Recent Orders</h3>
+            <button onclick="switchSection('orders', document.querySelector('.admin-nav-item:nth-child(2)'))" style="background:none;color:var(--royal-blue-light);font-size:0.85rem;cursor:pointer">View All →</button>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:var(--dark-surface);border-radius:var(--radius-sm)">
+              <div>
+                <div style="font-weight:600;font-size:0.9rem">#PR-2025-08741</div>
+                <div style="font-size:0.75rem;color:var(--text-muted)">Bambu Lab X1 Carbon</div>
+              </div>
+              <div style="text-align:right">
+                <div style="color:var(--gold);font-family:var(--font-tech);font-size:0.9rem">₹1,24,999</div>
+                <span class="badge badge-warning" style="font-size:0.65rem">Shipped</span>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:var(--dark-surface);border-radius:var(--radius-sm)">
+              <div>
+                <div style="font-weight:600;font-size:0.9rem">#PR-2025-08638</div>
+                <div style="font-size:0.75rem;color:var(--text-muted)">eSUN PLA+ Bundle × 3</div>
+              </div>
+              <div style="text-align:right">
+                <div style="color:var(--gold);font-family:var(--font-tech);font-size:0.9rem">₹3,897</div>
+                <span class="badge badge-success" style="font-size:0.65rem">Delivered</span>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:var(--dark-surface);border-radius:var(--radius-sm)">
+              <div>
+                <div style="font-weight:600;font-size:0.9rem">Print #STL-2025-0042</div>
+                <div style="font-size:0.75rem;color:var(--text-muted)">Custom bracket - PLA+</div>
+              </div>
+              <div style="text-align:right">
+                <div style="color:var(--gold);font-family:var(--font-tech);font-size:0.9rem">₹499</div>
+                <span class="badge badge-royal" style="font-size:0.65rem">Printing</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 style="font-weight:700;margin-bottom:20px">Quick Actions</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <a href="print-service.html" class="card" style="text-align:center;padding:20px;cursor:pointer;border-color:rgba(255,215,0,0.2)">
+              <div style="font-size:1.8rem;margin-bottom:8px">📁</div>
+              <div style="font-weight:600;font-size:0.85rem">Upload STL</div>
+            </a>
+            <div class="card" style="text-align:center;padding:20px;cursor:pointer" onclick="switchSection('tracking', null)">
+              <div style="font-size:1.8rem;margin-bottom:8px">🚚</div>
+              <div style="font-weight:600;font-size:0.85rem">Track Order</div>
+            </div>
+            <div class="card" style="text-align:center;padding:20px;cursor:pointer" onclick="switchSection('invoices', null)">
+              <div style="font-size:1.8rem;margin-bottom:8px">🧾</div>
+              <div style="font-weight:600;font-size:0.85rem">Invoices</div>
+            </div>
+            <div class="card" style="text-align:center;padding:20px;cursor:pointer" onclick="switchSection('support', null)">
+              <div style="font-size:1.8rem;margin-bottom:8px">🎫</div>
+              <div style="font-weight:600;font-size:0.85rem">Support</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ORDERS -->
+    <div id="section-orders" style="display:none">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+        <h2 style="font-family:var(--font-display);font-size:1.8rem;font-weight:700">My Orders</h2>
+        <select class="form-control" style="width:160px">
+          <option>All Orders</option><option>Active</option><option>Delivered</option><option>Cancelled</option>
+        </select>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px" id="ordersList"></div>
+    </div>
+
+    <!-- TRACKING -->
+    <div id="section-tracking" style="display:none">
+      <h2 style="font-family:var(--font-display);font-size:1.8rem;font-weight:700;margin-bottom:24px">Track Your Order</h2>
+
+      <div class="card" style="margin-bottom:24px">
+        <label class="form-label">Enter Order ID or AWB Number</label>
+        <div style="display:flex;gap:12px">
+          <input type="text" class="form-control" placeholder="e.g. PR-2025-08741 or 1234567890" id="trackInput" value="PR-2025-08741">
+          <button class="btn btn-royal" onclick="trackOrder()"><i class="fas fa-search"></i> Track</button>
+        </div>
+      </div>
+
+      <div id="trackingResult">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:24px;flex-wrap:wrap;gap:16px">
+            <div>
+              <h3 style="font-weight:700;margin-bottom:6px">Order #PR-2025-08741</h3>
+              <p style="color:var(--text-muted)">Bambu Lab X1 Carbon Combo</p>
+            </div>
+            <div style="text-align:right">
+              <span class="badge badge-warning" style="font-size:0.85rem;padding:6px 14px">📦 Shipped</span>
+              <div style="font-size:0.8rem;color:var(--text-muted);margin-top:6px">AWB: 1234567890</div>
+            </div>
+          </div>
+
+          <!-- Timeline -->
+          <div class="order-timeline">
+            <div class="timeline-step completed">
+              <strong>Order Placed</strong>
+              <div style="font-size:0.8rem;color:var(--text-muted)">Mar 15, 2025 · 3:42 PM</div>
+              <div style="font-size:0.8rem;color:var(--text-secondary);margin-top:4px">Your order has been confirmed and payment received</div>
+            </div>
+            <div class="timeline-step completed">
+              <strong>Processing</strong>
+              <div style="font-size:0.8rem;color:var(--text-muted)">Mar 15, 2025 · 5:15 PM</div>
+              <div style="font-size:0.8rem;color:var(--text-secondary);margin-top:4px">Order packed and quality checked</div>
+            </div>
+            <div class="timeline-step completed">
+              <strong>Dispatched</strong>
+              <div style="font-size:0.8rem;color:var(--text-muted)">Mar 16, 2025 · 10:00 AM</div>
+              <div style="font-size:0.8rem;color:var(--text-secondary);margin-top:4px">Shipped via Delhivery · AWB: 1234567890</div>
+            </div>
+            <div class="timeline-step active">
+              <strong>In Transit</strong>
+              <div style="font-size:0.8rem;color:var(--text-muted)">Mar 17, 2025 · 8:30 AM</div>
+              <div style="font-size:0.8rem;color:var(--royal-blue-light);margin-top:4px">Package at Mumbai Hub — Moving towards destination</div>
+            </div>
+            <div class="timeline-step">
+              <strong>Out for Delivery</strong>
+              <div style="font-size:0.8rem;color:var(--text-muted)">Expected: Mar 18, 2025</div>
+            </div>
+            <div class="timeline-step">
+              <strong>Delivered</strong>
+              <div style="font-size:0.8rem;color:var(--text-muted)">Expected: Mar 18-19, 2025</div>
+            </div>
+          </div>
+
+          <div style="margin-top:24px;padding-top:16px;border-top:var(--border-glow);display:flex;gap:12px;flex-wrap:wrap">
+            <button class="btn btn-outline btn-sm"><i class="fas fa-download"></i> Download Invoice</button>
+            <a href="https://delhivery.com" target="_blank" class="btn btn-ghost btn-sm"><i class="fas fa-external-link-alt"></i> Track on Delhivery</a>
+            <button class="btn btn-outline-gold btn-sm" onclick="showToast('Support ticket raised!','success')"><i class="fas fa-headset"></i> Need Help?</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STL FILES -->
+    <div id="section-stl" style="display:none">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+        <h2 style="font-family:var(--font-display);font-size:1.8rem;font-weight:700">My STL Files</h2>
+        <a href="print-service.html" class="btn btn-gold"><i class="fas fa-upload"></i> Upload New</a>
+      </div>
+      <div id="stlFilesList"></div>
+    </div>
+
+    <!-- WISHLIST -->
+    <div id="section-wishlist" style="display:none">
+      <h2 style="font-family:var(--font-display);font-size:1.8rem;font-weight:700;margin-bottom:24px">My Wishlist</h2>
+      <div class="grid-3" id="wishlistGrid"></div>
+    </div>
+
+    <!-- ADDRESSES -->
+    <div id="section-addresses" style="display:none">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
+        <h2 style="font-family:var(--font-display);font-size:1.8rem;font-weight:700">Saved Addresses</h2>
+        <button class="btn btn-royal" onclick="showAddAddressForm()"><i class="fas fa-plus"></i> Add New</button>
+      </div>
+      <div class="grid-2" id="addressList"></div>
+    </div>
+
+    <!-- INVOICES -->
+    <div id="section-invoices" style="display:none">
+      <h2 style="font-family:var(--font-display);font-size:1.8rem;font-weight:700;margin-bottom:24px">GST Invoices</h2>
+      <div class="table-wrapper">
+        <table class="table">
+          <thead>
+            <tr><th>Invoice #</th><th>Order ID</th><th>Date</th><th>Amount</th><th>GST</th><th>Status</th><th>Action</th></tr>
+          </thead>
+          <tbody id="invoiceTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SUPPORT -->
+    <div id="section-support" style="display:none">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
+        <h2 style="font-family:var(--font-display);font-size:1.8rem;font-weight:700">Support Tickets</h2>
+        <button class="btn btn-royal" onclick="openNewTicket()"><i class="fas fa-plus"></i> New Ticket</button>
+      </div>
+      <div id="ticketsList"></div>
+    </div>
+
+    <!-- PROFILE -->
+    <div id="section-profile" style="display:none">
+      <h2 style="font-family:var(--font-display);font-size:1.8rem;font-weight:700;margin-bottom:24px">Edit Profile</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;max-width:900px">
+        <div class="card">
+          <h3 style="font-weight:700;margin-bottom:20px">Personal Information</h3>
+          <div class="form-group">
+            <label class="form-label">Full Name *</label>
+            <input type="text" id="profName" class="form-control" value="Arjun Mehta" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email Address *</label>
+            <input type="email" id="profEmail" class="form-control" value="arjun@example.com" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone Number *</label>
+            <input type="tel" id="profPhone" class="form-control" value="+91 98765 43210" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">GST Number (Optional)</label>
+            <input type="text" id="profGst" class="form-control" placeholder="29AAAAA0000A1Z5">
+          </div>
+          <button class="btn btn-royal" onclick="updateProfile()"><i class="fas fa-save"></i> Save Changes</button>
+        </div>
+        <div class="card">
+          <h3 style="font-weight:700;margin-bottom:20px">Change Password</h3>
+          <form onsubmit="event.preventDefault();updatePassword()" autocomplete="on">
+          <div class="form-group">
+            <label class="form-label">Current Password *</label>
+            <input type="password" id="currPass" class="form-control" placeholder="••••••••" autocomplete="current-password" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">New Password *</label>
+            <input type="password" id="newPass" class="form-control" placeholder="••••••••" autocomplete="new-password" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Confirm New Password *</label>
+            <input type="password" id="confPass" class="form-control" placeholder="••••••••" autocomplete="new-password" required>
+          </div>
+          <button type="submit" class="btn btn-outline"><i class="fas fa-key"></i> Update Password</button>
+          </form>
+          <div style="margin-top:24px;padding-top:20px;border-top:var(--border-glow)">
+            <h4 style="font-weight:700;margin-bottom:12px">Notifications</h4>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <label style="display:flex;justify-content:space-between;align-items:center">
+                <span style="font-size:0.9rem">Email notifications</span>
+                <input type="checkbox" checked style="accent-color:var(--royal-blue);width:16px;height:16px">
+              </label>
+              <label style="display:flex;justify-content:space-between;align-items:center">
+                <span style="font-size:0.9rem">SMS updates</span>
+                <input type="checkbox" checked style="accent-color:var(--royal-blue);width:16px;height:16px">
+              </label>
+              <label style="display:flex;justify-content:space-between;align-items:center">
+                <span style="font-size:0.9rem">WhatsApp alerts</span>
+                <input type="checkbox" style="accent-color:var(--royal-blue);width:16px;height:16px">
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- STL VIEWER MODAL -->
+<div class="modal" id="stlViewerModal">
+  <div class="modal-content" style="max-width:900px">
+    <div class="modal-header">
+      <h3>3D Model Viewer <span id="stlViewFilename" style="color:var(--gold);margin-left:10px"></span></h3>
+      <button class="btn-close" onclick="closeSTLViewer()">✕</button>
+    </div>
+    <div class="modal-body" style="padding:0;background:#000;border-radius:var(--radius-sm);overflow:hidden;position:relative">
+      <div id="stlContainer" style="width:100%;height:500px;cursor:grab"></div>
+      <div id="stlLoader" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,0.8);z-index:10">
+        <div class="spinner" style="width:40px;height:40px;border:4px solid rgba(26,58,255,0.1);border-top-color:var(--royal-blue);border-radius:50%;animation:spin 1s linear infinite"></div>
+        <p style="margin-top:15px;color:var(--text-muted)">Loading 3D Model...</p>
+      </div>
+    </div>
+    <div class="modal-footer" style="display:flex;gap:12px;justify-content:flex-end">
+      <button class="btn btn-ghost" onclick="closeSTLViewer()">Close Viewer</button>
+    </div>
+  </div>
+</div>
+
+<!-- LIVE VIEW MODAL -->
+<div class="modal" id="liveViewModal">
+  <div class="modal-content" style="max-width:800px">
+    <div class="modal-header">
+      <h3>Live Printer Feed <span id="liveViewJobId" style="color:var(--gold);margin-left:10px"></span></h3>
+      <button class="btn-close" onclick="closeLiveView()">✕</button>
+    </div>
+    <div class="modal-body" style="padding:0;background:#000;border-radius:var(--radius-sm);overflow:hidden;position:relative">
+      <div style="width:100%;padding-top:56.25%;position:relative">
+        <img id="liveFeedImg" src="https://images.unsplash.com/photo-1631034307217-096440ba00fc?auto=format&fit=crop&q=80&w=800" 
+             style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;filter:brightness(0.7)">
+        
+        <!-- Live Overlay -->
+        <div style="position:absolute;top:20px;left:20px;display:flex;align-items:center;gap:10px;background:rgba(0,0,0,0.6);padding:5px 12px;border-radius:20px;border:1px solid var(--error)">
+          <div style="width:8px;height:8px;background:var(--error);border-radius:50%;animation:pulse 1.5s infinite"></div>
+          <span style="color:white;font-size:0.75rem;font-weight:700;letter-spacing:1px">LIVE FEED</span>
+        </div>
+        
+        <!-- Printer Info -->
+        <div style="position:absolute;bottom:20px;left:20px;color:white;text-shadow:0 2px 4px rgba(0,0,0,0.8)">
+          <div style="font-weight:700;font-size:1.1rem">Printer #PR-04 (Bambu Lab X1C)</div>
+          <div style="font-size:0.85rem;opacity:0.9" id="liveFilename">...</div>
+        </div>
+        
+        <!-- Camera Stats -->
+        <div style="position:absolute;top:20px;right:20px;text-align:right;color:white;font-family:monospace;font-size:0.8rem;background:rgba(0,0,0,0.4);padding:10px;border-radius:4px">
+          <div>TEMP: 215°C / 60°C</div>
+          <div>FAN: 100%</div>
+          <div id="liveProgress">PROG: 45%</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer" style="display:flex;justify-content:space-between;align-items:center">
+      <div style="color:var(--text-muted);font-size:0.85rem">
+        <i class="fas fa-info-circle"></i> This is a real-time monitor of your active 3D print.
+      </div>
+      <button class="btn btn-ghost" onclick="closeLiveView()">Close Feed</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+<div class="toast-container" id="toastContainer"></div>
+<a href="https://wa.me/919876543210" class="whatsapp-btn"><i class="fab fa-whatsapp"></i></a>
+
+<script>
+// ─── MOCK DATA ─────────────────────────────────────────────
+const orders = [
+  { id: 'PR-2025-08741', date: 'Mar 15, 2025', items: 'Bambu Lab X1 Carbon Combo + AMS Lite', amount: 133998, status: 'shipped', payment: 'Razorpay' },
+  { id: 'PR-2025-08638', date: 'Mar 10, 2025', items: 'eSUN PLA+ 1kg × 3 packs', amount: 3897, status: 'delivered', payment: 'UPI' },
+  { id: 'PR-2025-08502', date: 'Mar 5, 2025', items: 'Creality Sprite Extruder + Nozzle Kit', amount: 2798, status: 'delivered', payment: 'UPI' },
+  { id: 'PR-2025-07891', date: 'Feb 18, 2025', items: 'E3D V6 HotEnd Kit + PTFE Tube', amount: 4399, status: 'delivered', payment: 'HDFC EMI' },
+  { id: 'STL-2025-0042', date: 'Mar 16, 2025', items: '3D Print Service — Custom Bracket (PLA+)', amount: 499, status: 'printing', payment: 'Razorpay' },
+];
+
+const stlFiles = [
+  { id: 1, name: 'custom_bracket_v3.stl', size: '1.2 MB', date: 'Mar 16, 2025', status: 'printing', material: 'PLA+', price: 499, progress: 68 },
+  { id: 2, name: 'phone_stand_ergonomic.stl', size: '0.8 MB', date: 'Mar 1, 2025', status: 'delivered', material: 'PETG', price: 389, progress: 100 },
+  { id: 3, name: 'engine_mount_prototype.stl', size: '3.4 MB', date: 'Feb 20, 2025', status: 'delivered', material: 'ABS', price: 1299, progress: 100 },
+  { id: 4, name: 'drone_arm_housing.3mf', size: '2.1 MB', date: 'Feb 10, 2025', status: 'cancelled', material: 'PETG-CF', price: 2499, progress: 0 },
+];
+
+const wishlistItems = [
+  { id: 9, name: 'Bambu Lab P1S Enclosed', price: 89999, emoji: '🖨️' },
+  { id: 5, name: 'Polymaker PolyTerra PLA 1kg', price: 1499, emoji: '🧵' },
+  { id: 22, name: '3D Pixel Printing Tool Kit Deluxe', price: 1799, emoji: '🔧' },
+];
+
+const savedAddresses = [
+  { id: 1, name: 'Arjun Mehta', type: 'HOME', isDefault: true, address: '42, Rose Garden Apartments, Koramangala 5th Block', city: 'Bengaluru', state: 'Karnataka', pin: '560095', phone: '+91 98765 43210' },
+  { id: 2, name: 'Arjun Mehta', type: 'OFFICE', isDefault: false, address: 'WeWork Prestige Tech Park, Outer Ring Road', city: 'Bengaluru', state: 'Karnataka', pin: '560103', phone: '+91 98765 43210' },
+];
+
+const invoices = [
+  { inv: 'INV-2025-0741', order: 'PR-2025-08741', date: 'Mar 15, 2025', amount: 133998, gst: 24119, status: 'paid' },
+  { inv: 'INV-2025-0638', order: 'PR-2025-08638', date: 'Mar 10, 2025', amount: 3897, gst: 701, status: 'paid' },
+  { inv: 'INV-2025-0502', order: 'PR-2025-08502', date: 'Mar 5, 2025', amount: 2798, gst: 504, status: 'paid' },
+];
+
+const tickets = [
+  { id: 'TKT-001', subject: 'Delivery delayed for order PR-08741', status: 'open', priority: 'high', date: 'Mar 17, 2025', replies: 2 },
+  { id: 'TKT-002', subject: 'Wrong nozzle diameter shipped', status: 'resolved', priority: 'medium', date: 'Mar 5, 2025', replies: 4 },
+];
+
+// ─── DATA FETCHING ───────────────────────────────────────────
+let userOrders = [];
+let userSTLFiles = [];
+
+async function fetchUserOrders() {
+  try {
+    const response = await fetch('/api/orders');
+    userOrders = await response.json();
+    // Filter for current user if needed, for now showing all
+    renderOrders();
+  } catch (error) {
+    console.error('Error fetching orders:', error);
+  }
+}
+
+async function fetchUserSTLJobs() {
+  try {
+    const response = await fetch('/api/stl-jobs');
+    userSTLFiles = await response.json();
+    renderSTLFiles();
+  } catch (error) {
+    console.error('Error fetching STL jobs:', error);
+  }
+}
+
+// ─── SECTION SWITCHER ──────────────────────────────────────
+function switchSection(name, el) {
+  document.querySelectorAll('[id^="section-"]').forEach(s => s.style.display = 'none');
+  document.getElementById('section-' + name).style.display = 'block';
+  document.querySelectorAll('.admin-nav-item').forEach(n => n.classList.remove('active'));
+  if(el) el.classList.add('active');
+
+  if(name === 'orders') fetchUserOrders();
+  if(name === 'stl') fetchUserSTLJobs();
+  if(name === 'wishlist') renderWishlist();
+  if(name === 'addresses') renderAddresses();
+  if(name === 'invoices') renderInvoices();
+  if(name === 'support') renderTickets();
+}
+
+// ─── RENDERERS ─────────────────────────────────────────────
+function renderOrders() {
+  const statusClasses = { shipped: 'warning', delivered: 'success', printing: 'royal', pending: 'muted', cancelled: 'error' };
+  const statusEmoji = { shipped: '🚚', delivered: '✅', printing: '🖨️', pending: '⏳', cancelled: '❌' };
+  
+  if (userOrders.length === 0) {
+    document.getElementById('ordersList').innerHTML = '<div class="card" style="text-align:center;padding:40px">You haven\'t placed any orders yet.</div>';
+    return;
+  }
+
+  document.getElementById('ordersList').innerHTML = userOrders.map(o => {
+    const orderId = o._id || o.id;
+    const itemsText = o.items ? o.items.map(i => i.name).join(', ') : 'No items';
+    const amount = o.total || o.amount || 0;
+    const date = o.createdAt ? new Date(o.createdAt).toLocaleDateString() : (o.date || 'N/A');
+    
+    return `
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:start;flex-wrap:wrap;gap:12px">
+        <div>
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
+            <span style="font-family:var(--font-tech);font-weight:700">${orderId.slice(-8).toUpperCase()}</span>
+            <span class="badge badge-${statusClasses[o.status] || 'muted'}">${statusEmoji[o.status] || '⏳'} ${o.status.charAt(0).toUpperCase()+o.status.slice(1)}</span>
+          </div>
+          <div style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:4px">${itemsText}</div>
+          <div style="font-size:0.8rem;color:var(--text-muted)">${date} · Paid via ${o.paymentMethod || o.payment || 'N/A'}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-family:var(--font-tech);font-size:1.2rem;font-weight:700;color:var(--gold)">₹${amount.toLocaleString('en-IN')}</div>
+          <div style="display:flex;gap:8px;margin-top:10px;justify-content:flex-end;flex-wrap:wrap">
+            <button class="btn btn-outline btn-sm" onclick="switchSection('tracking',null)"><i class="fas fa-route"></i> Track</button>
+            <button class="btn btn-ghost btn-sm" onclick="window.open('invoice.html?id=' + '${orderId}', '_blank')"><i class="fas fa-download"></i> Invoice</button>
+            ${o.status === 'delivered' ? `<button class="btn btn-outline-gold btn-sm" onclick="showToast('Review form coming soon!','info')"><i class="fas fa-star"></i> Review</button>` : ''}
+          </div>
+        </div>
+      </div>
+    </div>
+  `}).join('');
+}
+
+function renderSTLFiles() {
+  const statusClasses = { printing: 'royal', delivered: 'success', cancelled: 'error', pending: 'warning' };
+  
+  if (userSTLFiles.length === 0) {
+    document.getElementById('stlFilesList').innerHTML = '<div class="card" style="text-align:center;padding:40px">No STL job requests found.</div>';
+    return;
+  }
+
+  document.getElementById('stlFilesList').innerHTML = userSTLFiles.map(f => {
+    const jobId = f._id || f.id;
+    const date = f.createdAt ? new Date(f.createdAt).toLocaleDateString() : (f.date || 'N/A');
+    const amount = f.quote ? f.quote.total : (f.price || 0);
+    const progress = f.progress || (f.status === 'delivered' ? 100 : f.status === 'printing' ? 45 : 0);
+
+    return `
+    <div class="card" style="margin-bottom:16px">
+      <div style="display:flex;gap:16px;align-items:start;flex-wrap:wrap">
+        <div style="width:56px;height:56px;background:rgba(26,58,255,0.1);border:var(--border-glow);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0">📁</div>
+        <div style="flex:1">
+          <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:8px">
+            <div>
+              <div style="font-weight:700">${f.filename || f.file}</div>
+              <div style="font-size:0.8rem;color:var(--text-muted)">Uploaded ${date}</div>
+            </div>
+            <div style="text-align:right">
+              <span class="badge badge-${statusClasses[f.status] || 'muted'}">${f.status.charAt(0).toUpperCase()+f.status.slice(1)}</span>
+              <div style="color:var(--gold);font-family:var(--font-tech);font-weight:700;margin-top:4px">₹${amount.toLocaleString('en-IN')}</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:16px;font-size:0.8rem;color:var(--text-muted);margin-bottom:${f.status==='printing'?'12':'0'}px;flex-wrap:wrap">
+            <span>⚗️ ${f.settings ? f.settings.material : (f.material || 'PLA+')}</span>
+          </div>
+          ${f.status === 'printing' ? `
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:4px">
+              <span style="color:var(--text-muted)">Print Progress</span>
+              <span style="color:var(--royal-blue-light)">${progress}%</span>
+            </div>
+            <div class="progress-bar" style="height:8px">
+              <div class="progress-fill" style="width:${progress}%"></div>
+            </div>
+          </div>` : ''}
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          ${f.status === 'printing' ? `<button class="btn btn-royal btn-sm btn-icon" onclick="openLiveView('${jobId}', '${f.filename || f.file}')" data-tooltip="Live Cam"><i class="fas fa-video"></i></button>` : ''}
+          <button class="btn btn-ghost btn-sm btn-icon" onclick="viewSTL('${f.fileData || ''}', '${f.filename || f.file}')" data-tooltip="View 3D"><i class="fas fa-eye"></i></button>
+          <button class="btn btn-ghost btn-sm btn-icon" onclick="downloadSTL('${f.fileData || ''}', '${f.filename || f.file}')"><i class="fas fa-download"></i></button>
+          ${f.status === 'pending' ? `<button class="btn btn-danger btn-sm" onclick="showToast('Request cancelled','info')"><i class="fas fa-trash"></i></button>` : ''}
+        </div>
+      </div>
+    </div>
+  `}).join('');
+}
+
+function renderWishlist() {
+  document.getElementById('wishlistGrid').innerHTML = wishlistItems.map(w => `
+    <div class="product-card">
+      <div class="product-card-image">
+        <div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:4rem">${w.emoji}</div>
+        <div class="product-card-overlay">
+          <button class="btn btn-gold btn-sm" onclick="showToast('Added to cart!','success')"><i class="fas fa-cart-plus"></i></button>
+        </div>
+      </div>
+      <div class="product-card-body">
+        <div class="product-card-name">${w.name}</div>
+        <div class="product-price">₹${w.price.toLocaleString('en-IN')}</div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button class="btn btn-royal btn-sm" style="flex:1" onclick="showToast('Added to cart!','success')">Add to Cart</button>
+          <button class="btn btn-danger btn-sm btn-icon" onclick="this.closest('.product-card').remove();showToast('Removed from wishlist','info')"><i class="fas fa-heart-broken"></i></button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderAddresses() {
+  document.getElementById('addressList').innerHTML = savedAddresses.map(a => `
+    <div class="card" style="position:relative">
+      ${a.isDefault ? `<span class="badge badge-success" style="position:absolute;top:16px;right:16px">Default</span>` : ''}
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
+        <span class="badge badge-royal">${a.type}</span>
+        <span style="font-weight:700">${a.name}</span>
+      </div>
+      <div style="font-size:0.9rem;color:var(--text-secondary);line-height:1.8">
+        ${a.address}<br>${a.city}, ${a.state} — ${a.pin}<br>📞 ${a.phone}
+      </div>
+      <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap">
+        <button class="btn btn-outline btn-sm" onclick="showToast('Edit address form coming soon!','info')"><i class="fas fa-edit"></i> Edit</button>
+        ${!a.isDefault ? `<button class="btn btn-ghost btn-sm" onclick="showToast('Set as default','success')">Set Default</button>` : ''}
+        ${!a.isDefault ? `<button class="btn btn-danger btn-sm" onclick="this.closest('.card').remove();showToast('Address deleted','info')"><i class="fas fa-trash"></i></button>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderInvoices() {
+  document.getElementById('invoiceTableBody').innerHTML = invoices.map(i => `
+    <tr>
+      <td><span style="font-family:var(--font-tech);color:var(--royal-blue-light)">${i.inv}</span></td>
+      <td>${i.order}</td>
+      <td>${i.date}</td>
+      <td style="color:var(--gold);font-family:var(--font-tech)">₹${i.amount.toLocaleString('en-IN')}</td>
+      <td style="color:var(--text-secondary)">₹${i.gst.toLocaleString('en-IN')}</td>
+      <td><span class="badge badge-success">Paid</span></td>
+      <td>
+        <button class="btn btn-outline btn-sm" onclick="showToast('Downloading invoice PDF...','info')"><i class="fas fa-download"></i> PDF</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function renderTickets() {
+  const statusC = { open: 'error', resolved: 'success', pending: 'warning' };
+  const priorityC = { high: 'error', medium: 'warning', low: 'muted' };
+  document.getElementById('ticketsList').innerHTML = tickets.map(t => `
+    <div class="card" style="margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;align-items:start;flex-wrap:wrap;gap:12px">
+        <div>
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
+            <span style="font-family:var(--font-tech);font-size:0.85rem;color:var(--text-muted)">${t.id}</span>
+            <span class="badge badge-${statusC[t.status]}">${t.status.charAt(0).toUpperCase()+t.status.slice(1)}</span>
+            <span class="badge badge-${priorityC[t.priority]}">${t.priority} priority</span>
+          </div>
+          <div style="font-weight:700;margin-bottom:4px">${t.subject}</div>
+          <div style="font-size:0.8rem;color:var(--text-muted)">${t.date} · ${t.replies} replies</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-outline btn-sm" onclick="showToast('Opening ticket...','info')"><i class="fas fa-eye"></i> View</button>
+          ${t.status === 'open' ? `<button class="btn btn-ghost btn-sm" onclick="showToast('Ticket closed','success')">Close</button>` : ''}
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function trackOrder() {
+  showToast('✅ Order found! Showing tracking details.', 'success');
+}
+
+function openNewTicket() {
+  showToast('Support ticket form coming soon! WhatsApp us for urgent help.', 'info');
+}
+
+function updateProfile() {
+  const name = document.getElementById('profName').value.trim();
+  const email = document.getElementById('profEmail').value.trim();
+  const phone = document.getElementById('profPhone').value.trim();
+
+  if(!name || !email || !phone) {
+    showToast('⚠️ Please fill in all required profile fields!', 'warning');
+    return;
+  }
+  showToast('✅ Profile updated successfully!', 'success');
+}
+
+let stlScene, stlCamera, stlRenderer, stlControls, stlMesh;
+
+function viewSTL(fileId, filename) {
+  if (!fileId) { showToast('❌ No 3D data found', 'error'); return; }
+  
+  document.getElementById('stlViewFilename').textContent = filename;
+  document.getElementById('stlViewerModal').classList.add('active');
+  document.getElementById('stlLoader').style.display = 'flex';
+  
+  initSTLViewer(fileId);
+}
+
+function closeSTLViewer() {
+  document.getElementById('stlViewerModal').classList.remove('active');
+  if (stlRenderer) {
+    stlRenderer.dispose();
+    document.getElementById('stlContainer').innerHTML = '';
+  }
+}
+
+function initSTLViewer(fileId) {
+  const container = document.getElementById('stlContainer');
+  container.innerHTML = '';
+  document.getElementById('stlLoader').style.display = 'flex';
+  
+  stlScene = new THREE.Scene();
+  stlScene.background = new THREE.Color(0x050505);
+  
+  stlCamera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 10000);
+  stlCamera.position.set(200, 200, 200);
+  
+  stlRenderer = new THREE.WebGLRenderer({ antialias: true });
+  stlRenderer.setSize(container.clientWidth, container.clientHeight);
+  stlRenderer.setPixelRatio(window.devicePixelRatio);
+  container.appendChild(stlRenderer.domElement);
+  
+  stlControls = new THREE.OrbitControls(stlCamera, stlRenderer.domElement);
+  stlControls.enableDamping = true;
+  
+  stlScene.add(new THREE.AmbientLight(0xffffff, 0.5));
+  const sun = new THREE.DirectionalLight(0xffffff, 0.8);
+  sun.position.set(100, 100, 100);
+  stlScene.add(sun);
+  
+  const loader = new THREE.STLLoader();
+  loader.load(`/api/image/${fileId}`, (geometry) => {
+    const material = new THREE.MeshPhongMaterial({ color: 0x1a3aff, specular: 0x111111, shininess: 200 });
+    stlMesh = new THREE.Mesh(geometry, material);
+    
+    geometry.computeBoundingBox();
+    const center = new THREE.Vector3();
+    geometry.boundingBox.getCenter(center);
+    stlMesh.position.set(-center.x, -center.y, -center.z);
+    
+    stlScene.add(stlMesh);
+    
+    const size = new THREE.Vector3();
+    geometry.boundingBox.getSize(size);
+    const maxDim = Math.max(size.x, size.y, size.z);
+    const fov = stlCamera.fov * (Math.PI / 180);
+    let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
+    cameraZ *= 2.5; 
+    stlCamera.position.set(cameraZ, cameraZ, cameraZ);
+    stlCamera.updateProjectionMatrix();
+    stlControls.target.set(0, 0, 0);
+    
+    document.getElementById('stlLoader').style.display = 'none';
+    
+    function animate() {
+      if (!document.getElementById('stlViewerModal').classList.contains('active')) return;
+      requestAnimationFrame(animate);
+      stlControls.update();
+      stlRenderer.render(stlScene, stlCamera);
+    }
+    animate();
+  }, undefined, (err) => {
+    console.error('3D Load Error:', err);
+    showToast('❌ Failed to load 3D model', 'error');
+    document.getElementById('stlLoader').style.display = 'none';
+  });
+}
+
+function downloadSTL(fileId, filename) {
+  if (!fileId) return;
+  const link = document.createElement('a');
+  link.href = `/api/image/${fileId}`;
+  link.download = filename || 'model.stl';
+  link.click();
+}
+
+function openLiveView(jobId, filename) {
+  document.getElementById('liveViewJobId').textContent = '#' + jobId.slice(-6).toUpperCase();
+  document.getElementById('liveFilename').textContent = 'Printing: ' + filename;
+  
+  // Find actual progress if available
+  const job = userSTLFiles.find(j => (j._id || j.id) === jobId);
+  if (job) {
+    document.getElementById('liveProgress').textContent = 'PROG: ' + (job.progress || 45) + '%';
+  }
+
+  document.getElementById('liveViewModal').classList.add('active');
+  showToast('🎥 Connecting to live printer feed...', 'info');
+}
+
+function closeLiveView() {
+  document.getElementById('liveViewModal').classList.remove('active');
+}
+
+function updatePassword() {
+  const curr = document.getElementById('currPass').value;
+  const n1 = document.getElementById('newPass').value;
+  const n2 = document.getElementById('confPass').value;
+
+  if(!curr || !n1 || !n2) {
+    showToast('⚠️ Please fill in all password fields!', 'warning');
+    return;
+  }
+  if(n1 !== n2) {
+    showToast('❌ New passwords do not match!', 'error');
+    return;
+  }
+  showToast('✅ Password updated successfully!', 'success');
+  document.getElementById('currPass').value = '';
+  document.getElementById('newPass').value = '';
+  document.getElementById('confPass').value = '';
+}
+
+function showAddAddressForm() {
+  showToast('Address form — use the checkout page for now.', 'info');
+}
+
+function showToast(msg, type='info') {
+  const c = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<span>${msg}</span><span onclick="this.parentElement.remove()" style="cursor:pointer;margin-left:auto;opacity:0.6">✕</span>`;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+
+// ─── INIT ──────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  const hash = window.location.hash.replace('#', '');
+  if(hash) switchSection(hash, document.querySelector(`[onclick*="${hash}"]`));
+});
+</script>
+</body>
+</html>
+

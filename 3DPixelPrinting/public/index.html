@@ -1,0 +1,1628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="3D Pixel Printing - India's #1 Premium 3D Printing Solutions. Shop 3D Printers, Filaments, Parts & Professional Printing Services.">
+  <meta name="keywords" content="3D printer, filaments, PLA, PETG, ABS, 3D printing service, 3D design, AMC, repair, India">
+  <meta property="og:title" content="3D Pixel Printing — Premium 3D Printing">
+  <meta property="og:description" content="India's most premium 3D printing destination. Printers, filaments, services & more.">
+  <title>3D Pixel Printing — Next Generation 3D Printing Solutions</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🖨️</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/royal-theme.css">
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     TOP ANNOUNCEMENT BAR
+═══════════════════════════════════════════════════════════ -->
+<div class="announcement-bar" id="announcementBar">
+  <div class="announcement-inner">
+    <div class="announcement-items">
+
+      <div class="announcement-item">
+        <i class="fas fa-shipping-fast announcement-icon"></i>
+        <span><strong>Free Shipping</strong> on orders above ₹2,999</span>
+      </div>
+
+      <div class="announcement-divider">|</div>
+
+      <div class="announcement-item">
+        <i class="fas fa-file-invoice announcement-icon"></i>
+        <span><strong>GST Billing</strong> available for all orders</span>
+      </div>
+
+      <div class="announcement-divider">|</div>
+
+      <div class="announcement-item">
+        <i class="fas fa-headset announcement-icon"></i>
+        <span><strong>24/7 Support</strong> via WhatsApp & Live Chat</span>
+      </div>
+
+      <div class="announcement-divider hidden-mobile">|</div>
+
+      <div class="announcement-item hidden-mobile">
+        <i class="fas fa-tag announcement-icon"></i>
+        <span>Use code <strong class="coupon-highlight">ROYAL10</strong> for 10% off</span>
+      </div>
+
+      <div class="announcement-divider hidden-mobile">|</div>
+
+      <div class="announcement-item hidden-mobile">
+        <i class="fas fa-bolt announcement-icon"></i>
+        <span>Same-day dispatch before <strong>2 PM</strong></span>
+      </div>
+
+    </div>
+    <button class="announcement-close" onclick="closeAnnouncement()" aria-label="Close">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     HEADER / NAVIGATION
+═══════════════════════════════════════════════════════════ -->
+<header class="site-header" id="siteHeader">
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <div class="navbar-inner">
+
+        <!-- Logo -->
+        <a href="index.html" class="navbar-logo">
+          <div class="logo-icon">🖨️</div>
+          <div class="logo-text">3D Pixel <span>Printing</span></div>
+        </a>
+
+        <!-- Search Bar -->
+        <div class="navbar-search">
+          <div class="search-wrapper">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" placeholder="Search printers, filaments, parts…" id="searchInput" autocomplete="off">
+            <button class="search-btn" onclick="handleSearch()">Search</button>
+          </div>
+          <div class="search-suggestions" id="searchSuggestions"></div>
+        </div>
+
+        <!-- Desktop Nav Links -->
+        <nav class="navbar-nav" aria-label="Main Navigation">
+          <a href="index.html" class="nav-link active">Home</a>
+          <a href="products.html" class="nav-link">Shop</a>
+          <a href="services.html" class="nav-link">Services</a>
+          <a href="print-service.html" class="nav-link">3D Print</a>
+          <a href="#contact" class="nav-link">Contact</a>
+        </nav>
+
+        <!-- Action Buttons -->
+        <div class="navbar-actions">
+          <button class="nav-action-btn" onclick="toggleSearch()" data-tooltip="Search" aria-label="Search">
+            <i class="fas fa-search"></i>
+          </button>
+          <button class="nav-action-btn cart-btn" onclick="toggleCart()" data-tooltip="Cart" aria-label="Cart">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-count" id="cartCount">3</span>
+          </button>
+          <button class="nav-action-btn" onclick="window.location='dashboard.html'" data-tooltip="My Account" aria-label="My Account">
+            <i class="fas fa-user"></i>
+          </button>
+          <a href="admin.html" class="btn btn-outline btn-sm admin-btn">
+            <i class="fas fa-shield-alt"></i><span> Admin</span>
+          </a>
+          <button class="hamburger" onclick="toggleMobileMenu()" aria-label="Toggle Menu" aria-expanded="false">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </nav>
+</header>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-menu-close" onclick="toggleMobileMenu()" aria-label="Close Menu">
+    <i class="fas fa-times"></i>
+  </button>
+  <div class="mobile-menu-logo">
+    <div class="logo-icon">🖨️</div>
+    <div class="logo-text">3D Pixel <span>Printing</span></div>
+  </div>
+  <nav class="mobile-nav">
+    <a href="index.html" class="mobile-nav-link active"><i class="fas fa-home"></i>Home</a>
+    <a href="products.html" class="mobile-nav-link"><i class="fas fa-box"></i>Shop Products</a>
+    <a href="services.html" class="mobile-nav-link"><i class="fas fa-cogs"></i>Services</a>
+    <a href="print-service.html" class="mobile-nav-link"><i class="fas fa-print"></i>3D Print Service</a>
+    <a href="cart.html" class="mobile-nav-link"><i class="fas fa-shopping-cart"></i>Cart (3)</a>
+    <a href="dashboard.html" class="mobile-nav-link"><i class="fas fa-user"></i>My Account</a>
+    <a href="admin.html" class="mobile-nav-link"><i class="fas fa-shield-alt"></i>Admin Panel</a>
+  </nav>
+  <div class="mobile-menu-footer">
+    <a href="https://wa.me/919876543210" class="btn btn-royal btn-sm w-full">
+      <i class="fab fa-whatsapp"></i> WhatsApp Us
+    </a>
+  </div>
+</div>
+<div class="mobile-overlay" id="mobileOverlay" onclick="toggleMobileMenu()"></div>
+
+<!-- Ticker / Scrolling Bar -->
+<div class="ticker-bar">
+  <div class="ticker-track" id="tickerTrack">
+    <div class="ticker-items">
+      <span class="ticker-item"><span class="ticker-dot"></span>🚀 Free Shipping on orders above <strong>₹2,999</strong></span>
+      <span class="ticker-item"><span class="ticker-dot"></span>⚡ Same-day dispatch before 2 PM</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>🎁 Code <strong>ROYAL10</strong> — 10% off your first order</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>🛠️ Professional 3D Printing from <strong>₹199</strong></span>
+      <span class="ticker-item"><span class="ticker-dot"></span>📦 New arrivals: Bambu Lab P1S, Creality K2 Plus &amp; more!</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>🖨️ AMC Plans from <strong>₹2,999/year</strong></span>
+      <!-- Duplicate for seamless loop -->
+      <span class="ticker-item"><span class="ticker-dot"></span>🚀 Free Shipping on orders above <strong>₹2,999</strong></span>
+      <span class="ticker-item"><span class="ticker-dot"></span>⚡ Same-day dispatch before 2 PM</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>🎁 Code <strong>ROYAL10</strong> — 10% off your first order</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>🛠️ Professional 3D Printing from <strong>₹199</strong></span>
+      <span class="ticker-item"><span class="ticker-dot"></span>📦 New arrivals: Bambu Lab P1S, Creality K2 Plus &amp; more!</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>🖨️ AMC Plans from <strong>₹2,999/year</strong></span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     HERO SECTION
+═══════════════════════════════════════════════════════════ -->
+<section class="hero" id="home">
+  <!-- Background layers -->
+  <div class="hero-bg-layer"></div>
+  <div class="hero-grid-layer"></div>
+  <div class="hero-particles" id="heroParticles"></div>
+
+  <!-- Glow orbs -->
+  <div class="glow-orb orb-blue" style="width:700px;height:700px;top:-150px;left:-150px;opacity:0.35"></div>
+  <div class="glow-orb orb-gold" style="width:500px;height:500px;bottom:-50px;right:5%;opacity:0.25"></div>
+  <div class="glow-orb orb-blue" style="width:300px;height:300px;top:40%;right:35%;opacity:0.15"></div>
+
+  <div class="container hero-container">
+
+    <!-- Left Content -->
+    <div class="hero-content animate-fade-in">
+
+      <div class="hero-badge">
+        <span class="badge-pulse"></span>
+        <i class="fas fa-crown"></i>
+        India's #1 Premium 3D Printing Destination
+      </div>
+
+      <h1 class="hero-title">
+        Next Generation<br>
+        <span class="text-gradient-royal">3D Printing</span><br>
+        <span class="text-gradient-gold">Solutions</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Premium printers, exotic filaments, expert print services, doorstep repairs &amp; CAD design — all under one royal roof. Trusted by <strong>10,000+</strong> makers across India.
+      </p>
+
+      <!-- CTA Buttons -->
+      <div class="hero-actions">
+        <a href="products.html" class="btn btn-gold btn-xl hero-btn-primary">
+          <i class="fas fa-store"></i>
+          Shop Printers
+        </a>
+        <a href="print-service.html" class="btn btn-outline btn-xl hero-btn-secondary">
+          <i class="fas fa-upload"></i>
+          Upload STL
+        </a>
+      </div>
+
+      <!-- Trust indicators -->
+      <div class="hero-trust">
+        <div class="trust-item">
+          <i class="fas fa-shield-alt trust-icon"></i>
+          <span>Official Warranty</span>
+        </div>
+        <div class="trust-item">
+          <i class="fas fa-undo trust-icon"></i>
+          <span>Easy Returns</span>
+        </div>
+        <div class="trust-item">
+          <i class="fas fa-lock trust-icon"></i>
+          <span>Secure Payments</span>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-number" id="statPrinters">0</div>
+          <div class="hero-stat-label">Printers Sold</div>
+        </div>
+        <div class="hero-stat-divider"></div>
+        <div class="hero-stat">
+          <div class="hero-stat-number" id="statCustomers">0</div>
+          <div class="hero-stat-label">Happy Customers</div>
+        </div>
+        <div class="hero-stat-divider"></div>
+        <div class="hero-stat">
+          <div class="hero-stat-number" id="statPrints">0</div>
+          <div class="hero-stat-label">Prints Delivered</div>
+        </div>
+        <div class="hero-stat-divider"></div>
+        <div class="hero-stat">
+          <div class="hero-stat-number" id="statRating">0</div>
+          <div class="hero-stat-label">Star Rating</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: 3D Printer Hologram Visual -->
+    <div class="hero-visual animate-fade-in-right">
+      <div class="printer-3d-scene">
+
+        <!-- Glowing platform -->
+        <div class="printer-platform"></div>
+
+        <!-- Hologram rings -->
+        <div class="holo-ring holo-ring-1"></div>
+        <div class="holo-ring holo-ring-2"></div>
+        <div class="holo-ring holo-ring-3"></div>
+
+        <!-- Core printer -->
+        <div class="printer-core">
+          <div class="printer-body">
+            <div class="printer-emoji">🖨️</div>
+            <!-- Print progress bar -->
+            <div class="print-progress-bar">
+              <div class="print-progress-fill" id="printFill"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Orbiting dots -->
+        <div class="orbit-dot orbit-dot-1"></div>
+        <div class="orbit-dot orbit-dot-2"></div>
+        <div class="orbit-dot orbit-dot-3"></div>
+
+        <!-- Floating info chips -->
+        <div class="info-chip info-chip-tl">
+          <div class="chip-label text-gold font-tech">Layer: 0.2mm</div>
+          <div class="chip-sub">Resolution</div>
+        </div>
+
+        <div class="info-chip info-chip-tr">
+          <div class="chip-label text-gold font-tech">Speed: 500mm/s</div>
+          <div class="chip-sub">Print Speed</div>
+        </div>
+
+        <div class="info-chip info-chip-br">
+          <div class="chip-status">
+            <span class="status-dot"></span>
+            <span class="text-success font-tech">PRINTING</span>
+          </div>
+          <div class="chip-sub" id="printPercent">Progress: 74%</div>
+        </div>
+
+        <div class="info-chip info-chip-bl">
+          <div class="chip-label text-gold font-tech">PLA+</div>
+          <div class="chip-sub">Material</div>
+        </div>
+
+        <!-- Scanline sweep -->
+        <div class="scan-line"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="scroll-indicator">
+    <div class="scroll-dot"></div>
+    <span>Scroll to explore</span>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     FEATURED CATEGORIES
+═══════════════════════════════════════════════════════════ -->
+<section class="categories-section" id="categories">
+  <div class="container">
+
+    <div class="section-header">
+      <div class="section-label"><i class="fas fa-th-large"></i> Browse Categories</div>
+      <h2 class="section-title">Shop by <span class="text-gradient-royal">Category</span></h2>
+      <p class="section-subtitle">Find everything you need for your 3D printing journey</p>
+    </div>
+
+    <div class="categories-grid">
+
+      <a href="products.html?cat=printers" class="category-card category-featured">
+        <div class="category-glow"></div>
+        <div class="category-icon-wrap">
+          <div class="category-icon">🖨️</div>
+        </div>
+        <div class="category-info">
+          <div class="category-name">3D Printers</div>
+          <div class="category-count">48 Products</div>
+          <div class="category-arrow"><i class="fas fa-arrow-right"></i></div>
+        </div>
+        <div class="category-tags">
+          <span class="cat-tag">FDM</span>
+          <span class="cat-tag">Resin</span>
+          <span class="cat-tag">CoreXY</span>
+        </div>
+      </a>
+
+      <a href="products.html?cat=filaments" class="category-card">
+        <div class="category-glow"></div>
+        <div class="category-icon-wrap">
+          <div class="category-icon">🧵</div>
+        </div>
+        <div class="category-info">
+          <div class="category-name">Filaments</div>
+          <div class="category-count">120+ Colors</div>
+          <div class="category-arrow"><i class="fas fa-arrow-right"></i></div>
+        </div>
+        <div class="category-tags">
+          <span class="cat-tag">PLA</span>
+          <span class="cat-tag">PETG</span>
+          <span class="cat-tag">ABS</span>
+        </div>
+      </a>
+
+      <a href="products.html?cat=parts" class="category-card">
+        <div class="category-glow"></div>
+        <div class="category-icon-wrap">
+          <div class="category-icon">⚙️</div>
+        </div>
+        <div class="category-info">
+          <div class="category-name">Spare Parts</div>
+          <div class="category-count">300+ Parts</div>
+          <div class="category-arrow"><i class="fas fa-arrow-right"></i></div>
+        </div>
+        <div class="category-tags">
+          <span class="cat-tag">Hotend</span>
+          <span class="cat-tag">Motors</span>
+          <span class="cat-tag">Boards</span>
+        </div>
+      </a>
+
+      <a href="print-service.html" class="category-card">
+        <div class="category-glow"></div>
+        <div class="category-icon-wrap">
+          <div class="category-icon">📐</div>
+        </div>
+        <div class="category-info">
+          <div class="category-name">Custom Printing</div>
+          <div class="category-count">From ₹199</div>
+          <div class="category-arrow"><i class="fas fa-arrow-right"></i></div>
+        </div>
+        <div class="category-tags">
+          <span class="cat-tag">STL Upload</span>
+          <span class="cat-tag">Quote</span>
+        </div>
+      </a>
+
+      <a href="services.html#repair" class="category-card">
+        <div class="category-glow"></div>
+        <div class="category-icon-wrap">
+          <div class="category-icon">🔧</div>
+        </div>
+        <div class="category-info">
+          <div class="category-name">Repair Services</div>
+          <div class="category-count">Expert Technicians</div>
+          <div class="category-arrow"><i class="fas fa-arrow-right"></i></div>
+        </div>
+        <div class="category-tags">
+          <span class="cat-tag">Doorstep</span>
+          <span class="cat-tag">AMC</span>
+        </div>
+      </a>
+
+      <a href="2d-to-3d.html" class="category-card">
+        <div class="category-glow"></div>
+        <div class="category-icon-wrap">
+          <div class="category-icon">🎨</div>
+        </div>
+        <div class="category-info">
+          <div class="category-name">2D to 3D Magic</div>
+          <div class="category-count">Photos to 3D Objects</div>
+          <div class="category-arrow"><i class="fas fa-arrow-right"></i></div>
+        </div>
+        <div class="category-tags">
+          <span class="cat-tag">Lithophanes</span>
+          <span class="cat-tag">Wall Art</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     BEST SELLING PRODUCTS GRID
+═══════════════════════════════════════════════════════════ -->
+<section class="products-section section" id="products">
+  <div class="container">
+
+    <div class="section-header">
+      <div class="section-label"><i class="fas fa-fire"></i> Hot Picks</div>
+      <h2 class="section-title">Best <span class="text-gradient-gold">Selling Products</span></h2>
+      <p class="section-subtitle">Curated selection of our most loved printers, filaments and accessories</p>
+    </div>
+
+    <!-- Filter Tabs -->
+    <div class="filter-tabs" id="filterTabs">
+      <button class="filter-tab active" onclick="filterProducts('all',this)">
+        <i class="fas fa-th"></i> All Products
+      </button>
+      <button class="filter-tab" onclick="filterProducts('printers',this)">
+        <i class="fas fa-print"></i> 3D Printers
+      </button>
+      <button class="filter-tab" onclick="filterProducts('filaments',this)">
+        <i class="fas fa-layer-group"></i> Filaments
+      </button>
+      <button class="filter-tab" onclick="filterProducts('parts',this)">
+        <i class="fas fa-cog"></i> Parts & Accessories
+      </button>
+    </div>
+
+    <!-- Products Grid — 4 per row -->
+    <div class="products-grid" id="featuredGrid"></div>
+
+    <!-- View All CTA -->
+    <div class="text-center" style="margin-top:48px">
+      <a href="products.html" class="btn btn-outline btn-lg">
+        <i class="fas fa-store"></i> View All Products
+        <i class="fas fa-arrow-right" style="margin-left:8px;font-size:0.85rem"></i>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- STL Upload CTA Banner -->
+<section class="stl-cta-section">
+  <div class="stl-cta-bg"></div>
+  <div class="container">
+    <div class="stl-cta-inner">
+      <div class="stl-cta-content">
+        <div class="section-label" style="justify-content:flex-start"><i class="fas fa-cube"></i> Professional Service</div>
+        <h2 class="stl-cta-title">
+          Got an STL File?<br>
+          <span class="text-gradient-gold">Get an Instant Quote!</span>
+        </h2>
+        <p class="stl-cta-desc">
+          Upload your 3D model, choose from 9 premium materials, set infill and quality — get instant pricing. We print and deliver anywhere in India.
+        </p>
+        <div class="stl-cta-actions">
+          <a href="print-service.html" class="btn btn-gold btn-lg">
+            <i class="fas fa-upload"></i> Upload STL File
+          </a>
+          <a href="services.html" class="btn btn-outline btn-lg">
+            <i class="fas fa-info-circle"></i> Learn More
+          </a>
+        </div>
+      </div>
+      <div class="stl-steps-grid">
+        <div class="stl-step">
+          <div class="stl-step-icon">📁</div>
+          <div class="stl-step-title">Upload STL</div>
+          <div class="stl-step-desc">Any 3D format</div>
+        </div>
+        <div class="stl-step">
+          <div class="stl-step-icon">⚗️</div>
+          <div class="stl-step-title">Choose Material</div>
+          <div class="stl-step-desc">PLA, PETG, ABS, Resin</div>
+        </div>
+        <div class="stl-step">
+          <div class="stl-step-icon">💰</div>
+          <div class="stl-step-title">Instant Quote</div>
+          <div class="stl-step-desc">No hidden charges</div>
+        </div>
+        <div class="stl-step">
+          <div class="stl-step-icon">🚚</div>
+          <div class="stl-step-title">Fast Delivery</div>
+          <div class="stl-step-desc">2–5 business days</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     HOW IT WORKS
+═══════════════════════════════════════════════════════════ -->
+<section class="how-it-works section" id="how-it-works">
+  <div class="container">
+
+    <div class="section-header">
+      <div class="section-label"><i class="fas fa-route"></i> Simple Process</div>
+      <h2 class="section-title">How It <span class="text-gradient-royal">Works</span></h2>
+      <p class="section-subtitle">Get your custom 3D print in 4 simple steps — from file to doorstep</p>
+    </div>
+
+    <div class="how-steps">
+
+      <div class="how-step" data-step="1">
+        <div class="step-connector step-connector-right"></div>
+        <div class="step-circle">
+          <div class="step-number">01</div>
+          <div class="step-icon-wrap">
+            <i class="fas fa-upload step-fa-icon"></i>
+          </div>
+        </div>
+        <div class="step-content">
+          <h3 class="step-title">Upload STL</h3>
+          <p class="step-desc">Upload your 3D model in STL, OBJ, or 3MF format. Our system auto-analyses geometry.</p>
+          <a href="print-service.html" class="step-link">Upload Now <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <div class="how-step" data-step="2">
+        <div class="step-connector step-connector-left"></div>
+        <div class="step-connector step-connector-right"></div>
+        <div class="step-circle">
+          <div class="step-number">02</div>
+          <div class="step-icon-wrap">
+            <i class="fas fa-file-invoice-dollar step-fa-icon"></i>
+          </div>
+        </div>
+        <div class="step-content">
+          <h3 class="step-title">Get Quote</h3>
+          <p class="step-desc">Instantly see pricing based on your material choice, infill %, and delivery speed.</p>
+          <a href="print-service.html" class="step-link">See Pricing <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <div class="how-step" data-step="3">
+        <div class="step-connector step-connector-left"></div>
+        <div class="step-connector step-connector-right"></div>
+        <div class="step-circle">
+          <div class="step-number">03</div>
+          <div class="step-icon-wrap">
+            <i class="fas fa-print step-fa-icon"></i>
+          </div>
+        </div>
+        <div class="step-content">
+          <h3 class="step-title">We Print</h3>
+          <p class="step-desc">Our industrial printers produce your part with precision. Live progress updates via email.</p>
+          <a href="services.html" class="step-link">Learn More <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <div class="how-step" data-step="4">
+        <div class="step-connector step-connector-left"></div>
+        <div class="step-circle">
+          <div class="step-number">04</div>
+          <div class="step-icon-wrap">
+            <i class="fas fa-truck step-fa-icon"></i>
+          </div>
+        </div>
+        <div class="step-content">
+          <h3 class="step-title">Delivery</h3>
+          <p class="step-desc">Packed safely and dispatched via premium courier. Real-time tracking to your door.</p>
+          <a href="dashboard.html" class="step-link">Track Order <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Process CTA -->
+    <div class="text-center" style="margin-top:56px">
+      <a href="print-service.html" class="btn btn-royal btn-lg">
+        <i class="fas fa-rocket"></i> Start Your Print Job
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     WHY CHOOSE US
+═══════════════════════════════════════════════════════════ -->
+<section class="why-section section" id="why-us" style="background:var(--dark-surface);border-top:var(--border-glow);border-bottom:var(--border-glow)">
+  <div class="container">
+
+    <div class="section-header">
+      <div class="section-label"><i class="fas fa-star"></i> Our Advantage</div>
+      <h2 class="section-title">Why <span class="text-gradient-gold">3D Pixel Printing?</span></h2>
+      <p class="section-subtitle">Industry-leading quality meets unbeatable pricing and support</p>
+    </div>
+
+    <div class="why-grid">
+
+      <div class="why-card">
+        <div class="why-check"><i class="fas fa-check"></i></div>
+        <div class="why-content">
+          <h4 class="why-title">Industrial Quality</h4>
+          <p class="why-desc">Professional-grade prints from industrial FDM & SLA printers. ISO-compliant processes for prototyping and production.</p>
+        </div>
+      </div>
+
+      <div class="why-card">
+        <div class="why-check"><i class="fas fa-check"></i></div>
+        <div class="why-content">
+          <h4 class="why-title">Fast Delivery</h4>
+          <p class="why-desc">Same-day dispatch on stock items. 2–5 day delivery pan-India with real-time tracking across 19,000+ pincodes.</p>
+        </div>
+      </div>
+
+      <div class="why-card">
+        <div class="why-check"><i class="fas fa-check"></i></div>
+        <div class="why-content">
+          <h4 class="why-title">Affordable Price</h4>
+          <p class="why-desc">Best price guarantee. No-cost EMI up to 12 months. Price-match policy on all major 3D printers.</p>
+        </div>
+      </div>
+
+      <div class="why-card">
+        <div class="why-check"><i class="fas fa-check"></i></div>
+        <div class="why-content">
+          <h4 class="why-title">Technical Support</h4>
+          <p class="why-desc">Expert engineers available 24/7 via live chat, WhatsApp, phone & email. Free troubleshooting for all customers.</p>
+        </div>
+      </div>
+
+      <div class="why-card">
+        <div class="why-check"><i class="fas fa-check"></i></div>
+        <div class="why-content">
+          <h4 class="why-title">Authorized Dealer</h4>
+          <p class="why-desc">Official dealer for 12+ top brands — Bambu Lab, Creality, Prusa, Elegoo, Anycubic &amp; more. Full warranty assured.</p>
+        </div>
+      </div>
+
+      <div class="why-card">
+        <div class="why-check"><i class="fas fa-check"></i></div>
+        <div class="why-content">
+          <h4 class="why-title">GST Billing</h4>
+          <p class="why-desc">Proper GST invoices for all orders. Business-friendly invoicing for input tax credit on every purchase.</p>
+        </div>
+      </div>
+
+      <div class="why-card">
+        <div class="why-check"><i class="fas fa-check"></i></div>
+        <div class="why-content">
+          <h4 class="why-title">Warranty Support</h4>
+          <p class="why-desc">Full manufacturer warranty on all products plus extended 3D Pixel Printing coverage. Hassle-free claims process.</p>
+        </div>
+      </div>
+
+      <div class="why-card">
+        <div class="why-check"><i class="fas fa-check"></i></div>
+        <div class="why-content">
+          <h4 class="why-title">Eco Commitment</h4>
+          <p class="why-desc">We champion eco-friendly PLA filaments and sustainable packaging. Every order plants a tree through our green initiative.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- CTA -->
+    <div class="why-cta">
+      <div class="why-cta-left">
+        <h3 class="why-cta-title">Ready to experience the 3D Pixel Printing difference?</h3>
+        <p class="why-cta-sub">Join 10,000+ satisfied customers across India</p>
+      </div>
+      <div class="why-cta-btns">
+        <a href="products.html" class="btn btn-gold btn-lg"><i class="fas fa-shopping-bag"></i> Shop Now</a>
+        <a href="print-service.html" class="btn btn-outline btn-lg"><i class="fas fa-upload"></i> Get a Quote</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     TESTIMONIALS SLIDER
+═══════════════════════════════════════════════════════════ -->
+<section class="testimonials-section section" id="testimonials">
+  <div class="container">
+
+    <div class="section-header">
+      <div class="section-label"><i class="fas fa-heart"></i> Customer Love</div>
+      <h2 class="section-title">What Our <span class="text-gradient-royal">Customers Say</span></h2>
+      <p class="section-subtitle">Don't take our word for it — hear from our community of makers</p>
+    </div>
+
+    <!-- Slider wrapper -->
+    <div class="testimonials-slider-wrap">
+      <button class="slider-nav-btn slider-prev" onclick="slidePrev()" aria-label="Previous">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+
+      <div class="testimonials-slider" id="testimonialSlider">
+        <div class="testimonials-track" id="testimonialTrack">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <button class="slider-nav-btn slider-next" onclick="slideNext()" aria-label="Next">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+
+    <!-- Dot indicators -->
+    <div class="slider-dots" id="sliderDots"></div>
+
+    <!-- Overall rating summary -->
+    <div class="rating-summary">
+      <div class="rating-summary-score">
+        <div class="big-score">4.9</div>
+        <div class="big-stars">★★★★★</div>
+        <div class="big-score-label">Overall Rating</div>
+      </div>
+      <div class="rating-bars">
+        <div class="rating-bar-row"><span>5★</span><div class="rating-bar"><div class="rating-bar-fill" style="width:88%"></div></div><span>88%</span></div>
+        <div class="rating-bar-row"><span>4★</span><div class="rating-bar"><div class="rating-bar-fill" style="width:8%;background:var(--royal-blue-light)"></div></div><span>8%</span></div>
+        <div class="rating-bar-row"><span>3★</span><div class="rating-bar"><div class="rating-bar-fill" style="width:3%;background:#aaa"></div></div><span>3%</span></div>
+        <div class="rating-bar-row"><span>2★</span><div class="rating-bar"><div class="rating-bar-fill" style="width:1%;background:#888"></div></div><span>1%</span></div>
+        <div class="rating-bar-row"><span>1★</span><div class="rating-bar"><div class="rating-bar-fill" style="width:0%;background:#666"></div></div><span>0%</span></div>
+      </div>
+      <div class="rating-meta">
+        <div class="rating-meta-item"><strong>10,000+</strong><span>Reviews</span></div>
+        <div class="rating-meta-item"><strong>98%</strong><span>Recommend</span></div>
+        <div class="rating-meta-item"><strong>4.9★</strong><span>Average</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     BRANDS BAR
+═══════════════════════════════════════════════════════════ -->
+<section class="brands-section" style="border-top:var(--border-glow);border-bottom:var(--border-glow)">
+  <div class="container">
+    <p class="brands-label">Authorized Dealer For</p>
+    <div class="brands-track">
+      <div class="brands-items" id="brandsItems">
+        <span class="brand-logo">BAMBU LAB</span>
+        <span class="brand-logo">CREALITY</span>
+        <span class="brand-logo">PRUSA</span>
+        <span class="brand-logo">ELEGOO</span>
+        <span class="brand-logo">ANYCUBIC</span>
+        <span class="brand-logo">ESUN</span>
+        <span class="brand-logo">POLYMAKER</span>
+        <span class="brand-logo">SUNLU</span>
+        <!-- Duplicate for infinite scroll -->
+        <span class="brand-logo">BAMBU LAB</span>
+        <span class="brand-logo">CREALITY</span>
+        <span class="brand-logo">PRUSA</span>
+        <span class="brand-logo">ELEGOO</span>
+        <span class="brand-logo">ANYCUBIC</span>
+        <span class="brand-logo">ESUN</span>
+        <span class="brand-logo">POLYMAKER</span>
+        <span class="brand-logo">SUNLU</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     NEWSLETTER
+═══════════════════════════════════════════════════════════ -->
+<section class="newsletter-section">
+  <div class="newsletter-bg"></div>
+  <div class="container">
+    <div class="newsletter-inner">
+      <div class="newsletter-content">
+        <div class="section-label" style="justify-content:flex-start"><i class="fas fa-envelope"></i> Stay Updated</div>
+        <h2 class="newsletter-title">Get Exclusive <span class="text-gradient-gold">Royal Deals</span></h2>
+        <p class="newsletter-desc">Subscribe for early access to new products, flash sales, and 3D printing tips. Unsubscribe anytime.</p>
+        <div class="newsletter-form">
+          <input type="email" class="newsletter-input" placeholder="your@email.com" id="newsletterEmail">
+          <button class="btn btn-gold newsletter-btn" onclick="subscribe()">
+            <i class="fas fa-paper-plane"></i> Subscribe
+          </button>
+        </div>
+        <p class="newsletter-note">🔒 No spam. Join 12,000+ subscribers.</p>
+      </div>
+      <div class="newsletter-perks">
+        <div class="perk-item">
+          <div class="perk-icon"><i class="fas fa-tag"></i></div>
+          <div>
+            <div class="perk-title">Exclusive Discounts</div>
+            <div class="perk-desc">Get 10% off your first order</div>
+          </div>
+        </div>
+        <div class="perk-item">
+          <div class="perk-icon"><i class="fas fa-bolt"></i></div>
+          <div>
+            <div class="perk-title">Flash Sale Alerts</div>
+            <div class="perk-desc">First to know about deals</div>
+          </div>
+        </div>
+        <div class="perk-item">
+          <div class="perk-icon"><i class="fas fa-graduation-cap"></i></div>
+          <div>
+            <div class="perk-title">3D Printing Tips</div>
+            <div class="perk-desc">Weekly expert tutorials</div>
+          </div>
+        </div>
+        <div class="perk-item">
+          <div class="perk-icon"><i class="fas fa-box-open"></i></div>
+          <div>
+            <div class="perk-title">New Product Launches</div>
+            <div class="perk-desc">Preview before public release</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════════════════ -->
+<footer class="site-footer" id="contact">
+  <div class="footer-top">
+    <div class="container">
+      <div class="footer-grid">
+
+        <!-- Brand -->
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <div class="logo-icon">🖨️</div>
+            <div class="logo-text">3D Pixel <span>Printing</span></div>
+          </div>
+          <p class="footer-brand-desc">
+            India's most premium 3D printing destination. We provide top-quality printers, filaments, printing services, repair & design — all under one royal roof.
+          </p>
+          <div class="footer-social">
+            <a href="#" class="social-btn" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="social-btn" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+            <a href="#" class="social-btn" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-btn" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="#" class="social-btn" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="footer-col">
+          <div class="footer-col-title">Quick Links</div>
+          <nav class="footer-links">
+            <a href="products.html" class="footer-link"><i class="fas fa-chevron-right"></i> Shop Products</a>
+            <a href="print-service.html" class="footer-link"><i class="fas fa-chevron-right"></i> 3D Print Service</a>
+            <a href="services.html" class="footer-link"><i class="fas fa-chevron-right"></i> All Services</a>
+            <a href="cart.html" class="footer-link"><i class="fas fa-chevron-right"></i> My Cart</a>
+            <a href="dashboard.html" class="footer-link"><i class="fas fa-chevron-right"></i> My Account</a>
+            <a href="admin.html" class="footer-link"><i class="fas fa-chevron-right"></i> Admin Panel</a>
+          </nav>
+        </div>
+
+        <!-- Services -->
+        <div class="footer-col">
+          <div class="footer-col-title">Services</div>
+          <nav class="footer-links">
+            <a href="services.html#print" class="footer-link"><i class="fas fa-chevron-right"></i> 3D Printing</a>
+            <a href="services.html#repair" class="footer-link"><i class="fas fa-chevron-right"></i> Repair & Maintenance</a>
+            <a href="services.html#design" class="footer-link"><i class="fas fa-chevron-right"></i> 3D Design</a>
+            <a href="services.html#amc" class="footer-link"><i class="fas fa-chevron-right"></i> AMC Plans</a>
+            <a href="products.html?cat=parts" class="footer-link"><i class="fas fa-chevron-right"></i> Spare Parts</a>
+            <a href="#" class="footer-link"><i class="fas fa-chevron-right"></i> B2B / Bulk Orders</a>
+          </nav>
+        </div>
+
+        <!-- Contact Info -->
+        <div class="footer-col">
+          <div class="footer-col-title">Contact Info</div>
+          <div class="footer-contact-list">
+            <div class="footer-contact-item">
+              <i class="fas fa-map-marker-alt footer-contact-icon"></i>
+              <span>Bengaluru, Karnataka, India — 560001</span>
+            </div>
+            <a href="tel:+919876543210" class="footer-contact-item">
+              <i class="fas fa-phone footer-contact-icon"></i>
+              <span>+91 98765 43210</span>
+            </a>
+            <a href="mailto:hello@3dpixelprinting.in" class="footer-contact-item">
+              <i class="fas fa-envelope footer-contact-icon"></i>
+              <span>hello@3dpixelprinting.in</span>
+            </a>
+            <div class="footer-contact-item">
+              <i class="fas fa-clock footer-contact-icon"></i>
+              <span>Mon–Sat: 9 AM – 7 PM IST</span>
+            </div>
+            <a href="https://wa.me/919876543210" class="footer-contact-item footer-whatsapp" target="_blank" rel="noopener">
+              <i class="fab fa-whatsapp footer-contact-icon"></i>
+              <span>WhatsApp Support</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Bottom -->
+  <div class="footer-bottom">
+    <div class="container">
+      <div class="footer-bottom-inner">
+        <div class="footer-bottom-left">
+          <p>© 2025 3D Pixel Printing Technologies Pvt. Ltd. All rights reserved.</p>
+          <p class="footer-legal-links">
+            <a href="#">Privacy Policy</a>
+            <span>·</span>
+            <a href="#">Terms &amp; Conditions</a>
+            <span>·</span>
+            <a href="#">Refund Policy</a>
+            <span>·</span>
+            <a href="#">Shipping Policy</a>
+          </p>
+        </div>
+        <div class="footer-bottom-right">
+          <p class="footer-payment-label">Secure Payments</p>
+          <div class="payment-icons">
+            <div class="payment-icon">UPI</div>
+            <div class="payment-icon">Razorpay</div>
+            <div class="payment-icon">Stripe</div>
+            <div class="payment-icon">EMI</div>
+            <div class="payment-icon">COD</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════════
+     CART DRAWER
+═══════════════════════════════════════════════════════════ -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart(event)"></div>
+<aside class="cart-drawer" id="cartDrawer" aria-label="Shopping Cart">
+  <div class="cart-drawer-header">
+    <div>
+      <h3 class="cart-drawer-title"><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
+      <p class="cart-drawer-count" id="cartItemsCount">3 items</p>
+    </div>
+    <button onclick="toggleCart()" class="cart-close-btn" aria-label="Close Cart">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  <div class="cart-items" id="cartItemsList"></div>
+  <div class="cart-footer">
+    <div class="coupon-row">
+      <input type="text" class="form-control" placeholder="Coupon code (ROYAL10)" id="couponInput">
+      <button class="btn btn-outline btn-sm" onclick="applyCoupon()">Apply</button>
+    </div>
+    <div class="cart-totals">
+      <div class="cart-total-row"><span>Subtotal</span><span id="cartSubtotal">₹0</span></div>
+      <div class="cart-total-row"><span>Shipping</span><span class="text-success">FREE</span></div>
+      <div class="cart-total-row"><span>GST (18%)</span><span id="cartGST">₹0</span></div>
+      <div class="cart-total-row" id="discountRow" style="display:none"><span class="text-success">Discount</span><span class="text-success" id="cartDiscount">-₹0</span></div>
+      <div class="cart-total-row total-row"><span>Total</span><span class="price-gold" id="cartTotal">₹0</span></div>
+    </div>
+    <a href="checkout.html" class="btn btn-gold w-full cart-checkout-btn">
+      <i class="fas fa-lock"></i> Secure Checkout
+    </a>
+    <a href="cart.html" class="btn btn-ghost w-full" style="margin-top:10px;justify-content:center">
+      View Full Cart
+    </a>
+  </div>
+</aside>
+
+<!-- ═══════════════════════════════════════════════════════════
+     LIVE CHAT WIDGET
+═══════════════════════════════════════════════════════════ -->
+<div class="chat-widget">
+  <div class="chat-window" id="chatWindow">
+    <div class="chat-window-header">
+      <div class="chat-header-avatar">👨‍💻</div>
+      <div class="chat-header-info">
+        <div class="chat-header-name">3D Pixel Printing Support</div>
+        <div class="chat-header-status"><span class="online-dot"></span> Online · Replies in minutes</div>
+      </div>
+      <button onclick="closeChatWindow()" class="chat-close-btn"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="chat-message bot">👋 Hi! Welcome to 3D Pixel Printing. How can I help you today?</div>
+      <div class="chat-message bot">Ask about products, pricing, orders, or services!</div>
+    </div>
+    <div class="chat-quick-replies">
+      <button class="quick-reply" onclick="sendQuickReply('Pricing info')">💰 Pricing</button>
+      <button class="quick-reply" onclick="sendQuickReply('Track my order')">📦 Track Order</button>
+      <button class="quick-reply" onclick="sendQuickReply('Repair service')">🔧 Repairs</button>
+    </div>
+    <div class="chat-input-area">
+      <input type="text" class="form-control" placeholder="Type your message…" id="chatInput" onkeypress="if(event.key==='Enter')sendChat()">
+      <button class="btn btn-royal btn-icon" onclick="sendChat()"><i class="fas fa-paper-plane"></i></button>
+    </div>
+  </div>
+  <button class="chat-toggle-btn" onclick="toggleChatWindow()" aria-label="Live Chat">
+    <i class="fas fa-comments chat-toggle-icon"></i>
+    <span class="chat-badge" id="chatBadge">1</span>
+  </button>
+</div>
+
+<!-- WhatsApp Float -->
+<a href="https://wa.me/919876543210?text=Hi! I have a query about 3D Pixel Printing" class="whatsapp-float" target="_blank" rel="noopener" aria-label="WhatsApp">
+  <i class="fab fa-whatsapp whatsapp-icon"></i>
+</a>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Back to Top -->
+<button class="back-to-top" id="backToTop" onclick="scrollToTop()" aria-label="Back to Top">
+  <i class="fas fa-chevron-up"></i>
+</button>
+
+<!-- ═══════════════════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════════════════ -->
+<script>
+'use strict';
+
+/* ─── MOCK DATA ─────────────────────────────────────────────────────── */
+let featuredProducts = [];
+let cartItems = JSON.parse(localStorage.getItem('pr_cart') || '[]');
+let couponDiscount = 0;
+
+function saveCart() { localStorage.setItem('pr_cart', JSON.stringify(cartItems)); }
+
+const testimonials = [
+  {
+    name: "Vikram Malhotra",
+    role: "Industrial Designer",
+    initial: "V",
+    rating: 5,
+    text: "3D Pixel Printing has been our go-to for rapid prototyping. Their turnaround time is unmatched in India, and the precision of their industrial prints is top-tier.",
+    verified: true
+  },
+  {
+    name: "Ananya Sharma",
+    role: "Creative Artist",
+    initial: "A",
+    rating: 5,
+    text: "The exotic filaments I bought from here are just amazing! The wood and marble finish PLA worked perfectly for my art project. Highly recommended.",
+    verified: true
+  },
+  {
+    name: "Rohan Das",
+    role: "Tech Enthusiast",
+    initial: "R",
+    rating: 4,
+    text: "Great experience with their repair service. My Creality printer had some motherboard issues, and they fixed it at my doorstep within 24 hours.",
+    verified: true
+  },
+  {
+    name: "Sneha Reddy",
+    role: "Architecture Student",
+    initial: "S",
+    rating: 5,
+    text: "Best 3D printing service in Bengaluru. I uploaded my CAD model and got an instant quote. The final print quality was way better than I expected.",
+    verified: true
+  },
+  {
+    name: "Pratik Jain",
+    role: "B2B Client",
+    initial: "P",
+    rating: 5,
+    text: "Their AMC plans are perfect for our university's maker space. Maintenance is hassle-free and the technical support is very responsive.",
+    verified: true
+  }
+];
+
+function renderStars(r) {
+  return [1,2,3,4,5].map(i => `<span class="star ${i<=Math.floor(r)?'':'empty'}">★</span>`).join('');
+}
+
+async function fetchFeatured() {
+  try {
+    const response = await fetch('/api/products');
+    const all = await response.json();
+    featuredProducts = all;
+    renderFeatured();
+  } catch (error) {
+    console.error('Error fetching featured products:', error);
+  }
+}
+
+/* ─── RENDER PRODUCTS ────────────────────────────────────────────────── */
+function renderFeatured(filter='all') {
+  const grid = document.getElementById('featuredGrid');
+  if(!grid) return;
+
+  const list = filter==='all' ? featuredProducts.slice(0, 8) : featuredProducts.filter(p => {
+    if (!p.category) return false;
+    let pCat = p.category.toLowerCase();
+    if (pCat.includes('printer')) pCat = 'printers';
+    else if (pCat.includes('filament')) pCat = 'filaments';
+    else if (pCat.includes('part')) pCat = 'parts';
+    else if (pCat.includes('accessory')) pCat = 'accessories';
+    return pCat === filter;
+  }).slice(0, 8);
+
+  if (list.length === 0) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-muted)">No products found.</div>';
+    grid.style.opacity = '1';
+    grid.style.transform = 'translateY(0)';
+    return;
+  }
+
+  grid.innerHTML = list.map(p => {
+    const discount = p.original ? Math.round((1 - p.price/p.original)*100) : 0;
+    const mainImgId = (p.imageIds && p.imageIds.length > 0) ? (p.imageIds[0]._id || p.imageIds[0]) : null;
+    const imageSrc = mainImgId ? `/api/image/${mainImgId}` : null;
+    const productId = p._id || p.id;
+
+    return `
+    <div class="product-card in-view" onclick="location.href='product.html?id=${productId}'">
+      <div class="product-card-img">
+        ${imageSrc ? 
+          `<img src="${imageSrc}" alt="${p.name}" class="product-full-img">` : 
+          `<div class="product-emoji-wrap">${p.emoji || '📦'}</div>`
+        }
+        ${p.badge ? `<span class="product-badge badge-hot">${p.badge}</span>` : ''}
+        <div class="product-card-actions">
+          <button class="pca-btn" onclick="event.stopPropagation();addToCart('${productId}','${p.name.replace(/'/g,"\\'")}',${p.price},'${p.emoji}', ${JSON.stringify(p.imageIds || [])})" title="Add to Cart">
+            <i class="fas fa-cart-plus"></i>
+          </button>
+          <button class="pca-btn" onclick="event.stopPropagation();addToWishlist('${p.name.replace(/'/g,"\\'") }');" title="Wishlist">
+            <i class="far fa-heart"></i>
+          </button>
+          <button class="pca-btn" onclick="event.stopPropagation();location.href='product.html?id=${productId}'" title="Quick View">
+            <i class="fas fa-eye"></i>
+          </button>
+        </div>
+        <div class="product-glow-overlay"></div>
+        </div>
+        <div class="product-card-body">
+        <div class="product-brand">${p.brand}</div>
+        <h3 class="product-name">${p.name}</h3>
+        <div class="product-rating">
+          <div class="product-stars">${renderStars(p.rating)}</div>
+          <span class="product-rating-text">${p.rating} <span style="color:var(--text-muted)">(${p.reviews})</span></span>
+        </div>
+        <div class="product-price-row">
+          <span class="product-price">₹${p.price.toLocaleString('en-IN')}</span>
+          ${p.original ? `<span class="product-price-old">₹${p.original.toLocaleString('en-IN')}</span>
+          <span class="product-discount-badge">${discount}% off</span>` : ''}
+        </div>
+        <div class="product-card-footer">
+          <button class="btn btn-royal btn-sm product-add-btn" onclick="event.stopPropagation();addToCart('${productId}','${p.name.replace(/'/g,"\\'")}',${p.price},'${p.emoji}', ${JSON.stringify(p.imageIds || [])})">
+            <i class="fas fa-cart-plus"></i> Add to Cart
+          </button>
+
+          <button class="btn btn-ghost btn-icon btn-sm" onclick="event.stopPropagation();addToWishlist('${p.name.replace(/'/g,"\\'")}')" title="Wishlist">
+            <i class="far fa-heart"></i>
+          </button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  /* Re-observe cards for scroll animations (just in case they need it for other reasons) */
+  grid.querySelectorAll('.product-card').forEach(el => scrollObserver.observe(el));
+}
+
+/* ─── FILTER PRODUCTS ────────────────────────────────────────────────── */
+function filterProducts(filter, el) {
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  const grid = document.getElementById('featuredGrid');
+  grid.style.opacity = '0';
+  grid.style.transform = 'translateY(10px)';
+  setTimeout(() => {
+    renderFeatured(filter);
+    grid.style.transition = 'all 0.35s ease';
+    grid.style.opacity = '1';
+    grid.style.transform = 'translateY(0)';
+  }, 200);
+}
+
+/* ─── TESTIMONIALS SLIDER ────────────────────────────────────────────── */
+let currentSlide = 0;
+let slidesPerView = 3;
+let autoSlideTimer = null;
+
+function getSlidesPerView() {
+  if(window.innerWidth < 768) return 1;
+  if(window.innerWidth < 1100) return 2;
+  return 3;
+}
+
+function renderTestimonials() {
+  const track = document.getElementById('testimonialTrack');
+  const dots = document.getElementById('sliderDots');
+  if(!track) return;
+
+  track.innerHTML = testimonials.map(t => `
+    <div class="testimonial-slide">
+      <div class="testimonial-card">
+        <div class="tc-top">
+          <div class="tc-quote">"</div>
+          <div class="tc-stars">${renderStars(t.rating)}</div>
+        </div>
+        <p class="tc-text">"${t.text}"</p>
+        <div class="tc-author">
+          <div class="tc-avatar">${t.initial}</div>
+          <div class="tc-info">
+            <div class="tc-name">${t.name}</div>
+            <div class="tc-role">${t.role}</div>
+          </div>
+          ${t.verified ? '<div class="tc-verified"><i class="fas fa-check-circle"></i> Verified</div>' : ''}
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  // Dot indicators
+  const totalDots = Math.ceil(testimonials.length / getSlidesPerView());
+  dots.innerHTML = Array.from({length:totalDots}, (_, i) =>
+    `<button class="slider-dot ${i===0?'active':''}" onclick="goToSlide(${i})"></button>`
+  ).join('');
+  updateSlider();
+}
+
+function updateSlider() {
+  slidesPerView = getSlidesPerView();
+  const track = document.getElementById('testimonialTrack');
+  if(!track) return;
+  const offset = currentSlide * (100 / slidesPerView);
+  track.style.transform = `translateX(-${offset}%)`;
+  document.querySelectorAll('.slider-dot').forEach((d, i) => {
+    d.classList.toggle('active', i === currentSlide);
+  });
+}
+
+function slideNext() {
+  const max = Math.ceil(testimonials.length / getSlidesPerView()) - 1;
+  currentSlide = currentSlide >= max ? 0 : currentSlide + 1;
+  updateSlider();
+  resetAutoSlide();
+}
+
+function slidePrev() {
+  const max = Math.ceil(testimonials.length / getSlidesPerView()) - 1;
+  currentSlide = currentSlide <= 0 ? max : currentSlide - 1;
+  updateSlider();
+  resetAutoSlide();
+}
+
+function goToSlide(n) { currentSlide = n; updateSlider(); resetAutoSlide(); }
+
+function startAutoSlide() {
+  autoSlideTimer = setInterval(slideNext, 5000);
+}
+function resetAutoSlide() {
+  clearInterval(autoSlideTimer);
+  startAutoSlide();
+}
+
+/* ─── CART FUNCTIONS ─────────────────────────────────────────────────── */
+function toggleCart() {
+  const drawer = document.getElementById('cartDrawer');
+  const overlay = document.getElementById('cartOverlay');
+  const isOpen = drawer.classList.contains('open');
+  if(isOpen) { drawer.classList.remove('open'); overlay.classList.remove('active'); }
+  else { drawer.classList.add('open'); overlay.classList.add('active'); renderCartItems(); }
+}
+
+function closeCart(e) {
+  if(e.target === document.getElementById('cartOverlay')) {
+    document.getElementById('cartDrawer').classList.remove('open');
+    document.getElementById('cartOverlay').classList.remove('active');
+  }
+}
+
+function renderCartItems() {
+  const list = document.getElementById('cartItemsList');
+  if(!list) return;
+  if(!cartItems.length) {
+    list.innerHTML = `<div class="cart-empty">
+      <div class="cart-empty-icon">🛒</div>
+      <p>Your cart is empty</p>
+      <a href="products.html" class="btn btn-royal btn-sm" onclick="toggleCart()">Shop Now</a>
+    </div>`;
+    updateCartTotals();
+    return;
+  }
+  list.innerHTML = cartItems.map(item => `
+    <div class="cart-item">
+      <div class="cart-item-thumb">${item.emoji}</div>
+      <div class="cart-item-details">
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-price price-gold">₹${(item.price * item.qty).toLocaleString('en-IN')}</div>
+        <div class="cart-item-qty-row">
+          <button class="qty-btn" onclick="updateQty('${item.id}',-1)">−</button>
+          <span class="qty-val">${item.qty}</span>
+          <button class="qty-btn" onclick="updateQty('${item.id}',1)">+</button>
+          <button class="cart-remove-btn" onclick="removeFromCart('${item.id}')"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+  updateCartTotals();
+  document.getElementById('cartItemsCount').textContent = cartItems.length + ' item' + (cartItems.length!==1?'s':'');
+}
+
+function updateQty(id, delta) {
+  const item = cartItems.find(i => i.id == id);
+  if(item) { item.qty = Math.max(1, item.qty+delta); renderCartItems(); saveCart(); }
+}
+function removeFromCart(id) {
+  cartItems = cartItems.filter(i => i.id != id);
+  renderCartItems(); updateCartCount(); saveCart();
+  showToast('Item removed from cart', 'info');
+}
+function addToCart(id, name, price, emoji, imageIds=[]) {
+  const ex = cartItems.find(i => i.id == id);
+  if(ex) { ex.qty++; } else { 
+    const mainImgId = (imageIds && imageIds.length > 0) ? (imageIds[0]._id || imageIds[0]) : null;
+    cartItems.push({id, name, price, qty:1, emoji, imageId: mainImgId}); 
+  }
+  updateCartCount();
+  saveCart();
+  showToast(`✅ ${name} added to cart!`, 'success');
+}
+function updateCartCount() {
+  const total = cartItems.reduce((s,i) => s+i.qty, 0);
+  const el = document.getElementById('cartCount');
+  if(el) el.textContent = total;
+}
+function updateCartTotals() {
+  const sub = cartItems.reduce((s,i) => s+(i.price*i.qty), 0);
+  const gst = Math.round(sub*0.18);
+  const total = sub + gst - couponDiscount;
+  const set = (id,v) => { const el=document.getElementById(id); if(el) el.textContent=v; };
+  set('cartSubtotal', '₹'+sub.toLocaleString('en-IN'));
+  set('cartGST', '₹'+gst.toLocaleString('en-IN'));
+  set('cartTotal', '₹'+total.toLocaleString('en-IN'));
+  set('cartDiscount', '-₹'+couponDiscount.toLocaleString('en-IN'));
+  const dr = document.getElementById('discountRow');
+  if(dr) dr.style.display = couponDiscount>0 ? 'flex' : 'none';
+}
+
+function applyCoupon() {
+  const code = (document.getElementById('couponInput').value||'').toUpperCase().trim();
+  const coupons = { ROYAL10:0.10, PRINT15:0.15, SAVE20:0.20, FIRST25:0.25, MAKER30:0.30 };
+  if(coupons[code]) {
+    const sub = cartItems.reduce((s,i) => s+(i.price*i.qty), 0);
+    couponDiscount = Math.round(sub*coupons[code]);
+    showToast(`🎉 Coupon applied! You save ₹${couponDiscount.toLocaleString('en-IN')}`, 'success');
+    renderCartItems();
+  } else {
+    showToast('❌ Invalid coupon code. Try ROYAL10', 'error');
+  }
+}
+
+function addToWishlist(name) {
+  showToast(`❤️ ${name} added to wishlist!`, 'success');
+}
+
+/* ─── ANIMATED COUNTER ───────────────────────────────────────────────── */
+function animateCounter(id, target, suffix='', duration=2200) {
+  const el = document.getElementById(id);
+  if(!el) return;
+  let start = 0;
+  const isDecimal = String(target).includes('.');
+  const step = target / (duration / 16);
+  const timer = setInterval(() => {
+    start += step;
+    if(start >= target) {
+      clearInterval(timer);
+      el.textContent = target.toLocaleString('en-IN', { minimumFractionDigits: isDecimal ? 1 : 0 }) + suffix;
+    } else {
+      el.textContent = (isDecimal ? start.toFixed(1) : Math.floor(start).toLocaleString('en-IN')) + suffix;
+    }
+  }, 16);
+}
+
+/* ─── TOAST ──────────────────────────────────────────────────────────── */
+function showToast(msg, type='info') {
+  const container = document.getElementById('toastContainer');
+  if(!container) return;
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `<span>${msg}</span><button class="toast-close" onclick="this.parentElement.remove()">✕</button>`;
+  container.appendChild(toast);
+  setTimeout(() => { toast.classList.add('fade-out'); setTimeout(()=>toast.remove(),400); }, 3500);
+}
+
+/* ─── CHAT WIDGET ────────────────────────────────────────────────────── */
+let chatBadgeSeen = false;
+function toggleChatWindow() {
+  document.getElementById('chatWindow').classList.toggle('open');
+  if(!chatBadgeSeen) {
+    const b = document.getElementById('chatBadge');
+    if(b) { b.style.display='none'; chatBadgeSeen=true; }
+  }
+}
+function closeChatWindow() { document.getElementById('chatWindow').classList.remove('open'); }
+const botReplies = [
+  "Thanks for reaching out! Our team will connect with you shortly.",
+  "We offer PLA, PETG, ABS, TPU, Nylon, and Resin printing services.",
+  "3D printing starts at ₹199. Upload your STL for an instant quote!",
+  "Delivery takes 2–5 business days after print completion.",
+  "We provide full warranty support. Share your order ID and we'll help!",
+  "Our AMC plans start at ₹2,999/year. Great for businesses!",
+];
+let botIdx = 0;
+function sendChat() {
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim();
+  if(!msg) return;
+  appendChatMsg(msg, 'user');
+  input.value = '';
+  setTimeout(() => appendChatMsg(botReplies[botIdx++ % botReplies.length], 'bot'), 800);
+}
+function sendQuickReply(msg) {
+  appendChatMsg(msg, 'user');
+  setTimeout(() => appendChatMsg(botReplies[botIdx++ % botReplies.length], 'bot'), 700);
+}
+function appendChatMsg(msg, type) {
+  const msgs = document.getElementById('chatMessages');
+  msgs.innerHTML += `<div class="chat-message ${type}">${msg}</div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+/* ─── NEWSLETTER ─────────────────────────────────────────────────────── */
+function subscribe() {
+  const email = document.getElementById('newsletterEmail');
+  if(email && email.value) {
+    showToast('🎉 Subscribed! Check your email for a welcome coupon.', 'success');
+    email.value = '';
+  } else {
+    showToast('Please enter a valid email address.', 'error');
+  }
+}
+
+/* ─── SEARCH ─────────────────────────────────────────────────────────── */
+let searchOpen = false;
+function toggleSearch() {
+  const nb = document.querySelector('.navbar-search');
+  if(!nb) return;
+  searchOpen = !searchOpen;
+  nb.classList.toggle('mobile-visible', searchOpen);
+  if(searchOpen) document.getElementById('searchInput').focus();
+}
+function handleSearch() {
+  const q = document.getElementById('searchInput').value.trim();
+  if(q) window.location.href = `products.html?search=${encodeURIComponent(q)}`;
+}
+document.addEventListener('DOMContentLoaded', () => {
+  const si = document.getElementById('searchInput');
+  if(si) {
+    si.addEventListener('keypress', e => { if(e.key==='Enter') handleSearch(); });
+    si.addEventListener('input', () => {
+      const sug = document.getElementById('searchSuggestions');
+      const q = si.value.trim().toLowerCase();
+      if(!sug) return;
+      if(q.length < 2) { sug.innerHTML=''; sug.style.display='none'; return; }
+      const results = featuredProducts.filter(p => p.name.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q)).slice(0,5);
+      if(results.length) {
+        sug.innerHTML = results.map(r => `<div class="search-sug-item" onclick="location.href='product.html?id=${r.id}'">${r.emoji} ${r.name} — ₹${r.price.toLocaleString('en-IN')}</div>`).join('');
+        sug.style.display = 'block';
+      } else { sug.innerHTML=''; sug.style.display='none'; }
+    });
+  }
+});
+
+/* ─── ANNOUNCEMENT BAR ───────────────────────────────────────────────── */
+function closeAnnouncement() {
+  const bar = document.getElementById('announcementBar');
+  if(bar) { bar.style.maxHeight='0'; bar.style.padding='0'; bar.style.overflow='hidden'; }
+  adjustHeaderTop();
+}
+function adjustHeaderTop() {
+  const bar = document.getElementById('announcementBar');
+  const header = document.getElementById('siteHeader');
+  if(bar && header) {
+    header.style.top = bar.offsetHeight + 'px';
+  }
+}
+
+/* ─── MOBILE MENU ────────────────────────────────────────────────────── */
+function toggleMobileMenu() {
+  const menu = document.getElementById('mobileMenu');
+  const overlay = document.getElementById('mobileOverlay');
+  const btn = document.querySelector('.hamburger');
+  const isOpen = menu.classList.contains('open');
+  menu.classList.toggle('open');
+  overlay.classList.toggle('active');
+  if(btn) btn.setAttribute('aria-expanded', String(!isOpen));
+}
+
+/* ─── NAVBAR SCROLL ──────────────────────────────────────────────────── */
+window.addEventListener('scroll', () => {
+  const navbar = document.getElementById('navbar');
+  if(navbar) navbar.classList.toggle('scrolled', window.scrollY > 60);
+  const btt = document.getElementById('backToTop');
+  if(btt) btt.classList.toggle('visible', window.scrollY > 400);
+});
+
+/* ─── BACK TO TOP ────────────────────────────────────────────────────── */
+function scrollToTop() { window.scrollTo({ top:0, behavior:'smooth' }); }
+
+/* ─── INTERSECTION OBSERVER (scroll animations) ──────────────────────── */
+const scrollObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting) {
+      entry.target.classList.add('in-view');
+      scrollObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.08 });
+
+/* ─── PRINTER PROGRESS ANIMATION ────────────────────────────────────── */
+let printPct = 74;
+function animatePrinter() {
+  const fill = document.getElementById('printFill');
+  const label = document.getElementById('printPercent');
+  if(!fill) return;
+  printPct = (printPct + 0.1) % 100;
+  fill.style.width = printPct.toFixed(1) + '%';
+  if(label) label.textContent = 'Progress: ' + Math.round(printPct) + '%';
+  requestAnimationFrame(() => setTimeout(animatePrinter, 80));
+}
+
+/* ─── HERO PARTICLES ─────────────────────────────────────────────────── */
+function createParticles() {
+  const container = document.getElementById('heroParticles');
+  if(!container) return;
+  for(let i=0; i<25; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.cssText = `
+      left:${Math.random()*100}%;
+      top:${Math.random()*100}%;
+      width:${2+Math.random()*4}px;
+      height:${2+Math.random()*4}px;
+      animation-delay:${Math.random()*6}s;
+      animation-duration:${4+Math.random()*8}s;
+    `;
+    container.appendChild(p);
+  }
+}
+
+/* ─── INIT ───────────────────────────────────────────────────────────── */
+async function loadCMS() {
+  try {
+    const res = await fetch('/api/settings/cms');
+    const cfg = await res.json();
+    
+    const banner = document.querySelector('.top-banner');
+    if(banner && cfg.announcementText) banner.innerHTML = cfg.announcementText;
+    
+    const heroTitle = document.querySelector('.hero-title');
+    if(heroTitle && cfg.heroTitle) heroTitle.innerHTML = cfg.heroTitle;
+    
+    const heroSubtitle = document.querySelector('.hero-subtitle');
+    if(heroSubtitle && cfg.heroSubtitle) heroSubtitle.innerHTML = cfg.heroSubtitle;
+    
+    const heroBtn = document.querySelector('.hero .btn-gold');
+    if(heroBtn && cfg.heroButtonText) {
+      heroBtn.textContent = cfg.heroButtonText;
+      heroBtn.href = cfg.heroButtonLink || 'products.html';
+    }
+  } catch(e) { console.log('CMS load skipped'); }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadCMS();
+  fetchFeatured();
+  renderTestimonials();
+  createParticles();
+  animatePrinter();
+  startAutoSlide();
+  updateCartCount(); // Added
+
+  /* Observe scroll-animate elements */
+  document.querySelectorAll('.how-step, .why-card, .category-card, .product-card, .stl-step').forEach(el => scrollObserver.observe(el));
+
+  /* Animate counters after short delay */
+  setTimeout(() => {
+    animateCounter('statPrinters', 5200, '+');
+    animateCounter('statCustomers', 12400, '+');
+    animateCounter('statPrints', 48000, '+');
+    animateCounter('statRating', 4.9, '★', 1500);
+  }, 600);
+
+  /* Resize handler for slider */
+  window.addEventListener('resize', () => { currentSlide=0; updateSlider(); });
+  adjustHeaderTop();
+});
+</script>
+</body>
+</html>
+

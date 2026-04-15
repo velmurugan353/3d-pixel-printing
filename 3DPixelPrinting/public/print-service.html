@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="3D Pixel Printing - India's #1 Premium 3D Printing Solutions. Professional 3D Printing Service.">
+  <title>3D Print Service — 3D Pixel Printing</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🖨️</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/royal-theme.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     TOP ANNOUNCEMENT BAR
+═══════════════════════════════════════════════════════════ -->
+<div class="announcement-bar" id="announcementBar">
+  <div class="announcement-inner">
+    <div class="announcement-items">
+      <div class="announcement-item">
+        <i class="fas fa-shipping-fast announcement-icon"></i>
+        <span><strong>Free Shipping</strong> on orders above ₹2,999</span>
+      </div>
+      <div class="announcement-divider">|</div>
+      <div class="announcement-item">
+        <i class="fas fa-file-invoice announcement-icon"></i>
+        <span><strong>GST Billing</strong> available for all orders</span>
+      </div>
+      <div class="announcement-divider">|</div>
+      <div class="announcement-item">
+        <i class="fas fa-headset announcement-icon"></i>
+        <span><strong>24/7 Support</strong> via WhatsApp & Live Chat</span>
+      </div>
+      <div class="announcement-divider hidden-mobile">|</div>
+      <div class="announcement-item hidden-mobile">
+        <i class="fas fa-tag announcement-icon"></i>
+        <span>Use code <strong class="coupon-highlight">ROYAL10</strong> for 10% off</span>
+      </div>
+    </div>
+    <button class="announcement-close" onclick="closeAnnouncement()" aria-label="Close">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     HEADER / NAVIGATION
+═══════════════════════════════════════════════════════════ -->
+<header class="site-header" id="siteHeader">
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <div class="navbar-inner">
+        <!-- Logo -->
+        <a href="index.html" class="navbar-logo">
+          <div class="logo-icon">🖨️</div>
+          <div class="logo-text">3D Pixel <span>Printing</span></div>
+        </a>
+
+        <!-- Desktop Nav Links -->
+        <nav class="navbar-nav desktop-only">
+          <a href="index.html" class="nav-link">Home</a>
+          <a href="products.html" class="nav-link">Shop</a>
+          <a href="services.html" class="nav-link">Services</a>
+          <a href="print-service.html" class="nav-link active">3D Print</a>
+        </nav>
+
+        <div class="navbar-actions">
+          <button class="nav-action-btn cart-btn" onclick="window.location='cart.html'" data-tooltip="Cart">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-count">0</span>
+          </button>
+          <button class="nav-action-btn" onclick="window.location='dashboard.html'" data-tooltip="Account">
+            <i class="fas fa-user"></i>
+          </button>
+          <button class="hamburger" onclick="toggleMobileMenu()"><span></span><span></span><span></span></button>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<!-- PAGE HEADER -->
+<div class="page-header" style="padding-top:120px; padding-bottom:40px; background:radial-gradient(circle at top right, rgba(26,58,255,0.1), transparent 40%)">
+  <div class="container">
+    <div class="section-label" style="justify-content:flex-start">Custom Manufacturing</div>
+    <h1 class="page-header-title">3D <span class="text-gradient-royal">Print Service</span></h1>
+    <p style="color:var(--text-secondary);margin-top:12px;max-width:600px">Upload your design, configure professional settings, and get an instant quote. Industrial quality delivered pan-India.</p>
+    <div class="breadcrumb">
+      <a href="index.html">Home</a><span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-active">Print Service</span>
+    </div>
+  </div>
+</div>
+
+<!-- STEPS PROGRESS BAR -->
+<div class="steps-progress-container">
+  <div class="container">
+    <div class="steps-progress-bar">
+      <div class="step-item active" id="step-1">
+        <div class="step-icon"><i class="fas fa-file-upload"></i></div>
+        <div class="step-text">Upload</div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-item" id="step-2">
+        <div class="step-icon"><i class="fas fa-sliders-h"></i></div>
+        <div class="step-text">Configure</div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-item" id="step-3">
+        <div class="step-icon"><i class="fas fa-map-marker-alt"></i></div>
+        <div class="step-text">Address</div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-item" id="step-4">
+        <div class="step-icon"><i class="fas fa-credit-card"></i></div>
+        <div class="step-text">Order</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.steps-progress-container { background:var(--dark-surface); border-bottom:1px solid var(--dark-border); padding:24px 0; }
+.steps-progress-bar { display:flex; align-items:center; justify-content:space-between; max-width:800px; margin:0 auto; }
+.step-item { display:flex; flex-direction:column; align-items:center; gap:10px; flex:1; position:relative; z-index:2; opacity:0.4; transition:var(--transition); }
+.step-item.active { opacity:1; transform:scale(1.05); }
+.step-item.completed { opacity:1; color:var(--success); }
+.step-icon { width:44px; height:44px; border-radius:12px; background:var(--dark-card); border:1px solid var(--dark-border); display:flex; align-items:center; justify-content:center; font-size:1.1rem; transition:var(--transition); }
+.step-item.active .step-icon { background:var(--gradient-royal); color:white; border-color:transparent; box-shadow:var(--shadow-royal); }
+.step-item.completed .step-icon { background:var(--success); color:white; border-color:transparent; }
+.step-text { font-family:var(--font-tech); font-size:0.7rem; letter-spacing:1px; text-transform:uppercase; font-weight:700; }
+.step-connector { height:2px; background:var(--dark-border); flex:1; margin:0 -20px; margin-bottom:25px; transition:var(--transition); }
+.step-item.completed + .step-connector { background:var(--success); }
+</style>
+
+<!-- MAIN CONTENT -->
+<div class="section" style="padding-top:40px">
+  <div class="container">
+    <div class="print-service-layout">
+
+      <!-- LEFT: CONFIGURATION -->
+      <div class="form-scroll-area">
+
+        <!-- STEP 1: FILE UPLOAD -->
+        <div class="card glass-card" id="formStep1" style="margin-bottom:24px">
+          <div class="card-header-flex">
+            <h3 class="step-title-text"><i class="fas fa-cloud-upload-alt" style="color:var(--royal-blue-light)"></i> 1. DESIGN UPLOAD</h3>
+            <span id="uploadStatusBadge" class="badge badge-muted">No File</span>
+          </div>
+
+          <!-- Upload Dropzone -->
+          <div id="uploadZone" class="dropzone-enhanced" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" onclick="document.getElementById('fileInput').click()">
+            <div class="dropzone-content">
+              <div class="drop-icon">🚀</div>
+              <h4>Drag & Drop STL File</h4>
+              <p>or click to browse from device</p>
+              <div class="file-specs">MAX 50MB • STL, OBJ, 3MF</div>
+            </div>
+            <input type="file" id="fileInput" accept=".stl,.obj,.3mf" style="display:none" onchange="handleFileSelect(event)">
+          </div>
+
+          <!-- Enhanced 3D Viewer -->
+          <div id="viewer-container" class="preview-3d-box">
+            <div id="viewer"></div>
+            <!-- Viewer Controls Overlay -->
+            <div class="viewer-overlay-ui">
+              <div class="viewer-stats">
+                <div class="v-stat">X: <span id="v-dimX">--</span></div>
+                <div class="v-stat">Y: <span id="v-dimY">--</span></div>
+                <div class="v-stat">Z: <span id="v-dimZ">--</span></div>
+                <div class="v-stat"><span id="v-volume">--</span> cm³</div>
+              </div>
+              <div class="viewer-actions-row">
+                <button class="v-btn" onclick="resetViewer()" data-tooltip="Reset Camera"><i class="fas fa-sync-alt"></i></button>
+                <button class="v-btn" onclick="toggleWireframe()" data-tooltip="Wireframe"><i class="fas fa-border-none"></i></button>
+                <button class="v-btn" onclick="autoOrient()" data-tooltip="Auto-Orient"><i class="fas fa-magic"></i></button>
+                <div class="v-divider"></div>
+                <div class="v-filename" id="v-filename">No model loaded</div>
+              </div>
+            </div>
+            
+            <!-- ADVANCED TRANSFORMATION PANEL -->
+            <div class="model-controls-panel" id="modelControls" style="display:none">
+              <div class="control-tab-header">
+                <button class="control-tab active" onclick="switchControlTab('scale')">Scale</button>
+                <button class="control-tab" onclick="switchControlTab('rotate')">Rotate</button>
+              </div>
+              
+              <div id="tab-scale" class="control-tab-content">
+                <div class="form-group mb-2">
+                  <label class="form-label-xs">Scale Percentage</label>
+                  <div class="input-group-xs">
+                    <input type="number" id="scaleInput" value="100" class="form-control-xs" oninput="applyModelScale()">
+                    <span class="suffix">%</span>
+                  </div>
+                </div>
+                <div class="unit-toggle">
+                  <button class="unit-btn active" id="unit-mm" onclick="setUnits('mm')">mm</button>
+                  <button class="unit-btn" id="unit-cm" onclick="setUnits('cm')">cm</button>
+                  <button class="unit-btn" id="unit-in" onclick="setUnits('in')">in</button>
+                </div>
+              </div>
+              
+              <div id="tab-rotate" class="control-tab-content" style="display:none">
+                <div class="rotate-btns">
+                  <button class="v-btn-xs" onclick="rotateModel('x')">X +90°</button>
+                  <button class="v-btn-xs" onclick="rotateModel('y')">Y +90°</button>
+                  <button class="v-btn-xs" onclick="rotateModel('z')">Z +90°</button>
+                </div>
+              </div>
+            </div>
+
+            <div id="viewer-loader" class="viewer-loading-screen">
+              <i class="fas fa-atom fa-spin"></i>
+              <span>ANALYZING GEOMETRY...</span>
+            </div>
+          </div>
+
+          <!-- File Success Info -->
+          <div id="fileInfo" class="upload-success-strip" style="display:none">
+            <div class="file-icon">📦</div>
+            <div style="flex:1">
+              <div id="fileName" class="f-name">model.stl</div>
+              <div id="fileSize" class="f-meta">0.0 KB</div>
+            </div>
+            <button class="remove-file-btn" onclick="removeFile()"><i class="fas fa-trash-alt"></i></button>
+          </div>
+        </div>
+
+        <!-- STEP 2: SETTINGS -->
+        <div class="card glass-card" id="formStep2" style="margin-bottom:24px">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px">
+            <h3 class="step-title-text"><i class="fas fa-cogs" style="color:var(--gold)"></i> 2. PRINT CONFIGURATION</h3>
+            <div class="mode-tabs">
+              <button class="mode-tab active" onclick="setCfgMode('standard', this)">Standard</button>
+              <button class="mode-tab" onclick="setCfgMode('expert', this)">Expert</button>
+              <button class="mode-tab" onclick="setCfgMode('manual', this)">Manual</button>
+            </div>
+          </div>
+          
+          <!-- STANDARD MODE -->
+          <div id="mode-standard" class="cfg-mode-section">
+            <div class="form-group">
+              <label class="form-label">Quality Preset</label>
+              <div class="preset-grid">
+                <div class="preset-card active" onclick="applyPreset('standard', this)">
+                  <div class="preset-icon">⚙️</div>
+                  <div class="preset-name">Standard</div>
+                  <div class="preset-desc">Balanced speed & quality (0.2mm)</div>
+                </div>
+                <div class="preset-card" onclick="applyPreset('draft', this)">
+                  <div class="preset-icon">⚡</div>
+                  <div class="preset-name">Draft</div>
+                  <div class="preset-desc">Fast prototype (0.28mm)</div>
+                </div>
+                <div class="preset-card" onclick="applyPreset('high', this)">
+                  <div class="preset-icon">💎</div>
+                  <div class="preset-name">High Detail</div>
+                  <div class="preset-desc">Smooth finish (0.12mm)</div>
+                </div>
+                <div class="preset-card" onclick="applyPreset('functional', this)">
+                  <div class="preset-icon">🏗️</div>
+                  <div class="preset-name">Heavy Duty</div>
+                  <div class="preset-desc">Extra strong (40% infill)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- EXPERT & COMMON FIELDS -->
+          <div id="mode-details">
+            <div class="grid-2 mt-4">
+              <div class="form-group">
+                <label class="form-label">Material Type</label>
+                <select class="form-control" id="material" onchange="updatePriceCalc()">
+                  <!-- Populated via JS -->
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Filament Color</label>
+                <select class="form-control" id="color">
+                  <!-- Populated via JS -->
+                </select>
+              </div>
+              <div class="form-group expert-only" style="display:none">
+                <label class="form-label">Resolution (Layer Height)</label>
+                <select class="form-control" id="layerHeight" onchange="updatePriceCalc()">
+                  <!-- Populated via JS -->
+                </select>
+              </div>
+              <div class="form-group expert-only" style="display:none">
+                <label class="form-label">Infill Density: <strong id="infillLabel" style="color:var(--gold)">20%</strong></label>
+                <input type="range" class="range-input" min="5" max="100" value="20" step="5" id="infill" oninput="document.getElementById('infillLabel').textContent=this.value+'%';updatePriceCalc()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Quantity</label>
+                <div class="qty-stepper">
+                  <button onclick="updateQty(-1)">−</button>
+                  <input type="number" id="printQty" value="1" min="1" oninput="updatePriceCalc()">
+                  <button onclick="updateQty(1)">+</button>
+                </div>
+              </div>
+              <div class="form-group volume-input-group">
+                <label class="form-label">Approx Volume (<span id="vol-unit-label">cm³</span>)</label>
+                <div class="input-group">
+                  <input type="number" class="form-control" id="printVolume" value="25" min="1" oninput="updatePriceCalc()">
+                  <span class="input-suffix" id="vol-suffix">cm³</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid-2 manual-only" style="display:none">
+              <div class="form-group">
+                <label class="form-label">Calculated Weight (g)</label>
+                <input type="number" class="form-control" id="manualWeight" value="0" oninput="updatePriceCalc()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Print Time (hours)</label>
+                <input type="number" class="form-control" id="manualHours" value="0" oninput="updatePriceCalc()">
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="form-group expert-only" style="display:none">
+                <label class="form-label">Supports</label>
+                <select class="form-control" id="supports" onchange="updatePriceCalc()">
+                  <option value="auto">Auto (Recommended)</option>
+                  <option value="none">No Supports</option>
+                  <option value="manual">Industrial Manual</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Surface Finish</label>
+                <select class="form-control" id="finish" onchange="updatePriceCalc()">
+                  <!-- Populated via JS -->
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Manufacturing Notes</label>
+            <textarea class="form-control" rows="2" id="printNotes" placeholder="Dimensional tolerances, orientation preference, etc..."></textarea>
+          </div>
+        </div>
+
+        <!-- STEP 3: ADDRESS -->
+        <div class="card glass-card" id="formStep3" style="margin-bottom:24px">
+          <div class="card-header-flex">
+            <h3 class="step-title-text"><i class="fas fa-truck" style="color:var(--success)"></i> 3. DELIVERY ADDRESS</h3>
+            <div style="display:flex; gap:8px">
+              <button class="btn btn-ghost btn-xs" onclick="selectSavedAddress(1)">Home</button>
+              <button class="btn btn-ghost btn-xs" onclick="selectSavedAddress(2)">Office</button>
+            </div>
+          </div>
+          
+          <div class="grid-2 mt-4">
+            <div class="form-group">
+              <label class="form-label">Full Name *</label>
+              <input type="text" class="form-control" id="addrName" placeholder="Arjun Mehta" oninput="updateAddressSummary()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Contact Number *</label>
+              <input type="tel" class="form-control" id="addrPhone" placeholder="+91 98765 43210" oninput="updateAddressSummary()">
+            </div>
+            <div class="form-group" style="grid-column:1/-1">
+              <label class="form-label">Full Shipping Address *</label>
+              <input type="text" class="form-control" id="addrLine1" placeholder="House/Flat No, Apartment, Landmark" oninput="updateAddressSummary()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">City *</label>
+              <input type="text" class="form-control" id="addrCity" oninput="updateAddressSummary()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">PIN Code *</label>
+              <input type="text" class="form-control" id="addrPin" oninput="updateAddressSummary()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">State *</label>
+              <select class="form-control" id="addrState" onchange="updateAddressSummary()">
+                <option value="">Select State</option>
+                <option>Karnataka</option>
+                <option>Tamil Nadu</option>
+                <option>Maharashtra</option>
+                <option>Delhi</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">GST Number (Optional)</label>
+              <input type="text" class="form-control" id="addrGst" placeholder="Business Billing">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: STICKY SIDEBAR -->
+      <aside class="calc-sidebar">
+        <div class="card-glow calculator-card">
+          <div class="calc-header">
+            <div class="calc-label"><i class="fas fa-bolt"></i> Instant Quote</div>
+            <div class="calc-title">Cost Breakdown</div>
+          </div>
+
+          <div class="breakdown-list">
+            <div class="breakdown-item"><span>Material Usage</span><span id="priceMaterial">₹0</span></div>
+            <div class="breakdown-item"><span>Machine Power</span><span id="priceElec">₹0</span></div>
+            <div class="breakdown-item"><span>Industrial Labor</span><span id="priceLabor">₹0</span></div>
+            <div class="breakdown-item"><span>Depreciation</span><span id="priceDepr">₹0</span></div>
+            <div class="breakdown-item"><span>TN Courier (Insured)</span><span id="priceShipping">₹0</span></div>
+            <div class="breakdown-item"><span>GST (18%)</span><span id="priceGST">₹0</span></div>
+            <div class="breakdown-divider"></div>
+            <div class="total-row">
+              <span>Total Payable</span>
+              <span class="total-val" id="priceTotal">₹0</span>
+            </div>
+          </div>
+
+          <div class="eta-box">
+            <div class="eta-label">Estimated Print Time</div>
+            <div class="eta-val" id="printTimeEst">-- hrs</div>
+          </div>
+
+          <div id="addrSummaryCard" class="address-summary-mini" style="display:none">
+            <div class="summary-label"><i class="fas fa-shipping-fast"></i> Shipping to:</div>
+            <div id="summaryAddrContent" class="summary-content"></div>
+          </div>
+
+          <button class="btn btn-gold w-full btn-lg checkout-btn" onclick="placeOrder()">
+            <i class="fas fa-lock"></i> SECURE CHECKOUT
+          </button>
+          
+          <button class="btn btn-ghost w-full mt-2" onclick="requestCallback()">
+            <i class="fas fa-phone-alt"></i> EXPERT CONSULTATION
+          </button>
+
+          <div class="trust-icons-row">
+            <span>🛡️ ISO Quality</span>
+            <span>🔒 SSL Secure</span>
+            <span>✅ GST Invoice</span>
+          </div>
+        </div>
+
+        <!-- Helpful Guide -->
+        <div class="card glass-card mt-4">
+          <h4 style="font-weight:700; font-size:0.85rem; margin-bottom:12px; color:var(--gold)">PRO TIPS</h4>
+          <ul class="tips-list">
+            <li><i class="fas fa-check"></i> Check wall thickness (min 1mm)</li>
+            <li><i class="fas fa-check"></i> Standard resolution is 0.2mm</li>
+            <li><i class="fas fa-check"></i> Orientation affects finish quality</li>
+          </ul>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     MOBILE NAVIGATION & OVERLAY
+═══════════════════════════════════════════════════════════ -->
+<div class="mobile-overlay" id="mobileOverlay" onclick="toggleMobileMenu()"></div>
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-header">
+    <div class="navbar-logo">
+      <div class="logo-icon">🖨️</div>
+      <div class="logo-text">3D Pixel <span>Printing</span></div>
+    </div>
+    <button class="mobile-menu-close" onclick="toggleMobileMenu()"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="mobile-menu-body">
+    <a href="index.html" class="mobile-nav-link"><i class="fas fa-home"></i>Home</a>
+    <a href="products.html" class="mobile-nav-link"><i class="fas fa-shopping-bag"></i>Shop Products</a>
+    <a href="services.html" class="mobile-nav-link"><i class="fas fa-tools"></i>Services & AMC</a>
+    <a href="print-service.html" class="mobile-nav-link active"><i class="fas fa-print"></i>3D Print Service</a>
+    <a href="dashboard.html" class="mobile-nav-link"><i class="fas fa-user-circle"></i>My Account</a>
+  </div>
+</div>
+
+<div id="toastContainer" class="toast-container"></div>
+
+<style>
+.print-service-layout { display: grid; grid-template-columns: 1fr 380px; gap: 32px; align-items: start; }
+@media (max-width: 991px) { .print-service-layout { grid-template-columns: 1fr; } .calc-sidebar { position: static; } }
+
+.glass-card { background: rgba(13,13,26,0.6); backdrop-filter: blur(10px); border: 1px solid var(--dark-border); }
+.card-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.step-title-text { font-family: var(--font-tech); font-size: 0.9rem; letter-spacing: 1px; margin: 0; }
+
+/* Enhanced Dropzone */
+.dropzone-enhanced { border: 2px dashed var(--dark-border); border-radius: var(--radius-lg); padding: 40px 20px; text-align: center; transition: var(--transition); cursor: pointer; background: rgba(255,255,255,0.02); }
+.dropzone-enhanced:hover { border-color: var(--royal-blue); background: rgba(26,58,255,0.05); }
+.drop-icon { font-size: 3rem; margin-bottom: 12px; filter: drop-shadow(0 0 10px rgba(26,58,255,0.3)); }
+.file-specs { font-size: 0.65rem; color: var(--text-muted); margin-top: 15px; letter-spacing: 1px; }
+
+/* 3D Preview Box */
+.preview-3d-box { display: none; height: 400px; width: 100%; background: #000; border-radius: var(--radius-lg); border: var(--border-glow); position: relative; overflow: hidden; margin-top: 20px; }
+#viewer { width: 100%; height: 100%; }
+.viewer-overlay-ui { position: absolute; inset: 0; pointer-events: none; padding: 15px; display: flex; flex-direction: column; justify-content: space-between; }
+.viewer-stats { display: flex; gap: 10px; }
+.v-stat { background: rgba(0,0,0,0.6); padding: 4px 10px; border-radius: 6px; font-family: var(--font-tech); font-size: 0.65rem; color: var(--gold); border: 1px solid rgba(255,215,0,0.2); pointer-events: auto; }
+.viewer-actions-row { display: flex; align-items: center; gap: 10px; pointer-events: auto; }
+.v-btn { width: 32px; height: 32px; background: rgba(0,0,0,0.6); border: 1px solid var(--dark-border); border-radius: 6px; color: white; cursor: pointer; transition: 0.2s; }
+.v-btn:hover { background: var(--royal-blue); border-color: var(--royal-blue-light); }
+.v-filename { flex: 1; text-align: right; font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-tech); }
+.viewer-loading-screen { position: absolute; inset: 0; background: rgba(10,10,15,0.95); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; z-index: 5; color: var(--royal-blue-light); }
+.viewer-loading-screen i { font-size: 2.5rem; }
+.viewer-loading-screen span { font-family: var(--font-tech); font-size: 0.75rem; letter-spacing: 2px; }
+
+/* Success strip */
+.upload-success-strip { display: flex; align-items: center; gap: 15px; padding: 12px 20px; background: rgba(0,230,118,0.05); border: 1px solid rgba(0,230,118,0.2); border-radius: var(--radius-md); margin-top: 15px; }
+.f-name { font-weight: 700; font-size: 0.9rem; }
+.f-meta { font-size: 0.75rem; color: var(--text-muted); }
+.remove-file-btn { background: transparent; color: var(--text-muted); transition: 0.2s; }
+.remove-file-btn:hover { color: var(--error); transform: scale(1.1); }
+
+/* Form Elements */
+.qty-stepper { display: flex; align-items: center; background: var(--dark-surface); border: 1px solid var(--dark-border); border-radius: var(--radius-sm); overflow: hidden; width: 120px; }
+.qty-stepper button { width: 40px; height: 40px; background: transparent; color: white; font-size: 1.2rem; }
+.qty-stepper button:hover { background: rgba(255,255,255,0.05); }
+.qty-stepper input { flex: 1; width: 0; background: transparent; border: none; text-align: center; font-weight: 700; color: var(--gold); }
+.input-suffix { background: var(--dark-surface); padding: 0 12px; display: flex; align-items: center; font-size: 0.75rem; color: var(--text-muted); border-left: 1px solid var(--dark-border); }
+
+/* Calculator */
+.calc-sidebar { position: sticky; top: 90px; }
+.calculator-card { padding: 30px; border-radius: var(--radius-lg); }
+.calc-label { font-family: var(--font-tech); font-size: 0.65rem; letter-spacing: 2px; color: var(--gold); margin-bottom: 5px; text-transform: uppercase; }
+.calc-title { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; margin-bottom: 25px; }
+.breakdown-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; }
+.breakdown-item { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-secondary); }
+.breakdown-divider { height: 1px; background: rgba(255,255,255,0.05); margin: 5px 0; }
+.total-row { display: flex; justify-content: space-between; align-items: center; margin-top: 5px; }
+.total-val { font-family: var(--font-tech); font-size: 1.8rem; font-weight: 800; color: var(--gold); text-shadow: 0 0 20px rgba(255,215,0,0.3); }
+.eta-box { background: rgba(26,58,255,0.1); border: 1px solid rgba(26,58,255,0.2); padding: 15px; border-radius: var(--radius-md); margin-bottom: 20px; }
+.eta-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px; }
+.eta-val { font-family: var(--font-tech); font-size: 1rem; color: var(--royal-blue-light); font-weight: 700; }
+.checkout-btn { box-shadow: 0 10px 30px rgba(255,215,0,0.2); margin-top: 10px; }
+.trust-icons-row { display: flex; justify-content: center; gap: 15px; margin-top: 20px; font-size: 0.65rem; color: var(--text-muted); opacity: 0.7; }
+.address-summary-mini { background: rgba(255,215,0,0.03); border: 1px solid rgba(255,215,0,0.15); padding: 12px; border-radius: 8px; margin-bottom: 20px; }
+.summary-label { font-size: 0.7rem; color: var(--gold); font-weight: 700; margin-bottom: 5px; }
+.summary-content { font-size: 0.75rem; color: var(--text-secondary); line-height: 1.4; }
+.tips-list { list-style: none; padding: 0; margin: 0; }
+.tips-list li { font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 8px; display: flex; gap: 8px; align-items: start; }
+.tips-list li i { color: var(--success); font-size: 0.7rem; margin-top: 3px; }
+
+/* Add any missing styles for mobile components if not in theme.css */
+.toast-container { position: fixed; bottom: 30px; right: 30px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+.toast { background: var(--dark-card); border: 1px solid var(--dark-border); padding: 12px 20px; border-radius: 8px; color: white; display: flex; align-items: center; min-width: 280px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); pointer-events: auto; animation: slideIn 0.3s forwards; }
+.toast.success { border-left: 4px solid var(--success); }
+.toast.error { border-left: 4px solid var(--error); }
+.toast.warning { border-left: 4px solid var(--warning); }
+.toast.info { border-left: 4px solid var(--royal-blue); }
+@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+/* Mode Tabs */
+.mode-tabs { display: flex; background: var(--dark-surface); padding: 4px; border-radius: 10px; border: 1px solid var(--dark-border); }
+.mode-tab { padding: 6px 16px; border-radius: 8px; font-size: 0.7rem; font-family: var(--font-tech); cursor: pointer; transition: 0.2s; border: none; background: transparent; color: var(--text-muted); }
+.mode-tab.active { background: var(--gradient-royal); color: white; box-shadow: var(--shadow-royal); }
+
+/* Presets */
+.preset-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 10px; }
+.preset-card { background: var(--dark-card); border: 1px solid var(--dark-border); border-radius: 12px; padding: 15px 10px; text-align: center; cursor: pointer; transition: 0.2s; }
+.preset-card:hover { border-color: var(--royal-blue); background: rgba(26,58,255,0.05); }
+.preset-card.active { border-color: var(--gold); background: rgba(255,215,0,0.05); box-shadow: 0 0 15px rgba(255,215,0,0.1); }
+.preset-icon { font-size: 1.2rem; margin-bottom: 8px; }
+.preset-name { font-family: var(--font-tech); font-size: 0.65rem; font-weight: 700; color: white; margin-bottom: 4px; text-transform: uppercase; }
+.preset-desc { font-size: 0.6rem; color: var(--text-muted); line-height: 1.2; }
+
+.expert-only, .manual-only { transition: 0.3s; }
+
+/* Transformation Panel */
+.model-controls-panel { position: absolute; top: 15px; right: 15px; width: 180px; background: rgba(10,10,15,0.9); border: 1px solid var(--dark-border); border-radius: 12px; padding: 12px; z-index: 10; backdrop-filter: blur(10px); }
+.control-tab-header { display: flex; border-bottom: 1px solid var(--dark-border); margin-bottom: 10px; gap: 5px; }
+.control-tab { flex: 1; background: transparent; border: none; color: var(--text-muted); font-family: var(--font-tech); font-size: 0.6rem; padding: 5px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
+.control-tab.active { color: var(--gold); border-bottom: 2px solid var(--gold); }
+.form-label-xs { display: block; font-size: 0.6rem; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; }
+.input-group-xs { display: flex; align-items: center; background: var(--dark-surface); border: 1px solid var(--dark-border); border-radius: 6px; overflow: hidden; }
+.form-control-xs { width: 100%; background: transparent; border: none; color: white; padding: 5px 8px; font-size: 0.75rem; text-align: center; }
+.suffix { padding: 0 8px; font-size: 0.65rem; color: var(--text-muted); }
+.unit-toggle { display: flex; gap: 4px; margin-top: 8px; }
+.unit-btn { flex: 1; background: var(--dark-card); border: 1px solid var(--dark-border); border-radius: 4px; color: var(--text-muted); font-size: 0.6rem; padding: 4px; cursor: pointer; transition: 0.2s; }
+.unit-btn.active { background: var(--royal-blue); color: white; border-color: var(--royal-blue-light); }
+.rotate-btns { display: grid; grid-template-columns: 1fr; gap: 6px; }
+.v-btn-xs { background: var(--dark-surface); border: 1px solid var(--dark-border); color: white; padding: 6px; border-radius: 6px; font-size: 0.65rem; font-family: var(--font-tech); cursor: pointer; transition: 0.2s; }
+.v-btn-xs:hover { background: var(--royal-blue); border-color: var(--royal-blue-light); }
+</style>
+
+<script>
+let currentCfgMode = 'standard';
+let modelUnits = 'mm';
+let originalSize = new THREE.Vector3();
+let currentScale = 1.0;
+
+function switchControlTab(tab) {
+  document.querySelectorAll('.control-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`[onclick="switchControlTab('${tab}')"]`).classList.add('active');
+  document.getElementById('tab-scale').style.display = (tab === 'scale') ? 'block' : 'none';
+  document.getElementById('tab-rotate').style.display = (tab === 'rotate') ? 'block' : 'none';
+}
+
+function setUnits(u) {
+  modelUnits = u;
+  document.querySelectorAll('.unit-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('unit-' + u).classList.add('active');
+  updateDimensionsDisplay();
+  updatePriceCalc();
+}
+
+function applyModelScale() {
+  const pct = parseFloat(document.getElementById('scaleInput').value) || 100;
+  currentScale = pct / 100;
+  if(stlMesh) {
+    stlMesh.scale.set(currentScale, currentScale, currentScale);
+    updateDimensionsDisplay();
+    updatePriceCalc();
+  }
+}
+
+function rotateModel(axis) {
+  if(!stlMesh) return;
+  const rad = Math.PI / 2;
+  if(axis === 'x') stlMesh.rotation.x += rad;
+  if(axis === 'y') stlMesh.rotation.y += rad;
+  if(axis === 'z') stlMesh.rotation.z += rad;
+  
+  // Re-center model after rotation
+  const box = new THREE.Box3().setFromObject(stlMesh);
+  const center = new THREE.Vector3();
+  box.getCenter(center);
+  stlMesh.position.x -= center.x;
+  stlMesh.position.y -= box.min.y; // Keep grounded
+  stlMesh.position.z -= center.z;
+  
+  updateDimensionsDisplay();
+}
+
+function autoOrient() {
+  if(!stlMesh) return;
+  showToast('🪄 Normalizing Orientation...', 'info');
+  stlMesh.rotation.set(0,0,0);
+  const box = new THREE.Box3().setFromObject(stlMesh);
+  const size = new THREE.Vector3();
+  box.getSize(size);
+  // Simple heuristic: lay flat on the face with largest area
+  // For now, just reset and ground
+  stlMesh.position.set(0, -box.min.y, 0);
+  updateDimensionsDisplay();
+}
+
+function updateDimensionsDisplay() {
+  if(!stlMesh) return;
+  const box = new THREE.Box3().setFromObject(stlMesh);
+  const size = new THREE.Vector3();
+  box.getSize(size);
+  
+  let mult = 1; // mm
+  if(modelUnits === 'cm') mult = 0.1;
+  if(modelUnits === 'in') mult = 0.0393701;
+
+  document.getElementById('v-dimX').textContent = (size.x * mult).toFixed(1);
+  document.getElementById('v-dimY').textContent = (size.y * mult).toFixed(1);
+  document.getElementById('v-dimZ').textContent = (size.z * mult).toFixed(1);
+  
+  // Volume calculation (approx based on bounding box and density heuristic)
+  // For precise volume we'd need to iterate faces, using bounding box volume * 0.4 fill heuristic for now
+  const rawVol = (size.x * size.y * size.z) / 1000; // cm3
+  document.getElementById('v-volume').textContent = rawVol.toFixed(1);
+  document.getElementById('printVolume').value = rawVol.toFixed(1);
+}
+
+function setCfgMode(mode, btn) {
+  currentCfgMode = mode;
+  // Update Buttons
+  document.querySelectorAll('.mode-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  // Toggle Visibility
+  document.getElementById('mode-standard').style.display = (mode === 'standard') ? 'block' : 'none';
+  document.querySelectorAll('.expert-only').forEach(el => el.style.display = (mode === 'expert') ? 'block' : 'none');
+  document.querySelectorAll('.manual-only').forEach(el => el.style.display = (mode === 'manual') ? 'block' : 'none');
+  document.querySelector('.volume-input-group').style.display = (mode !== 'manual') ? 'block' : 'none';
+  
+  updatePriceCalc();
+}
+
+function applyPreset(type, card) {
+  document.querySelectorAll('.preset-card').forEach(c => c.classList.remove('active'));
+  card.classList.add('active');
+
+  const infill = document.getElementById('infill');
+  const layers = document.getElementById('layerHeight');
+  
+  if (type === 'draft') {
+    infill.value = 10;
+    layers.value = '0.28';
+  } else if (type === 'high') {
+    infill.value = 20;
+    layers.value = '0.12';
+  } else if (type === 'functional') {
+    infill.value = 40;
+    layers.value = '0.2';
+  } else {
+    infill.value = 20;
+    layers.value = '0.2';
+  }
+  
+  document.getElementById('infillLabel').textContent = infill.value + '%';
+  updatePriceCalc();
+}
+
+// ─── UI CORE FUNCTIONS ───────────────────────────────────
+function closeAnnouncement() {
+  const bar = document.getElementById('announcementBar');
+  if(bar) { bar.style.maxHeight='0'; bar.style.padding='0'; bar.style.overflow='hidden'; }
+  adjustHeaderTop();
+}
+function adjustHeaderTop() {
+  const bar = document.getElementById('announcementBar');
+  const header = document.getElementById('siteHeader');
+  if(bar && header && bar.style.maxHeight !== '0px') {
+    header.style.top = bar.offsetHeight + 'px';
+  } else if(header) {
+    header.style.top = '0';
+  }
+}
+function toggleMobileMenu() {
+  const menu = document.getElementById('mobileMenu');
+  const overlay = document.getElementById('mobileOverlay');
+  menu.classList.toggle('open');
+  overlay.classList.toggle('active');
+}
+function showToast(msg, type='info') {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `<span>${msg}</span><button style="margin-left:auto; background:none; color:white; opacity:0.5; cursor:pointer" onclick="this.parentElement.remove()">✕</button>`;
+  container.appendChild(toast);
+  setTimeout(() => { if(toast.parentElement) toast.remove(); }, 4000);
+}
+window.addEventListener('scroll', () => {
+  const navbar = document.getElementById('navbar');
+  if(navbar) navbar.classList.toggle('scrolled', window.scrollY > 60);
+});
+window.addEventListener('resize', adjustHeaderTop);
+document.addEventListener('DOMContentLoaded', adjustHeaderTop);
+
+let scene, camera, renderer, controls, stlMesh;
+let uploadedFile = null;
+let TN_CONFIG = {};
+
+async function fetchPricingConfig() {
+  try {
+    const res = await fetch('/api/settings/pricing');
+    TN_CONFIG = await res.json();
+    
+    // Populate Materials
+    document.getElementById('material').innerHTML = TN_CONFIG.MATERIALS.map(m => 
+      `<option value="${m.name}" data-price="${m.price}" data-density="${m.density || 1.25}">${m.name} (₹${m.price}/${m.unit})</option>`
+    ).join('');
+
+    // Colors
+    document.getElementById('color').innerHTML = TN_CONFIG.COLORS.map(c => `<option>${c.name}</option>`).join('');
+
+    // Layers
+    document.getElementById('layerHeight').innerHTML = TN_CONFIG.LAYER_HEIGHTS.map(l => 
+      `<option value="${l.value}" data-mul="${l.multiplier}">${l.name}</option>`
+    ).join('');
+
+    // Finishes
+    document.getElementById('finish').innerHTML = TN_CONFIG.FINISHES.map(f => 
+      `<option value="${f.name}" data-price="${f.price}">${f.name} ${f.price > 0 ? `(+₹${f.price})` : ''}</option>`
+    ).join('');
+
+    updatePriceCalc();
+  } catch(e) { console.error('Config fetch failed', e); }
+}
+
+function handleFileSelect(e) { if(e.target.files[0]) processFile(e.target.files[0]); }
+function handleDragOver(e) { e.preventDefault(); e.currentTarget.classList.add('dragging'); }
+function handleDragLeave(e) { e.currentTarget.classList.remove('dragging'); }
+function handleDrop(e) { e.preventDefault(); e.currentTarget.classList.remove('dragging'); if(e.dataTransfer.files[0]) processFile(e.dataTransfer.files[0]); }
+
+function processFile(file) {
+  const ext = '.' + file.name.split('.').pop().toLowerCase();
+  if(!['.stl', '.obj', '.3mf'].includes(ext)) return showToast('❌ File type not supported', 'error');
+  if(file.size > 50*1024*1024) return showToast('❌ File too large (Max 50MB)', 'error');
+
+  uploadedFile = file;
+  document.getElementById('fileName').textContent = file.name;
+  document.getElementById('v-filename').textContent = file.name;
+  document.getElementById('fileSize').textContent = (file.size / 1024).toFixed(1) + ' KB';
+  
+  document.getElementById('uploadZone').style.display = 'none';
+  document.getElementById('fileInfo').style.display = 'flex';
+  document.getElementById('modelControls').style.display = 'block';
+  document.getElementById('uploadStatusBadge').className = 'badge badge-success';
+  document.getElementById('uploadStatusBadge').textContent = 'READY';
+
+  document.getElementById('step-1').classList.add('completed');
+  document.getElementById('step-2').classList.add('active');
+
+  if(ext === '.stl') loadSTLPreview(file);
+  updatePriceCalc();
+  showToast('✨ Design Analyzed Successfully', 'success');
+}
+
+function loadSTLPreview(file) {
+  document.getElementById('viewer-container').style.display = 'block';
+  document.getElementById('viewer-loader').style.display = 'flex';
+  
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    initViewer(e.target.result);
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function initViewer(buffer) {
+  const container = document.getElementById('viewer');
+  if(renderer) {
+    container.innerHTML = '';
+    renderer.dispose();
+  }
+
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x0a0a0f);
+  
+  // Set Z as UP axis (Industrial Standard)
+  THREE.Object3D.DefaultUp.set(0, 0, 1);
+  
+  camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 10000);
+  camera.position.set(200, -200, 200); 
+  camera.up.set(0, 0, 1);
+
+  renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setSize(container.clientWidth, container.clientHeight);
+  renderer.setPixelRatio(window.devicePixelRatio);
+  container.appendChild(renderer.domElement);
+
+  controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.screenSpacePanning = true;
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+  const sun = new THREE.DirectionalLight(0xffffff, 0.8);
+  sun.position.set(1, -1, 1);
+  scene.add(sun);
+
+  // Rotate Grid to be on XY plane
+  const grid = new THREE.GridHelper(300, 20, 0x222244, 0x111122);
+  grid.rotation.x = Math.PI / 2;
+  scene.add(grid);
+  
+  // Visual Axes (X=Red, Y=Green, Z=Blue)
+  const axes = new THREE.AxesHelper(150);
+  scene.add(axes);
+
+  const loader = new THREE.STLLoader();
+  const geometry = loader.parse(buffer);
+  
+  const material = new THREE.MeshPhongMaterial({ color: 0x1a3aff, specular: 0x111111, shininess: 100 });
+  stlMesh = new THREE.Mesh(geometry, material);
+  
+  // Center and Ground on XY plane (Z is height)
+  geometry.computeBoundingBox();
+  const box = geometry.boundingBox;
+  const size = new THREE.Vector3();
+  box.getSize(size);
+  
+  stlMesh.position.set(- (box.max.x + box.min.x) / 2, - (box.max.y + box.min.y) / 2, -box.min.z);
+  scene.add(stlMesh);
+
+  updateDimensionsDisplay();
+
+  // Zoom Fit
+  const maxDim = Math.max(size.x, size.y, size.z);
+  const dist = maxDim / (2 * Math.atan(Math.PI * camera.fov / 360));
+  camera.position.set(dist * 1.5, -dist * 1.5, dist * 1.5);
+  controls.target.set(0, 0, size.z / 2);
+  controls.update();
+
+  function animate() { if(renderer) { requestAnimationFrame(animate); controls.update(); renderer.render(scene, camera); } }
+  animate();
+
+  document.getElementById('viewer-loader').style.display = 'none';
+}
+
+function toggleWireframe() { if(stlMesh) stlMesh.material.wireframe = !stlMesh.material.wireframe; }
+function resetViewer() { if(controls) controls.reset(); }
+
+function removeFile() {
+  uploadedFile = null;
+  document.getElementById('uploadZone').style.display = 'block';
+  document.getElementById('fileInfo').style.display = 'none';
+  document.getElementById('viewer-container').style.display = 'none';
+  document.getElementById('uploadStatusBadge').className = 'badge badge-muted';
+  document.getElementById('uploadStatusBadge').textContent = 'No File';
+  document.getElementById('step-1').classList.remove('completed');
+  document.getElementById('step-2').classList.remove('active');
+  if(renderer) { renderer.dispose(); renderer = null; }
+}
+
+function updateQty(delta) {
+  const input = document.getElementById('printQty');
+  input.value = Math.max(1, parseInt(input.value) + delta);
+  updatePriceCalc();
+}
+
+function updatePriceCalc() {
+  if(!TN_CONFIG.MATERIALS) return;
+  
+  const mSel = document.getElementById('material');
+  const mat = TN_CONFIG.MATERIALS[mSel.selectedIndex] || TN_CONFIG.MATERIALS[0];
+  const qty = parseInt(document.getElementById('printQty').value) || 1;
+  const finishPrice = parseInt(document.getElementById('finish').options[document.getElementById('finish').selectedIndex]?.dataset.price || 0);
+
+  let weight = 0;
+  let hours = 0;
+
+  if (currentCfgMode === 'manual') {
+    weight = parseFloat(document.getElementById('manualWeight').value) || 0;
+    hours = parseFloat(document.getElementById('manualHours').value) || 0;
+  } else {
+    const vol = parseFloat(document.getElementById('printVolume').value) || 1;
+    const infill = parseInt(document.getElementById('infill').value) || 20;
+    const layerMul = parseFloat(document.getElementById('layerHeight').options[document.getElementById('layerHeight').selectedIndex]?.dataset.mul || 1.0);
+    
+    // Auto Estimation Logic
+    weight = vol * (mat.density || 1.25) * (infill/100 + 0.15) * qty;
+    hours = Math.max(1, (weight / 15) * layerMul);
+  }
+  
+  const matCost = (weight/1000) * (mat.price || (mat.name === 'Resin' ? TN_CONFIG.RESIN_BASE : TN_CONFIG.FILAMENT_BASE));
+  const elecCost = (TN_CONFIG.PRINTER_WATTAGE/1000) * hours * TN_CONFIG.ELECTRICITY_RATE;
+  const laborCost = ((30 + weight*0.1)/60) * TN_CONFIG.LABOR_RATE;
+  const deprCost = hours * TN_CONFIG.DEPRECIATION_RATE;
+  const maintCost = weight * (TN_CONFIG.MAINTENANCE_RATE || 0.20);
+  
+  const setupFee = (TN_CONFIG.SETUP_FEE || 0);
+  const bufferMult = 1 + ((TN_CONFIG.FAIL_BUFFER_PCT || 0) / 100);
+
+  const subtotal = (matCost + elecCost + laborCost + deprCost + maintCost + (finishPrice * qty) + setupFee) * bufferMult;
+  const overhead = subtotal * (TN_CONFIG.OVERHEAD_PCT/100);
+  const profit = (subtotal + overhead) * (TN_CONFIG.PROFIT_PCT/100);
+  const shipping = (subtotal + profit) > TN_CONFIG.FREE_SHIPPING_THRESHOLD ? 0 : TN_CONFIG.MIN_SHIPPING;
+  const base = subtotal + overhead + profit;
+  const gst = base * (TN_CONFIG.GST_PCT/100);
+  const total = base + gst + shipping;
+
+  document.getElementById('priceMaterial').textContent = '₹' + Math.round(matCost);
+  document.getElementById('priceElec').textContent = '₹' + Math.round(elecCost);
+  document.getElementById('priceLabor').textContent = '₹' + Math.round(laborCost);
+  document.getElementById('priceDepr').textContent = '₹' + Math.round(deprCost);
+  document.getElementById('priceShipping').textContent = shipping === 0 ? 'FREE' : '₹' + shipping;
+  document.getElementById('priceGST').textContent = '₹' + Math.round(gst);
+  document.getElementById('priceTotal').textContent = '₹' + Math.round(total).toLocaleString('en-IN');
+  document.getElementById('printTimeEst').textContent = `~${Math.ceil(hours)} hours`;
+}
+
+function updateAddressSummary() {
+  const name = document.getElementById('addrName').value;
+  const city = document.getElementById('addrCity').value;
+  if(name || city) {
+    document.getElementById('addrSummaryCard').style.display = 'block';
+    document.getElementById('summaryAddrContent').innerHTML = `<strong>${name}</strong><br>${city}, ${document.getElementById('addrState').value}`;
+    document.getElementById('step-3').classList.add('active');
+  }
+}
+
+async function placeOrder() {
+  if(!uploadedFile) return showToast('⚠️ Upload a file first', 'warning');
+  if(!document.getElementById('addrName').value) return showToast('⚠️ Enter delivery details', 'warning');
+
+  showToast('🔄 Processing...', 'info');
+  try {
+    const formData = new FormData();
+    formData.append('image', uploadedFile);
+    const uRes = await fetch('/api/upload', { method:'POST', body:formData });
+    const uData = await uRes.json();
+
+    const jobData = {
+      customer: { name: document.getElementById('addrName').value, phone: document.getElementById('addrPhone').value, address: document.getElementById('addrLine1').value, city: document.getElementById('addrCity').value, pin: document.getElementById('addrPin').value, state: document.getElementById('addrState').value, email: 'user@mail.com' },
+      filename: uploadedFile.name,
+      fileData: uData.imageId,
+      settings: { material: document.getElementById('material').value, color: document.getElementById('color').value, volume: parseFloat(document.getElementById('printVolume').value), quantity: parseInt(document.getElementById('printQty').value) },
+      quote: { total: parseInt(document.getElementById('priceTotal').textContent.replace(/\D/g,'')) }
+    };
+
+    const res = await fetch('/api/stl-jobs', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(jobData) });
+    const data = await res.json();
+    if(data.success) {
+      showToast('🎉 Request Sent!', 'success');
+      setTimeout(() => window.location.href = 'dashboard.html#stl', 1500);
+    }
+  } catch(e) { showToast('❌ Error sending request', 'error'); }
+}
+
+function requestCallback() { showToast('📞 Our expert will call you shortly!', 'success'); }
+
+document.addEventListener('DOMContentLoaded', fetchPricingConfig);
+</script>
+</body>
+</html>
