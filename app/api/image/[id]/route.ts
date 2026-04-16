@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import mongoose from 'mongoose';
-import dbConnect, { getGridFSBucket } from '../../../lib/mongodb';
-import { ProductImage } from '../../../models';
+import dbConnect, { getGridFSBucket } from '@/lib/mongodb';
+import { ProductImage } from '@/models';
 
 export async function GET(
   request: NextRequest,
