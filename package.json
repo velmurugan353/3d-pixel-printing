@@ -4,6 +4,8 @@
   "description": "3D Pixel Printing — India's #1 Premium 3D Printing Destination",
   "main": "server.js",
   "scripts": {
+    "dev": "next dev",
+    "build": "next build",
     "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
