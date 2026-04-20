@@ -259,7 +259,7 @@ const AMCPlanSchema = new mongoose.Schema({
 });
 
 // Pre-save middleware to calculate totals
-AMCPlanSchema.pre('save', function(next) {
+AMCPlanSchema.pre('save', async function() {
     this.updatedAt = new Date();
     
     // Calculate GST if not set
@@ -270,17 +270,15 @@ AMCPlanSchema.pre('save', function(next) {
         this.gstAmount = 0;
         this.totalAmount = this.price;
     }
-    
-    next();
 });
 
-export const Contact = mongoose.models.Contact || mongoose.model('Contact', ContactSchema);
-export const ProductImage = mongoose.models.ProductImage || mongoose.model('ProductImage', ProductImageSchema);
-export const Product = mongoose.models.Product || mongoose.model('Product', ProductSchema);
-export const Order = mongoose.models.Order || mongoose.model('Order', OrderSchema);
-export const STLJob = mongoose.models.STLJob || mongoose.model('STLJob', STLJobSchema);
-export const Settings = mongoose.models.Settings || mongoose.model('Settings', SettingsSchema);
-export const Coupon = mongoose.models.Coupon || mongoose.model('Coupon', CouponSchema);
-export const User = mongoose.models.User || mongoose.model('User', UserSchema);
-export const RepairRequest = mongoose.models.RepairRequest || mongoose.model('RepairRequest', RepairRequestSchema);
-export const AMCPlan = mongoose.models.AMCPlan || mongoose.model('AMCPlan', AMCPlanSchema);
+export const Contact: mongoose.Model<any> = mongoose.models.Contact || mongoose.model('Contact', ContactSchema);
+export const ProductImage: mongoose.Model<any> = mongoose.models.ProductImage || mongoose.model('ProductImage', ProductImageSchema);
+export const Product: mongoose.Model<any> = mongoose.models.Product || mongoose.model('Product', ProductSchema);
+export const Order: mongoose.Model<any> = mongoose.models.Order || mongoose.model('Order', OrderSchema);
+export const STLJob: mongoose.Model<any> = mongoose.models.STLJob || mongoose.model('STLJob', STLJobSchema);
+export const Settings: mongoose.Model<any> = mongoose.models.Settings || mongoose.model('Settings', SettingsSchema);
+export const Coupon: mongoose.Model<any> = mongoose.models.Coupon || mongoose.model('Coupon', CouponSchema);
+export const User: mongoose.Model<any> = mongoose.models.User || mongoose.model('User', UserSchema);
+export const RepairRequest: mongoose.Model<any> = mongoose.models.RepairRequest || mongoose.model('RepairRequest', RepairRequestSchema);
+export const AMCPlan: mongoose.Model<any> = mongoose.models.AMCPlan || mongoose.model('AMCPlan', AMCPlanSchema);
