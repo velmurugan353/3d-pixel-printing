@@ -1,19 +1,19 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  async rewrites() {
-    return [
-      { source: '/products', destination: '/products.html' },
-      { source: '/product', destination: '/product.html' },
-      { source: '/services', destination: '/services.html' },
-      { source: '/print-service', destination: '/print-service.html' },
-      { source: '/cart', destination: '/cart.html' },
-      { source: '/checkout', destination: '/checkout.html' },
-      { source: '/dashboard', destination: '/dashboard.html' },
-      { source: '/admin', destination: '/admin.html' },
-      { source: '/2d-to-3d', destination: '/2d-to-3d.html' },
-      { source: '/invoice', destination: '/invoice.html' },
-    ];
-  },
+  // async rewrites() {
+  //   return [
+  //     { source: '/products', destination: '/products.html' },
+  //     { source: '/product', destination: '/product.html' },
+  //     { source: '/services', destination: '/services.html' },
+  //     { source: '/print-service', destination: '/print-service.html' },
+  //     { source: '/cart', destination: '/cart.html' },
+  //     { source: '/checkout', destination: '/checkout.html' },
+  //     { source: '/dashboard', destination: '/dashboard.html' },
+  //     { source: '/admin', destination: '/admin.html' },
+  //     { source: '/2d-to-3d', destination: '/2d-to-3d.html' },
+  //     { source: '/invoice', destination: '/invoice.html' },
+  //   ];
+  // },
 };
 
 export default nextConfig;

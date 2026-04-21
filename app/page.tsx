@@ -530,10 +530,12 @@ export default function HomePage() {
                 <div className="product-card-img" onClick={() => window.location.href = `/product.html?id=${p._id}`}>
                   {p.imageIds && p.imageIds.length > 0 ? (
                     <img src={`/api/image/${p.imageIds[0]._id || p.imageIds[0]}`} alt={p.name} className="product-full-img" />
+                  ) : p.imageUrl ? (
+                    <img src={p.imageUrl} alt={p.name} className="product-full-img" />
                   ) : (
                     <div className="product-emoji-wrap">{p.emoji || '📦'}</div>
                   )}
-                  {p.badge && <span className="product-badge badge-hot">{p.badge}</span>}
+                  <div className="product-glow-overlay"></div>
                   <div className="product-card-actions">
                     <button className="pca-btn" onClick={(e) => { e.stopPropagation(); addToCart(p); }}><i className="fas fa-cart-plus"></i></button>
                     <button className="pca-btn" onClick={(e) => { e.stopPropagation(); showToast('❤️ Added to Wishlist', 'success'); }}><i className="far fa-heart"></i></button>

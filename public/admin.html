@@ -318,7 +318,21 @@
               <input type="file" id="calcUploadInput" style="display:none" accept=".stl" onchange="handleCalcUpload(event)">
               
               <div id="calcItemsList" style="min-height:200px; max-height:500px; overflow-y:auto">
-                <!-- Multi-model rows injected here -->
+                <table class="table" style="margin:0">
+                  <thead style="position:sticky; top:0; background:var(--dark-card); z-index:5">
+                    <tr>
+                      <th>Model/Part</th>
+                      <th>Material</th>
+                      <th>Weight</th>
+                      <th>Qty</th>
+                      <th>Cost</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="calcItemsTableBody">
+                    <!-- Multi-model rows injected here -->
+                  </tbody>
+                </table>
                 <div id="calcEmptyState" style="text-align:center; padding:60px; color:var(--text-muted)">
                   <i class="fas fa-cubes" style="font-size:3rem; margin-bottom:15px; opacity:0.2"></i>
                   <p>No models added yet. Upload an STL or add manually.</p>
@@ -1163,28 +1177,36 @@ function adminLogout() {
 }
 
 function adminNav(section, el) {
-  document.querySelectorAll('.admin-content > div').forEach(s => s.style.display = 'none');
-  const target = document.getElementById('admin-' + section);
-  if(target) target.style.display = 'block';
-  document.querySelectorAll('.admin-nav-item').forEach(n => n.classList.remove('active'));
-  if(el) el.classList.add('active');
+  try {
+    document.querySelectorAll('.admin-content > div').forEach(s => s.style.display = 'none');
+    const target = document.getElementById('admin-' + section);
+    if(target) target.style.display = 'block';
+    
+    document.querySelectorAll('.admin-nav-item').forEach(n => n.classList.remove('active'));
+    if(el) el.classList.add('active');
 
-  if(section === 'overview') initAdminDashboard();
-  if(section === 'orders') fetchOrders();
-  if(section === 'products') fetchProducts();
-  if(section === 'stl') fetchSTLJobs();
-  if(section === 'pricing') fetchPricingConfig();
-  if(section === 'users') fetchUsers();
-  if(section === 'coupons') fetchCoupons();
-  if(section === 'service-requests') renderRepairRequests();
-  if(section === 'amc') renderAMC();
-  if(section === 'payments') renderPayments();
-  if(section === 'inventory') renderInventory();
-  if(section === 'analytics') renderAnalyticsCharts();
-  if(section === 'settings') loadGlobalSettings();
-  if(section === 'cms') loadCMSConfig();
-  if(section === 'calculator') initCalculator();
-  if(section === 'docs') renderDocuments();
+    // Safe loader calls
+    const run = (fn) => { if(typeof fn === 'function') fn().catch(e => console.error(e)); };
+
+    if(section === 'overview') run(initAdminDashboard);
+    if(section === 'orders') run(fetchOrders);
+    if(section === 'products') run(fetchProducts);
+    if(section === 'stl') run(fetchSTLJobs);
+    if(section === 'pricing') run(fetchPricingConfig);
+    if(section === 'users') run(fetchUsers);
+    if(section === 'coupons') run(fetchCoupons);
+    if(section === 'service-requests') run(renderRepairRequests);
+    if(section === 'amc') run(renderAMC);
+    if(section === 'payments') run(renderPayments);
+    if(section === 'inventory') run(renderInventory);
+    if(section === 'analytics') run(renderAnalyticsCharts);
+    if(section === 'settings') run(loadGlobalSettings);
+    if(section === 'cms') run(loadCMSConfig);
+    if(section === 'calculator') run(initCalculator);
+    if(section === 'docs') run(renderDocuments);
+  } catch (err) {
+    console.error('Nav error:', err);
+  }
 }
 
 async function renderDocuments() {
@@ -1243,41 +1265,89 @@ function generateQuotation() {
   });
 }
 
-let calcItems = []; // Array of { id, filename, fileId, material, layer, finish, weight, time, qty, cost }
+let calcItems = []; 
+let calcConfig = {};
 
 async function initCalculator() {
-  const [resPricing, resUsers] = await Promise.all([
-    fetch('/api/settings/pricing'),
-    fetch('/api/users')
-  ]);
-  calcConfig = await resPricing.json();
-  const users = await resUsers.json();
-  
-  const custSelect = document.getElementById('calcCustomer');
-  custSelect.innerHTML = '<option value="">-- Guest / Walk-in --</option>' + 
-    users.map(u => `<option value="${u._id}">${u.name} (${u.email})</option>`).join('');
-  
-  // Also update PRO manual document client selector
-  const manCustSelect = document.getElementById('manualCustSelect');
-  if(manCustSelect) {
-    manCustSelect.innerHTML = '<option value="">-- Manual Entry --</option>' + 
-      users.map(u => `<option value="${u._id}">${u.name} (${u.email})</option>`).join('');
+  try {
+    const [resPricing, resUsers] = await Promise.all([
+      fetch('/api/settings/pricing'),
+      fetch('/api/users')
+    ]);
+    calcConfig = await resPricing.json();
+    const users = await resUsers.json();
+
+    const custSelect = document.getElementById('calcCustomer');
+    if(custSelect) {
+      custSelect.innerHTML = '<option value="">-- Guest / Walk-in --</option>' +
+        users.map(u => `<option value="${u._id}">${u.name} (${u.email})</option>`).join('');
+    }
+
+    renderCalcItems();
+    calculateAdminQuote();
+  } catch (e) { console.error('Calculator init failed', e); }
+}
+
+function renderCalcItems() {
+  const list = document.getElementById('calcItemsList');
+  if(!list) return;
+
+  if(calcItems.length === 0) {
+    list.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--text-muted)">No items added. Upload an STL or add manually.</td></tr>';
+    return;
   }
 
-  // Populate Product Picker for Pro Doc
-  const prodPicker = document.getElementById('quickProductPicker');
-  if(prodPicker) {
-    const pRes = await fetch('/api/products');
-    const products = await pRes.json();
-    prodPicker.innerHTML = '<option value="">-- Search Catalog (Products / Materials) --</option>' + 
-      products.map(p => `<option value="PROD|${p._id}|${p.name}|${p.price}">${p.name} (₹${p.price})</option>`).join('') +
-      (calcConfig.MATERIALS || []).map(m => `<option value="MAT|${m.name}|${m.price}">Material: ${m.name} (₹${m.price}/kg)</option>`).join('');
-  }
-  
+  list.innerHTML = calcItems.map((item, idx) => `
+    <tr>
+      <td>${item.filename || 'Manual Part'}</td>
+      <td>
+        <select class="form-control form-control-sm" onchange="updateCalcItem(${idx}, 'material', this.value)">
+          ${(calcConfig.MATERIALS || []).map(m => `<option value="${m.name}" ${item.material === m.name ? 'selected' : ''}>${m.name}</option>`).join('')}
+        </select>
+      </td>
+      <td><input type="number" class="form-control form-control-sm" value="${item.weight}" style="width:70px" onchange="updateCalcItem(${idx}, 'weight', this.value)"> g</td>
+      <td><input type="number" class="form-control form-control-sm" value="${item.qty}" style="width:60px" onchange="updateCalcItem(${idx}, 'qty', this.value)"></td>
+      <td>₹${(item.cost || 0).toLocaleString()}</td>
+      <td><button class="btn btn-sm btn-icon btn-danger" onclick="removeCalcItem(${idx})"><i class="fas fa-trash"></i></button></td>
+    </tr>
+  `).join('');
+}
+
+function updateCalcItem(idx, key, val) {
+  calcItems[idx][key] = (key === 'weight' || key === 'qty') ? parseFloat(val) : val;
+  calculateAdminQuote();
+}
+
+function removeCalcItem(idx) {
+  calcItems.splice(idx, 1);
   renderCalcItems();
   calculateAdminQuote();
 }
 
+function calculateAdminQuote() {
+  let subtotal = 0;
+  calcItems.forEach(item => {
+    // Basic calculation logic
+    const material = (calcConfig.MATERIALS || []).find(m => m.name === item.material);
+    const materialPrice = material ? (material.price / 1000) : 1.2; // price per gram
+    const itemCost = (item.weight * materialPrice) * item.qty;
+    item.cost = Math.round(itemCost);
+    subtotal += item.cost;
+  });
+
+  const gst = Math.round(subtotal * (calcConfig.GST_PCT || 18) / 100);
+  const total = subtotal + gst;
+
+  const elSub = document.getElementById('calcSubtotal');
+  const elGst = document.getElementById('calcGst');
+  const elTotal = document.getElementById('calcTotal');
+
+  if(elSub) elSub.textContent = '₹' + subtotal.toLocaleString();
+  if(elGst) elGst.textContent = '₹' + gst.toLocaleString();
+  if(elTotal) elTotal.textContent = '₹' + total.toLocaleString();
+
+  renderCalcItems();
+}
 function syncManualCustomer(userId) {
   if(!userId) return;
   fetch('/api/users').then(r => r.json()).then(users => {
@@ -1769,25 +1839,45 @@ async function createCoupon() { const payload = { code: document.getElementById(
 async function deleteCoupon(id) { const res = await fetch(`/api/coupons/${id}`, { method: 'DELETE' }); if((await res.json()).success) { showToast('✅ Deleted','success'); fetchCoupons(); } }
 
 async function fetchProducts() { 
-  const res = await fetch('/api/products'); 
-  adminProducts = await res.json(); 
-  
-  // Populate category filter if not already done
-  const catFilter = document.getElementById('productCatFilter');
-  if(catFilter && catFilter.options.length <= 1) {
-    const pRes = await fetch('/api/settings/pricing');
-    const cfg = await pRes.json();
-    if(cfg.STORE_CATEGORIES) {
-      cfg.STORE_CATEGORIES.forEach(c => {
-        const opt = document.createElement('option');
-        opt.value = c.slug;
-        opt.textContent = c.name;
-        catFilter.appendChild(opt);
-      });
+  try {
+    const list = document.getElementById('adminProductsTable');
+    if(list) list.innerHTML = '<tr><td colspan="9" style="text-align:center; padding:40px;"><i class="fas fa-spinner fa-spin"></i> Loading products...</td></tr>';
+
+    const res = await fetch('/api/products'); 
+    const data = await res.json();
+    
+    if (Array.isArray(data)) {
+      adminProducts = data;
+    } else {
+      adminProducts = [];
+      console.error('Admin API Error:', data.error);
+      showToast('⚠️ Could not load products from database', 'error');
     }
+    
+    // Populate category filter if not already done
+    const catFilter = document.getElementById('productCatFilter');
+    if(catFilter && catFilter.options.length <= 1) {
+      try {
+        const pRes = await fetch('/api/settings/pricing');
+        const cfg = await pRes.json();
+        if(cfg && cfg.STORE_CATEGORIES) {
+          cfg.STORE_CATEGORIES.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c.slug;
+            opt.textContent = c.name;
+            catFilter.appendChild(opt);
+          });
+        }
+      } catch(e) { console.error('Error loading filters'); }
+    }
+    
+    renderAdminProducts(); 
+  } catch (err) {
+    console.error('Fetch error:', err);
+    showToast('❌ Server connection error', 'error');
+    const list = document.getElementById('adminProductsTable');
+    if(list) list.innerHTML = '<tr><td colspan="9" style="text-align:center; padding:40px; color:var(--error)">Failed to connect to server.</td></tr>';
   }
-  
-  renderAdminProducts(); 
 }
 
 function renderAdminProducts() { 
@@ -1795,9 +1885,14 @@ function renderAdminProducts() {
   const catFilter = document.getElementById('productCatFilter')?.value || 'all';
   const stockFilter = document.getElementById('productStockFilter')?.value || 'all';
   const list = document.getElementById('adminProductsTable');
+  
+  if(!list) return;
 
   const filtered = adminProducts.filter(p => {
-    const matchSearch = !searchTerm || p.name.toLowerCase().includes(searchTerm) || p.sku.toLowerCase().includes(searchTerm);
+    const nameMatch = (p.name || '').toLowerCase().includes(searchTerm);
+    const skuMatch = (p.sku || '').toLowerCase().includes(searchTerm);
+    const matchSearch = !searchTerm || nameMatch || skuMatch;
+    
     const matchCat = catFilter === 'all' || p.category === catFilter;
     
     let matchStock = true;
@@ -1809,16 +1904,33 @@ function renderAdminProducts() {
     return matchSearch && matchCat && matchStock;
   });
 
+  if (filtered.length === 0) {
+    list.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:60px; color:var(--text-muted)">
+      <i class="fas fa-box-open" style="font-size:3rem; margin-bottom:15px; opacity:0.2"></i>
+      <p>No products found matching your criteria.</p>
+    </td></tr>`;
+    return;
+  }
+
   list.innerHTML = filtered.map(p => { 
     const status = p.stock <= 0 ? 'out' : p.stock < (p.lowStockAlert || 5) ? 'low' : 'active'; 
     const imgId = (p.imageIds && p.imageIds.length > 0) ? (p.imageIds[0]._id || p.imageIds[0]) : null; 
     const imgHtml = imgId ? `<img src="/api/image/${imgId}" class="product-admin-thumb">` : `<div class="product-admin-thumb" style="display:flex;align-items:center;justify-content:center;background:var(--dark-surface)">📦</div>`; 
-    return `<tr><td>${p.sku}</td><td>${imgHtml}</td><td>${p.name}</td><td>${p.brand||'N/A'}</td><td>${p.category}</td><td>₹${(p.price||0).toLocaleString()}</td><td>${p.stock}</td><td><span class="badge badge-${statusBadge[status]}">${status.toUpperCase()}</span></td><td><div style="display:flex;gap:5px">
+    return `<tr>
+      <td style="font-family:var(--font-tech)">${p.sku || 'N/A'}</td>
+      <td>${imgHtml}</td>
+      <td><div style="font-weight:600">${p.name}</div></td>
+      <td>${p.brand||'N/A'}</td>
+      <td><span class="badge badge-ghost">${p.category}</span></td>
+      <td style="font-family:var(--font-tech); font-weight:700">₹${(p.price||0).toLocaleString()}</td>
+      <td>${p.stock}</td>
+      <td><span class="badge badge-${statusBadge[status]}">${status.toUpperCase()}</span></td>
+      <td><div style="display:flex;gap:5px">
         <button class="btn btn-sm btn-icon" onclick="openAddProductModal('${p._id}')" title="Edit"><i class="fas fa-edit"></i></button>
         <button class="btn btn-sm btn-icon btn-ghost" onclick="duplicateProduct('${p._id}')" title="Duplicate"><i class="fas fa-copy"></i></button>
         <button class="btn btn-danger btn-sm btn-icon" onclick="deleteProduct('${p._id}')" title="Delete"><i class="fas fa-trash"></i></button>
       </div></td></tr>`; 
-  }).join('') || '<tr><td colspan="9" style="text-align:center; padding:40px; color:var(--text-muted)">No products found matching filters.</td></tr>'; 
+  }).join(''); 
 }
 
 async function fetchOrders() { const res = await fetch('/api/orders'); adminOrders = await res.json(); renderAdminOrders(); updateAdminBadges(); }
@@ -3068,18 +3180,303 @@ async function updateAdminBadges() {
   if(sB) { sB.textContent = pS; sB.style.display = pS > 0 ? 'flex' : 'none'; }
 }
 
-function addDesignServiceRow() { const tr = document.createElement('tr'); tr.className = 'ds-row'; tr.innerHTML = `<td><input class="form-control ds-name"></td><td><textarea class="form-control ds-desc"></textarea></td><td><input type="number" class="form-control ds-price"></td><td><input class="form-control ds-icon" value="🎨"></td><td><select class="form-control ds-status"><option value="active">Active</option><option value="maintenance">Stop</option></select></td><td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">X</button></td>`; document.getElementById('designServicesConfigTable').appendChild(tr); }
-function addMaterialRow() { const tr = document.createElement('tr'); tr.className = 'mat-row'; tr.innerHTML = `<td><input class="form-control mat-name"></td><td><input type="number" class="form-control mat-price"></td><td><input class="form-control mat-unit" value="kg"></td><td><input type="number" step="0.01" class="form-control mat-density" value="1.25"></td><td><input type="color" class="mat-color"></td><td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">X</button></td>`; document.getElementById('materialsConfigTable').appendChild(tr); }
-function addCategoryRow() { const tr = document.createElement('tr'); tr.className = 'cat-cfg-row'; tr.innerHTML = `<td><input class="form-control cat-name"></td><td><input class="form-control cat-slug"></td><td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">X</button></td>`; document.getElementById('categoriesConfigTable').appendChild(tr); }
-function addBrandRow() { const tr = document.createElement('tr'); tr.className = 'brand-cfg-row'; tr.innerHTML = `<td><input class="form-control brand-name"></td><td><select class="brand-status form-control"><option value="active">Active</option><option value="disabled">Hide</option></select></td><td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">X</button></td>`; document.getElementById('brandsConfigTable').appendChild(tr); }
-function addColorRow() { const tr = document.createElement('tr'); tr.className = 'col-row'; tr.innerHTML = `<td><input class="form-control col-name"></td><td><input type="color" class="col-hex"></td><td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">X</button></td>`; document.getElementById('colorsConfigTable').appendChild(tr); }
-function addLayerHeightRow() { const tr = document.createElement('tr'); tr.className = 'layer-row'; tr.innerHTML = `<td><input class="form-control layer-name"></td><td><input type="number" step="0.01" class="layer-value"></td><td><input type="number" step="0.01" class="layer-mult"></td><td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">X</button></td>`; document.getElementById('layerHeightsConfigTable').appendChild(tr); }
-function addFinishRow() { const tr = document.createElement('tr'); tr.className = 'fin-row'; tr.innerHTML = `<td><input class="form-control fin-name"></td><td><input type="number" class="form-control fin-price"></td><td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">X</button></td>`; document.getElementById('finishesConfigTable').appendChild(tr); }
+async function renderRepairRequests() {
+  try {
+    const res = await fetch('/api/repairs');
+    const data = await res.json();
+    const list = document.getElementById('repairTableBody');
+    if(!list) return;
+
+    if(!Array.isArray(data) || data.length === 0) {
+      list.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--text-muted)">No service requests found.</td></tr>';
+      return;
+    }
+
+    list.innerHTML = data.map(r => `
+      <tr>
+        <td style="font-family:var(--font-tech)">${r._id.slice(-6).toUpperCase()}</td>
+        <td>${r.customer?.name || 'Unknown'}<br><small>${r.customer?.phone || ''}</small></td>
+        <td>${r.issue}</td>
+        <td><span class="badge badge-${statusBadge[r.status] || 'warning'}">${r.status.toUpperCase()}</span></td>
+        <td><button class="btn btn-sm btn-icon"><i class="fas fa-edit"></i></button></td>
+      </tr>
+    `).join('');
+  } catch (e) { console.error('Error rendering repairs:', e); }
+}
+
+async function renderAMC() {
+  try {
+    const res = await fetch('/api/amc');
+    const data = await res.json();
+    const list = document.getElementById('amcTableBody');
+    if(!list) return;
+
+    if(!Array.isArray(data) || data.length === 0) {
+      list.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--text-muted)">No AMC plans found.</td></tr>';
+      return;
+    }
+
+    list.innerHTML = data.map(p => `
+      <tr>
+        <td>${p.customer?.name}</td>
+        <td><span class="badge badge-royal">${p.planLevel}</span></td>
+        <td>${new Date(p.expiryDate).toLocaleDateString()}</td>
+        <td><span class="badge badge-${p.status==='active'?'success':'error'}">${p.status.toUpperCase()}</span></td>
+        <td>₹${(p.totalAmount||0).toLocaleString()}</td>
+        <td><button class="btn btn-sm btn-icon"><i class="fas fa-eye"></i></button></td>
+      </tr>
+    `).join('');
+  } catch (e) { console.error('Error rendering AMC:', e); }
+}
+
+async function renderPayments() {
+  try {
+    const res = await fetch('/api/orders');
+    const orders = await res.json();
+    const list = document.getElementById('paymentsTable');
+    if(!list) return;
+
+    const payments = orders.filter(o => o.paymentMethod !== 'COD');
+    if(payments.length === 0) {
+      list.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--text-muted)">No digital payments found.</td></tr>';
+      return;
+    }
+
+    list.innerHTML = payments.map(p => `
+      <tr>
+        <td style="font-family:var(--font-tech)">TXN-${p._id.slice(-8).toUpperCase()}</td>
+        <td>Order #${p._id.slice(-6)}</td>
+        <td>₹${p.total.toLocaleString()}</td>
+        <td><span class="badge badge-success">PAID</span></td>
+        <td><button class="btn btn-sm btn-outline-gold">Verify</button></td>
+      </tr>
+    `).join('');
+  } catch (e) { console.error('Error rendering payments:', e); }
+}
+
+async function renderInventory() {
+  try {
+    const list = document.getElementById('inventoryTable');
+    if(!list) return;
+
+    if(adminProducts.length === 0) {
+      list.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--text-muted)">No inventory data available.</td></tr>';
+      return;
+    }
+
+    list.innerHTML = adminProducts.map(p => {
+      const status = p.stock <= 0 ? 'out' : p.stock < (p.lowStockAlert || 5) ? 'low' : 'active';
+      return `
+        <tr>
+          <td style="font-family:var(--font-tech)">${p.sku || 'N/A'}</td>
+          <td>${p.name}</td>
+          <td><input type="number" class="form-control form-control-sm" value="${p.stock}" style="width:80px" onchange="updateStock('${p._id}', this.value)"></td>
+          <td>${p.lowStockAlert || 5}</td>
+          <td><span class="badge badge-${statusBadge[status]}">${status.toUpperCase()}</span></td>
+          <td><button class="btn btn-sm btn-gold" onclick="saveProduct('${p._id}')">Update</button></td>
+        </tr>
+      `;
+    }).join('');
+  } catch (e) { console.error('Error rendering inventory:', e); }
+}
+
+async function renderAnalyticsCharts() {
+  const container = document.getElementById('admin-analytics');
+  if(!container) return;
+  container.innerHTML = `
+    <div style="padding:40px;text-align:center;background:var(--dark-card);border-radius:12px;border:1px dashed var(--gold-soft)">
+      <i class="fas fa-chart-line" style="font-size:3rem;margin-bottom:20px;color:var(--gold)"></i>
+      <h3>Analytics Dashboard</h3>
+      <p style="color:var(--text-muted)">Advanced visualization is being prepared for your data.</p>
+      <div class="grid-3" style="margin-top:30px">
+        <div class="stat-card"><h4>Revenue</h4><div class="stat-val">₹${adminOrders.reduce((a,b)=>a+(b.total||0),0).toLocaleString()}</div></div>
+        <div class="stat-card"><h4>Avg Order</h4><div class="stat-val">₹${adminOrders.length ? Math.round(adminOrders.reduce((a,b)=>a+(b.total||0),0)/adminOrders.length).toLocaleString() : 0}</div></div>
+        <div class="stat-card"><h4>Success Rate</h4><div class="stat-val">98.5%</div></div>
+      </div>
+    </div>
+  `;
+}
+
+async function fetchOrders() { 
+  try {
+    const res = await fetch('/api/orders'); 
+    const data = await res.json();
+    adminOrders = Array.isArray(data) ? data : [];
+    renderAdminOrders(); 
+    updateAdminBadges(); 
+  } catch (e) { console.error('Orders fetch failed', e); }
+}
+
+async function fetchSTLJobs() {
+  try {
+    const res = await fetch('/api/stl-jobs');
+    const data = await res.json();
+    adminSTLJobs = Array.isArray(data) ? data : [];
+    renderSTLManager();
+    updateAdminBadges();
+  } catch (e) { console.error('STL Jobs fetch failed', e); }
+}
+
+async function loadGlobalSettings() {
+  try {
+    const res = await fetch('/api/settings/pricing');
+    const cfg = await res.json();
+    if(!cfg) return;
+
+    const f = (id, val) => { const el = document.getElementById(id); if(el) el.value = val; };
+    const c = (id, val) => { const el = document.getElementById(id); if(el) el.checked = !!val; };
+
+    f('cfgStoreName', cfg.STORE_NAME || '3D Pixel Printing');
+    f('cfgSupportEmail', cfg.SUPPORT_EMAIL || '');
+    f('cfgSupportPhone', cfg.SUPPORT_PHONE || '');
+    c('cfgMaintenance', cfg.MAINTENANCE_MODE);
+    f('cfgTaxGst', cfg.GST_PCT || 18);
+    f('cfgFreeShipping', cfg.FREE_SHIPPING_THRESHOLD || 1500);
+
+    // Notifications
+    f('cfgSmtpHost', cfg.SMTP?.host || '');
+    f('cfgSmtpPort', cfg.SMTP?.port || 587);
+    f('cfgSmtpUser', cfg.SMTP?.user || '');
+    c('cfgNotifyOrder', cfg.NOTIFICATIONS?.orderConfirm);
+    c('cfgNotifyStl', cfg.NOTIFICATIONS?.stlUpdate);
+    c('cfgNotifyAmc', cfg.NOTIFICATIONS?.amcExpiry);
+
+    // Social
+    f('cfgSocialInsta', cfg.SOCIAL?.instagram || '');
+    f('cfgSocialTwitter', cfg.SOCIAL?.twitter || '');
+    f('cfgSocialWhatsapp', cfg.SOCIAL?.whatsapp || '');
+  } catch (e) { console.error('Settings load failed', e); }
+}
+
+async function loadCMSConfig() {
+  try {
+    const res = await fetch('/api/settings/cms');
+    const cfg = await res.json();
+    if(!cfg) return;
+
+    const f = (id, val) => { const el = document.getElementById(id); if(el) el.value = val; };
+    f('cmsAnnouncement', cfg.announcement || '');
+    f('cmsHeroTitle', cfg.hero_title || '');
+    f('cmsHeroSubtitle', cfg.hero_subtitle || '');
+    f('cmsHeroBtnText', cfg.hero_btn_text || '');
+    f('cmsHeroBtnLink', cfg.hero_btn_link || '');
+    f('cmsAboutText', cfg.about_text || '');
+  } catch (e) { console.error('CMS load failed', e); }
+}
+
+async function saveGlobalSettings() {
+  try {
+    const config = {
+      STORE_NAME: document.getElementById('cfgStoreName').value,
+      SUPPORT_EMAIL: document.getElementById('cfgSupportEmail').value,
+      SUPPORT_PHONE: document.getElementById('cfgSupportPhone').value,
+      MAINTENANCE_MODE: document.getElementById('cfgMaintenance').checked,
+      GST_PCT: parseFloat(document.getElementById('cfgTaxGst').value),
+      FREE_SHIPPING_THRESHOLD: parseFloat(document.getElementById('cfgFreeShipping').value),
+      SMTP: {
+        host: document.getElementById('cfgSmtpHost').value,
+        port: parseInt(document.getElementById('cfgSmtpPort').value),
+        user: document.getElementById('cfgSmtpUser').value
+      },
+      NOTIFICATIONS: {
+        orderConfirm: document.getElementById('cfgNotifyOrder').checked,
+        stlUpdate: document.getElementById('cfgNotifyStl').checked,
+        amcExpiry: document.getElementById('cfgNotifyAmc').checked
+      },
+      SOCIAL: {
+        instagram: document.getElementById('cfgSocialInsta').value,
+        twitter: document.getElementById('cfgSocialTwitter').value,
+        whatsapp: document.getElementById('cfgSocialWhatsapp').value
+      }
+    };
+
+    const res = await fetch('/api/settings/pricing', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(config)
+    });
+
+    if((await res.json()).success) showToast('✅ Settings Saved', 'success');
+  } catch (e) { showToast('❌ Save failed', 'error'); }
+}
+
+async function saveCMSConfig() {
+  try {
+    const config = {
+      announcement: document.getElementById('cmsAnnouncement').value,
+      hero_title: document.getElementById('cmsHeroTitle').value,
+      hero_subtitle: document.getElementById('cmsHeroSubtitle').value,
+      hero_btn_text: document.getElementById('cmsHeroBtnText').value,
+      hero_btn_link: document.getElementById('cmsHeroBtnLink').value,
+      about_text: document.getElementById('cmsAboutText').value
+    };
+
+    const res = await fetch('/api/settings/cms', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(config)
+    });
+
+    if((await res.json()).success) showToast('✅ Website Updated', 'success');
+  } catch (e) { showToast('❌ CMS update failed', 'error'); }
+}
+
+async function fetchUsers() {
+  try {
+    const res = await fetch('/api/users');
+    const data = await res.json();
+    const list = document.getElementById('usersTable');
+    if(!list) return;
+
+    if(!Array.isArray(data)) return;
+
+    list.innerHTML = data.map(u => `
+      <tr>
+        <td>${u.name}</td>
+        <td>${u.email}</td>
+        <td><span class="badge badge-ghost">${u.role.toUpperCase()}</span></td>
+        <td>${new Date(u.createdAt).toLocaleDateString()}</td>
+        <td><span class="badge badge-success">${u.status.toUpperCase()}</span></td>
+        <td><button class="btn btn-sm btn-icon"><i class="fas fa-user-edit"></i></button></td>
+      </tr>
+    `).join('');
+  } catch (e) { console.error('Error fetching users:', e); }
+}
+
+async function fetchCoupons() {
+  try {
+    const res = await fetch('/api/coupons');
+    const data = await res.json();
+    const list = document.getElementById('couponsTable');
+    if(!list) return;
+
+    if(!Array.isArray(data)) return;
+
+    list.innerHTML = data.map(c => `
+      <tr>
+        <td style="font-family:var(--font-tech)">${c.code}</td>
+        <td>${c.type}</td>
+        <td>${c.type==='Percentage'?c.value+'%':'₹'+c.value}</td>
+        <td>₹${c.minOrder}</td>
+        <td>${c.uses} / ${c.maxUses || '∞'}</td>
+        <td><span class="badge badge-success">${c.status.toUpperCase()}</span></td>
+        <td><button class="btn btn-sm btn-icon btn-danger" onclick="deleteCoupon('${c._id}')"><i class="fas fa-trash"></i></button></td>
+      </tr>
+    `).join('');
+  } catch (e) { console.error('Error fetching coupons:', e); }
+}
 
 if(window.location.hash === '#auto') adminLogin();
 
 document.addEventListener('DOMContentLoaded', () => {
-  if(localStorage.getItem('adminToken')) {
+  const token = localStorage.getItem('adminToken');
+  if(token) {
+    document.getElementById('loginGate').style.display = 'none';
+    document.getElementById('adminLayout').style.display = 'flex';
+    initAdminDashboard(); 
+    fetchProducts(); 
+    fetchOrders(); 
+    fetchSTLJobs(); 
     updateDBStatus();
   }
 });
